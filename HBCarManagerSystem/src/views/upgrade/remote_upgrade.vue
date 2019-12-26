@@ -1,5 +1,5 @@
 <template>
-    
+    <h2>远程升级与控制界面</h2>
 </template>
 
 <script>

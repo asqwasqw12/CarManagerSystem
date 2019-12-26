@@ -21,5 +21,13 @@ const constantRoutes = [
     path:'/',
     redirect:'/home',
     hidden:true
+  },
+  {
+    path:'/HBCarManagerSystem/index.html',
+    redirect:'/login',
+    hidden:true
   }
+
+
 ]
+export default constantRoutes

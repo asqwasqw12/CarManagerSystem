@@ -1,5 +1,5 @@
 <template>
-    
+    <h2>信息输入界面</h2>
 </template>
 
 <script>

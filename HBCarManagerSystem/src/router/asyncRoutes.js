@@ -13,7 +13,7 @@ const asyncRoutes = [
       {
         path:'car_overview',
         name:'car_overview',
-        component:() => import('@/view/car/car_overview.vue'),
+        component:() => import('@/views/car/car_overview.vue'),
         meta:{
           icon:'fa truck',
           title:'车辆监管'
@@ -28,7 +28,7 @@ const asyncRoutes = [
       {
         path:'statistic_analysis',
         name:'statistic_analysis',
-        component:() => import('@/view/analysis/statistic_analysis.vue'),
+        component:() => import('@/views/analysis/statistic_analysis.vue'),
         meta:{
           icon:'fa line-chart',
           title:'统计分析',
@@ -44,7 +44,7 @@ const asyncRoutes = [
       {
         path:'customer_manager',
         name:'customer_manager',
-        component:() => import('@/view/customer/customer_manager.vue'),
+        component:() => import('@/views/customer/customer_manager.vue'),
         meta:{
           icon:'simle-o',
           title:'客户管理',
@@ -60,7 +60,7 @@ const asyncRoutes = [
       {
         path:'info_in',
         name:'info_in',
-        component:() => import('@/view/infomation/info_in.vue'),
+        component:() => import('@/views/infomation/info_in.vue'),
         meta:{
           icon:'fa pencil',
           title:'信息录入',
@@ -76,7 +76,7 @@ const asyncRoutes = [
       {
         path:'sys_log',
         name:'sys_log',
-        component:() => import('@/view/log/sys_log.vue'),
+        component:() => import('@/views/log/sys_log.vue'),
         meta:{
           icon:'fa file-text-to',
           title:'系统日志',
@@ -92,7 +92,7 @@ const asyncRoutes = [
       {
         path:'repair_manager',
         name:'repair_manager',
-        component:() => import('@/view/support/repair_manager.vue'),
+        component:() => import('@/views/support/repair_manager.vue'),
         meta:{
           icon:'fa wrench',
           title:'维修管理',
@@ -108,7 +108,7 @@ const asyncRoutes = [
       {
         path:'remote_upgrade',
         name:'remote_upgrade',
-        component:() => import('@/view/upgrade/remote_upgrade.vue'),
+        component:() => import('@/views/upgrade/remote_upgrade.vue'),
         meta:{
           icon:'fa cloud-downdload',
           title:'远程升控',
@@ -124,7 +124,7 @@ const asyncRoutes = [
       {
         path:'upkeep_manager',
         name:'upkeep_manager',
-        component:() => import('@/view/upkeep/upkeep_manager.vue'),
+        component:() => import('@/views/upkeep/upkeep_manager.vue'),
         meta:{
           icon:'fa gears',
           title:'保养管理',
@@ -140,7 +140,7 @@ const asyncRoutes = [
       {
         path:'user_manager',
         name:'user_manager',
-        component:() => import('@/view/user/user_manager.vue'),
+        component:() => import('@/views/user/user_manager.vue'),
         meta:{
           icon:'fa user-plus',
           title:'用户管理',
@@ -148,10 +148,6 @@ const asyncRoutes = [
         }
       }
     ]
-  },
-  {
-    path:'*',
-    hidden:true,
-    redirect:'/404'
   }
 ]
+export default asyncRoutes

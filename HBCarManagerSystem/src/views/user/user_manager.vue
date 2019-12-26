@@ -1,5 +1,5 @@
 <template>
-    
+    <h2>用户管理界面</h2>
 </template>
 
 <script>
