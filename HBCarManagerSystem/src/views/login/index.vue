@@ -19,7 +19,7 @@
           <el-form-item>
             <el-button type="primary" size="medium" :loading="loading" style="font-size:20px;font-family:微软雅黑;width:320px;" @click="clickLogin">登 录</el-button>
           </el-form-item>
-            <span style="display:inline-block;line-height:20px;">还未注册？请先<router-link to="register">注册</router-link>
+            <span style="display:inline-block;line-height:20px;">没有账号？马上<router-link to="register"><el-link type="primary">注册</el-link></router-link>
             </span>
 
         </el-form>

@@ -3,7 +3,7 @@ import { resetRouter } from "@/router"
 import request from '@/utils/request'
 const user = {
   state:{
-    token:cookies.get('token'),
+    token:cookies.get('token'),     //使用令牌进行路由，cookies.get()保证刷新页面可以不用重新登录
     name:'',
     role:''
   },

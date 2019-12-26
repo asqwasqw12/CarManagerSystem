@@ -46,7 +46,7 @@ window.console.log('token =' + store.getters.token)
         window.console.log('page not in white list,goto /login')
         next({
           name:'login',
-          query:{
+          query:{               //// 将刚刚要去的路由path作为参数，方便登录成功后直接跳转到该路由
             redirect:to.path
           }
         })
