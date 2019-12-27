@@ -6,8 +6,10 @@
 <body>
 <script src="https://unpkg.com/vue/dist/vue.js"></script>
 <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.js"></script>
 <div id="app">
   <ul>
+   <li><a id="link1" href="javascript:void(0)" onclick="tokenTest">token测试</a>
     <li><router-link to="/">Home</router-link></li>
     <li>
       <div><router-link to="/about">About</router-link></div>
@@ -21,6 +23,7 @@
   <router-view></router-view>
 </div>
 <script type="text/javascript">
+
   let Home = { template: '<h1>This is Home!</h1>' } // Home组件
   let About = { // About组件
     template: '<div>' + 
@@ -47,6 +50,17 @@
   let app = new Vue({
     router
   }).$mount('#app')
+  
+   function tokenTest(){
+       $.ajax({
+		 url:"/getUserInfo",
+		 dataType:"json",
+		 type:"post",
+		 data:{
+			 token:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbk5hbWUiOiJteSIsImV4cCI6MTU3NzE5NTg3NSwidXNlcklkIjoiMyJ9.cmb7s7Q7iUpbVo0awhhJrfpewLjFaIqIKLFm06b-5wM"
+		 }
+	 })
+  }																																																																																																																																																																																																																																				
 </script>
 </body>
 </html>

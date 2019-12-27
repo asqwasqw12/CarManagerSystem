@@ -49,7 +49,7 @@
           if (value.length === 0) {
             callback(new Error('请输入密码'))
           } else if (value.length < 6) {
-            callback(new Error('密码不能小于3位'))
+            callback(new Error('密码不能小于6位'))
           } else {
             callback()
           }
@@ -62,7 +62,7 @@
             marginRight: "auto",
            width: "1280px",
            height: "800px",
-           background:  "url(" + require("../../assets/index_background-3.jpg") + ")",
+           background:  "url(" + require("../../assets/index_background-5.jpg") + ")",
             backgroundSize: "cover",
           border: "2px solid #ccc"
           },
