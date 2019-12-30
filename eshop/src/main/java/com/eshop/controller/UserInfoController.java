@@ -1,31 +1,77 @@
 package com.eshop.controller;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
+import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.eshop.common.AssembleResponseMsg;
+import com.eshop.common.IOUtils;
 import com.eshop.common.JwtUtil;
 import com.eshop.pojo.ResponseBody;
 import com.eshop.pojo.UserInfo;
 import com.eshop.service.UserInfoService;
+import com.google.code.kaptcha.Constants;
+import com.google.code.kaptcha.Producer;
 
 @RestController
 public class UserInfoController {
 
+	/*
+	 * @Autowired private Producer producer;
+	 */
+	
 	@Autowired
-	UserInfoService userInfoService;
+	private UserInfoService userInfoService;
+
+	
+	/*
+	 * @GetMapping("captcha.jpg") public void captcha(HttpServletResponse
+	 * response,HttpServletRequest request) throws ServletException,IOException {
+	 * System.out.println("验证码后台服务响应了"); response.setHeader("Cache-Control",
+	 * "no-store,no-cache"); response.setContentType("image/jpeg");
+	 * System.out.println("1"); String text = producer.createText(); //生成文字验证码
+	 * System.out.println("2"); BufferedImage image = producer.createImage(text);
+	 * //生成图片验证码 System.out.println("3");
+	 * request.getSession().setAttribute(Constants.KAPTCHA_SESSION_KEY,text);//
+	 * 保存验证码到session System.out.println("4"); ServletOutputStream out =
+	 * response.getOutputStream(); System.out.println("5"); ImageIO.write(image,
+	 * "jpg", out); System.out.println("6"); IOUtils.closeQuietly(out);
+	 * 
+	 * }
+	 */
 
 	@RequestMapping(value ="/login",produces = "application/json;charset=utf-8")
-	public ResponseBody login(@RequestBody Map<String,Object> map) {
+	public ResponseBody login(@RequestBody Map<String,Object> map,HttpServletRequest request) {
 		System.out.println("后台有响应了！");
 		int flag = userInfoService.queryUser(map);
-		String userName = (String) map.get("userName");
+		String userName = (String) map.get("userName"); //获取前端传递的用户名
+		String captcha = (String) map.get("captcha");	//获取前端传递的验证码
+		
+		// 从session中获取之前保存的验证码跟前台传来的验证码进行匹配
+		/*
+		 * Object kaptcha =
+		 * request.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY); if(kaptcha
+		 * == null){ System.out.println("验证码失效"); return new
+		 * AssembleResponseMsg().failure(200,"27","验证码失效"); }
+		 * if(!captcha.equals(kaptcha)){ System.out.println("验证码不正确"); return new
+		 * AssembleResponseMsg().failure(200,"287","验证码不正确"); }
+		 */
+		
+		
 		Map<String,Object> userMap = new HashMap<>();
 		if(flag == 1) {
 			System.out.println("成功查询用户");

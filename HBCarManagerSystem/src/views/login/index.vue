@@ -17,6 +17,19 @@
             </el-input>
           </el-form-item>
           <el-form-item>
+            <el-col :span = "12">
+              <el-form-item prop = "captcha">
+                <el-input type = "test" v-model="loginForm.captcha" auto-complete="off" placeholder="验证码，单击图片刷新" style="width:100%"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="1"></el-col>
+            <el-col :span="11">
+              <el-form-item>
+                <img style="width:100%" class="pointer" :src="loginForm.src" @click="refreshCaptcha">
+              </el-form-item>
+            </el-col>
+          </el-form-item>
+          <el-form-item>
             <el-button type="primary" size="medium" :loading="loading" style="font-size:20px;font-family:微软雅黑;width:320px;" @click="clickLogin">登 录</el-button>
           </el-form-item>
             <span style="display:inline-block;line-height:20px;">没有账号？马上<router-link to="register"><el-link type="primary">注册</el-link></router-link>
@@ -80,6 +93,9 @@
           loginForm: {
             userName: '',
             password: '',
+            captcha:'',   //验证码
+            src:''        //验证码图片源
+
           },
           //加载界面
           loading: false,
@@ -142,7 +158,13 @@
           this.notifies.forEach(notify => {
             notify.close()
           })
+        },
+        refreshCaptcha(){
+          this.loginForm.src = "http://localhost:8080/eshop" + "/captcha.jpg?t=" + new Date().getTime();
         }
+      },
+      mounted() {
+        this.refreshCaptcha()
       }
     }
 </script>
