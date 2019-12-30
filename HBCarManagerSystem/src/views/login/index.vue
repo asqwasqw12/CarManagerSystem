@@ -17,7 +17,7 @@
             </el-input>
           </el-form-item>
           <el-form-item>
-            <el-col :span = "12">
+            <el-col :span = "13">
               <el-form-item prop = "captcha">
                 <el-input type = "test" v-model="loginForm.captcha" auto-complete="off" placeholder="验证码，单击图片刷新" style="width:100%"></el-input>
               </el-form-item>
@@ -123,8 +123,11 @@
           this.$refs.loginForm.validate(valid => {
             if (valid) {
               this.loading = true
+              let userInfo = { userName:this.loginForm.userName,
+              password:this.loginForm.password,
+              captcha: this.loginForm.captcha }
               setTimeout(() => {
-                this.$store.dispatch('login', this.loginForm).then(
+                this.$store.dispatch('login', userInfo).then(
                   res => {
                     if (res.info.code === '0') {
                       this.clearNotifies()
@@ -132,7 +135,7 @@
                     } else {
                       this.$notify({
                         title: '登录提示',
-                        message: '用户名或密码错误',
+                        message: res.info.message,
                         position: 'bottom-right',
                         type: 'error'
                       })
