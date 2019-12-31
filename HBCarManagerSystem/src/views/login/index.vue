@@ -18,14 +18,15 @@
           </el-form-item>
           <el-form-item>
             <el-col :span = "13">
-              <el-form-item prop = "captcha">
+              <el-form-item prop="captcha">
                 <el-input type = "test" v-model="loginForm.captcha" auto-complete="off" placeholder="验证码，单击图片刷新" style="width:100%"></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="1"></el-col>
-            <el-col :span="11">
+            <el-col :span="8" :offset="2" sytle="margin-right:0px;">
               <el-form-item>
-                <img style="width:100%" class="pointer" :src="loginForm.src" @click="refreshCaptcha">
+                <div class="verify-box" @click="refreshCaptcha">
+                  <s-identify :identifyCode="identifyCode"></s-identify>
+                </div>
               </el-form-item>
             </el-col>
           </el-form-item>
@@ -36,6 +37,7 @@
             </span>
 
         </el-form>
+
       </div>
       <div class="truck" :style="truckStyle" ></div>
       <footer>
@@ -49,7 +51,11 @@
 <script>
 
   import request from '@/utils/request'
+  import SIdentify from '../../components/identify'
     export default {
+    components:{
+      SIdentify
+    },
       data() {
         let validateUserName = (rule, value, callback) => {
           if (value.length === 0) {
@@ -63,6 +69,15 @@
             callback(new Error('请输入密码'))
           } else if (value.length < 6) {
             callback(new Error('密码不能小于6位'))
+          } else {
+            callback()
+          }
+        }
+        let validateCaptcha = (rule, value, callback) => {
+          if (value.length === 0) {
+            callback(new Error('请输入验证码'))
+          } else if (value != this.identifyCode ) {
+            callback(new Error('验证码错误'))
           } else {
             callback()
           }
@@ -93,14 +108,16 @@
           loginForm: {
             userName: '',
             password: '',
-            captcha:'',   //验证码
-            src:''        //验证码图片源
+            captcha:'',   //用户输入验证码
+            //src:''        //验证码图片源
 
           },
           //加载界面
           loading: false,
           notifies:[],
-
+          identifyCodes:'1234567890',
+          identifyCode:'',//图片验证码
+          //captcha:'',   //用户输入验证码
           //输入规则
           rules: {
             userName: [{
@@ -112,7 +129,13 @@
               required:true,
               trigger:'blur',
               validator:validatePassword
-            }]
+            }],
+            captcha:[{
+              required:true,
+              trigger:'blur',
+              validator:validateCaptcha
+            }],
+
           }
 
         }
@@ -123,9 +146,11 @@
           this.$refs.loginForm.validate(valid => {
             if (valid) {
               this.loading = true
-              let userInfo = { userName:this.loginForm.userName,
-              password:this.loginForm.password,
-              captcha: this.loginForm.captcha }
+              let userInfo = {
+                userName:this.loginForm.userName,
+                password:this.loginForm.password,
+              //captcha: this.loginForm.captcha
+                }
               setTimeout(() => {
                 this.$store.dispatch('login', userInfo).then(
                   res => {
@@ -162,8 +187,20 @@
             notify.close()
           })
         },
+        randomNum(min,max){
+          return Math.floor(Math.random() * (max - min) + min)
+        },
         refreshCaptcha(){
-          this.loginForm.src = "http://localhost:8080/eshop" + "/captcha.jpg?t=" + new Date().getTime();
+          //this.loginForm.src = "http://localhost:8080/eshop" + "/captcha.jpg?t=" + new Date().getTime();
+          this.identifyCode = "";
+          this.makeCode(this.identifyCodes,4);
+          console.log('当前验证码==',this.identifyCode);
+        },
+        makeCode(o,l){
+          for (let i = 0;i<l; i++){
+            this.identifyCode += this.identifyCodes[this.randomNum(0,this.identifyCodes.length)]
+          }
+
         }
       },
       mounted() {
@@ -189,6 +226,12 @@
     -moz-border-radius:5px;
     -webkit-border-radius:5px;
     /*border:1px solid white;*/
+  }
+  .verify-box{
+    margin-right: 0px;
+    padding-right: 0px;
+    width:120px;
+    height: 38px;
   }
   .truck{
     position:relative;
