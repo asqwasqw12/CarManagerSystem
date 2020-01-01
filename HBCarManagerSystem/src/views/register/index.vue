@@ -26,21 +26,21 @@
           <el-form-item>
             <el-col :span="12">
               <el-form-item label="密码" prop="password">
-                <el-input type="text" v-model="registerForm.password" >
+                <el-input type="password" v-model="registerForm.password" >
                 </el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="密码确认" prop="checkPassword">
-                <el-input type="text" v-model="registerForm.checkPassword" >
+                <el-input type="password" v-model="registerForm.checkPassword" >
                 </el-input>
               </el-form-item>
             </el-col>
           </el-form-item>
 
-          <el-form-item style="border:1px solid red;padding-left:2px;">
-            <el-col :span="12" style="border:1px solid blue;margin-left: 0px;">
-              <el-form-item label="手机号" prop="mobilephone" style="border:1px solid white;margin-left: 0px;">
+          <el-form-item >
+            <el-col :span="12">
+              <el-form-item label="手机号" prop="mobilephone" >
                 <el-input type="text" v-model="registerForm.mobilephone" >
                 </el-input>
               </el-form-item>
@@ -90,12 +90,12 @@
           <el-form-item>
             <el-col :span = "12">
             <el-form-item label="验证码" prop="captcha">
-              <el-input type = "test" v-model="registerForm.captcha" auto-complete="off" placeholder="验证码，单击图片刷新" style="width:100%"></el-input>
+              <el-input type = "test" v-model="registerForm.captcha" auto-complete="off" placeholder="验证码，单击图片刷新" style="width:100%;margin-right:12px;"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12" >
-            <el-form-item>
-              <div class="verify-box" @click="refreshCaptcha" style="margin-left: 14px;">
+            <el-form-item label=" ">
+              <div class="verify-box" @click="refreshCaptcha" style="width:120px;">
                 <s-identify :identifyCode="identifyCode"></s-identify>
               </div>
             </el-form-item>
@@ -134,6 +134,30 @@
            } else {
              callback()
            }
+
+         }
+         let validatePassword = (rule, value, callback) => {
+           let reg = /^\S{6,20}$/g
+           if (value.length === 0) {
+             callback(new Error('请输入密码'))
+           } else if(!reg.test(value)) {
+             callback(new Error('请输入6-20个非空字符'))
+           }else {
+             if (this.registerForm.checkPassword.length !== 0) {
+               this.$refs.registerForm.validateField('checkPassword')
+             } else {
+               callback()
+             }
+           }
+       }
+         let validateCheckPassword = (ruel, value, callback) => {
+           if (value.length === 0) {
+             callback(new Error('请再次输入密码'))
+           } else if (value !== this.registerForm.password) {
+             callback(new Error('两次输入密码不一致！'))
+           } else {
+             callback()
+           }
          }
          let validateUserName = (rule, value, callback) => {
            const reg = /^[a-zA-Z][a-zA-Z0-9_-]{4,16}$/
@@ -169,7 +193,7 @@
             registerForm:{
               userName:'',//用户名
               password:'',//密码
-              password1:'',
+              checkPassword:'',
               realName:'',//真实姓名
               sex:'男',//性别
               company:'合加新能源汽车有限公司',//公司名称
@@ -249,7 +273,17 @@
                 required: true,
                 trigger: 'blur',
                 validator: validateCaptcha
-              }]
+              }],
+              password:[{
+                required:true,
+                trigger:'blur',
+                validator:validatePassword
+              }],
+              checkPassword:[{
+                required:true,
+                trigger:'blur',
+                validator:validateCheckPassword
+              }],
             },
             //框架样式
             mainFrameStyle:{
@@ -279,6 +313,7 @@
           //this.loginForm.src = "http://localhost:8080/eshop" + "/captcha.jpg?t=" + new Date().getTime();
           this.identifyCode = "";
           this.makeCode(this.identifyCodes, 4);
+          this.$refs.registerForm.validateField('captcha');
           console.log('当前验证码==', this.identifyCode);
 
           //由于刷新后如果输入框已有数据，这个时候是不会进行有效性检查的，所以要将鼠标聚焦到验证码输入框
@@ -307,7 +342,7 @@
   #register {
     margin:10px auto;
     text-align:center;
-    width:600px;
+    width:700px;
     height:550px;
     -moz-border-radius:5px;
     -webkit-border-radius:5px;
