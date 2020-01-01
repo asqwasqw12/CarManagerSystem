@@ -23,7 +23,8 @@ const constantRoutes = [
     hidden:true
   },
   {
-    path:'/HBCarManagerSystem/index.html',
+    //path:'/index.html',
+    path:'/index.html',
     redirect:'/login',
     hidden:true
   }

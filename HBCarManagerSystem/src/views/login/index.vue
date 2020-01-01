@@ -194,6 +194,7 @@
           //this.loginForm.src = "http://localhost:8080/eshop" + "/captcha.jpg?t=" + new Date().getTime();
           this.identifyCode = "";
           this.makeCode(this.identifyCodes,4);
+          this.$refs.loginForm.validateField('captcha');
           console.log('当前验证码==',this.identifyCode);
         },
         makeCode(o,l){
@@ -204,7 +205,8 @@
         }
       },
       mounted() {
-        this.refreshCaptcha()
+        this.identifyCode = "";
+        this.makeCode(this.identifyCodes,4);
       }
     }
 </script>

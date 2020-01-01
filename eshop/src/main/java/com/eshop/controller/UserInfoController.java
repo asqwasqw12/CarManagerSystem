@@ -31,7 +31,7 @@ import com.google.code.kaptcha.Producer;
 public class UserInfoController {
 
 	
-	  @Autowired private Producer producer;
+	 // @Autowired private Producer producer;
 	 
 	
 	@Autowired
@@ -39,26 +39,23 @@ public class UserInfoController {
 
 	
 	
-	   @GetMapping("captcha.jpg")
-	  public void captcha(HttpServletResponse response,HttpServletRequest request) throws ServletException,IOException {
-	  System.out.println("验证码后台服务响应了");
-	  response.setHeader("Cache-Control","no-store,no-cache");
-	  response.setContentType("image/jpeg");
-	  System.out.println(producer);
-	  System.out.println("1");
-	  String text = producer.createText(); //生成文字验证码
-	  System.out.println("2"); 
-	  BufferedImage image = producer.createImage(text);
-	  //生成图片验证码 System.out.println("3");
-	  request.getSession().setAttribute(Constants.KAPTCHA_SESSION_KEY,text);//保存验证码到session 
-	  System.out.println("4");
-	  ServletOutputStream out = response.getOutputStream(); 
-	  System.out.println("5"); 
-	  ImageIO.write(image,"jpg", out);
-	  System.out.println("6"); 
-	  IOUtils.closeQuietly(out);
-	  System.out.println(request.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY));
-	  }
+	/*
+	 * @GetMapping("captcha.jpg") public void captcha(HttpServletResponse
+	 * response,HttpServletRequest request) throws ServletException,IOException {
+	 * System.out.println("验证码后台服务响应了");
+	 * response.setHeader("Cache-Control","no-store,no-cache");
+	 * response.setContentType("image/jpeg"); System.out.println(producer);
+	 * System.out.println("1"); String text = producer.createText(); //生成文字验证码
+	 * System.out.println("2"); BufferedImage image = producer.createImage(text);
+	 * //生成图片验证码 System.out.println("3");
+	 * request.getSession().setAttribute(Constants.KAPTCHA_SESSION_KEY,text);//
+	 * 保存验证码到session System.out.println("4"); ServletOutputStream out =
+	 * response.getOutputStream(); System.out.println("5");
+	 * ImageIO.write(image,"jpg", out); System.out.println("6");
+	 * IOUtils.closeQuietly(out);
+	 * System.out.println(request.getSession().getAttribute(Constants.
+	 * KAPTCHA_SESSION_KEY)); }
+	 */
 	 
 
 	@RequestMapping(value ="/login",produces = "application/json;charset=utf-8")
@@ -66,18 +63,16 @@ public class UserInfoController {
 		System.out.println("后台有响应了！");
 		int flag = userInfoService.queryUser(map);
 		String userName = (String) map.get("userName"); //获取前端传递的用户名
-		String captcha = (String) map.get("captcha");	//获取前端传递的验证码
 		
-		// 从session中获取之前保存的验证码跟前台传来的验证码进行匹配
-		
-		  Object kaptcha = request.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY); 
-		  if(kaptcha== null){
-			  System.out.println("验证码失效");
-		      return new AssembleResponseMsg().failure(200,"27","验证码失效"); 
-		      }
-		  if(!captcha.equals(kaptcha)){
-			  System.out.println("验证码不正确");
-			  return new AssembleResponseMsg().failure(200,"287","验证码不正确"); }
+		/*
+		 * String captcha = (String) map.get("captcha"); //获取前端传递的验证码 //
+		 * 从session中获取之前保存的验证码跟前台传来的验证码进行匹配 Object kaptcha =
+		 * request.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY);
+		 * if(kaptcha== null){ System.out.println("验证码失效"); return new
+		 * AssembleResponseMsg().failure(200,"27","验证码失效"); }
+		 * if(!captcha.equals(kaptcha)){ System.out.println("验证码不正确"); return new
+		 * AssembleResponseMsg().failure(200,"287","验证码不正确"); }
+		 */
 		 
 		
 		

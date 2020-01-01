@@ -25,7 +25,7 @@ const user = {
       //const { userName,password } = userInfo
       return new Promise((resolve, reject) => {
         request({
-          url: '/eshop/login',
+          url: '/api/login',
           method: 'post',
           contentType: "application/json; charset=utf-8",
           dataType: "json",
@@ -59,7 +59,7 @@ const user = {
       param.append('token', state.token);
       return new Promise( (resolve,reject) => {
         request({
-          url:'/eshop/getUserInfo',
+          url:'/api/getUserInfo',
           method:'post',
           contentType: "application/json; charset=utf-8",
           dataType: "json",

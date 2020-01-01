@@ -342,7 +342,7 @@
   #register {
     margin:10px auto;
     text-align:center;
-    width:700px;
+    width:650px;
     height:550px;
     -moz-border-radius:5px;
     -webkit-border-radius:5px;
