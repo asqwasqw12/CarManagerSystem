@@ -103,7 +103,7 @@
          </el-form-item>
 
           <el-form-item>
-            <el-button type="primary" @click="onSubmit">注册</el-button>
+            <el-button type="primary" :loading = "loading" @click="onSubmit">注册</el-button>
             <el-button type="primary" @click="onLogin">重新登录</el-button>
           </el-form-item>
         </el-form>
@@ -119,6 +119,7 @@
 
 <script>
     import router from "../../router";
+    import request from '@/utils/request'
     import SIdentify from '../../components/identify'
     export default {
         name: "index",
@@ -301,7 +302,64 @@
       },
       methods:{
           onSubmit(){
+            window.console.log("注册提交中。。。。")
+            this.$refs.registerForm.validate(
+              valid =>{
+                window.console.log("注册信息有效性验证成功")
+              }
+            )
+            /*this.$refs.registerForm.validate( valid =>{
+              window.console.log("注册信息有效性验证成功")
+              if(valid){
+                this.loading=true
+                let userInfo = {
+                  userName:this.registerForm.userName, //用户名
+                  password:this.registerForm.password,//密码
+                  realName:this.registerForm.realName,//真实姓名
+                  sex:this.registerForm.sex,//性别
+                  company:this.registerForm.company,//公司名称
+                  departmentname:this.registerForm.departmentname,//部门名称
+                  post:this.registerForm.post,//职务
+                  email:this.registerForm.email,//电子邮箱
+                  mobilephone:this.registerForm.mobilephone,//手机
+                }
+                request({
+                  url: '/api/register',
+                  method: 'post',
+                  contentType: "application/json; charset=utf-8",
+                  dataType: "json",
+                  data:userInfo                                    //携带数据发送请求到后台
+                }).then(response =>{
+                  this.loading = false
+                  const data = response.data
+                  console.log(data)
+                  if(data.info.code === 0) {
+                    this.$notify({
+                      title: '注册提示',
+                      message: data.info.message,
+                      position: 'bottom-right',
+                      type: 'success'
+                    })
+                  }else{
+                      this.$notify({
+                        title: '注册提示',
+                        message: data.info.message,
+                        position: 'bottom-right',
+                        type: 'error'
+                    })
+                  }
+                }).catch(error =>{
+                  this.$notify({
+                    title:'注册提示',
+                    message:error.message,
+                    position:'bottom-right',
+                    type:'error'
+                  })
+                })
+              }
+            })*/
             console.log('submit')
+
           },
           onLogin(){
             router.push('/login')
