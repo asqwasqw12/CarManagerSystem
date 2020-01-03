@@ -60,7 +60,7 @@ public class UserInfoController {
 
 	@RequestMapping(value ="/login",produces = "application/json;charset=utf-8")
 	public ResponseBody login(@RequestBody Map<String,Object> map,HttpServletRequest request) {
-		System.out.println("后台有响应了！");
+		System.out.println("用户登录：后台有响应了！");
 		int flag = userInfoService.queryUser(map);
 		String userName = (String) map.get("userName"); //获取前端传递的用户名
 		
@@ -135,5 +135,18 @@ public class UserInfoController {
 	   return new AssembleResponseMsg().failure(200,"25","错误，token为null");
    }
 }
+	@RequestMapping(value ="/register",produces ="application/json;charset=utf-8")
+	public  ResponseBody saveRegisterInfo(@RequestBody Map<String,Object> map) {
+		System.out.println("注册用户：后台响应了");
+		int result = userInfoService.saveUserInfo(map);
+		if(result > 0 ) { 
+			System.out.println("用户注册成功");
+			return new AssembleResponseMsg().success("OK");
+		}else {
+			System.out.println("用户注册失败");
+			return new AssembleResponseMsg().failure(200, "600", "注册失败");
+		}
+	}
+	
 }
 

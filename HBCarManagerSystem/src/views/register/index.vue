@@ -138,7 +138,7 @@
 
          }
          let validatePassword = (rule, value, callback) => {
-           let reg = /^\S{6,20}$/g
+           const reg = /^\S{6,20}$/g
            if (value.length === 0) {
              callback(new Error('请输入密码'))
            } else if(!reg.test(value)) {
@@ -146,12 +146,12 @@
            }else {
              if (this.registerForm.checkPassword.length !== 0) {
                this.$refs.registerForm.validateField('checkPassword')
-             } else {
-               callback()
              }
+               callback()
+
            }
        }
-         let validateCheckPassword = (ruel, value, callback) => {
+         let validateCheckPassword = (rule, value, callback) => {
            if (value.length === 0) {
              callback(new Error('请再次输入密码'))
            } else if (value !== this.registerForm.password) {
@@ -170,7 +170,7 @@
              callback()
            }
          }
-         let validateMobilephone = (rule, value, callback) => {
+        let validateMobilephone = (rule, value, callback) => {
            const reg = /^[1][3,4,5,7,8][0-9]{9}$/
            if (value.length === 0) {
              callback(new Error('请输入手机号码'))
@@ -217,7 +217,7 @@
                   validator:validateUserName
                 }
               ],
-              realName: [
+             realName: [
                 {
                   required: true,
                   message: '请输入您的真实姓名',
@@ -227,7 +227,7 @@
                   min: 2,
                   max: 10,
                   message: '长度在2到10个字符',
-                  trigger: 'blur'
+                  trigger:'blur'
                 }
               ],
               mobilephone: [
@@ -237,7 +237,7 @@
                   validator:validateMobilephone
                 }
               ],
-              email: [
+             email: [
                 {
                   required: true,
                   trigger: 'blur',
@@ -254,7 +254,7 @@
                   min: 3,
                   max: 20,
                   message: '长度在3到20个字符',
-                  trigger: 'blur'
+                  trigger:'blur'
                 }
               ],
               post: [
@@ -267,7 +267,7 @@
                   min: 2,
                   max: 20,
                   message: '长度在2到20个字符',
-                  trigger: 'blur'
+                  trigger:'blur'
                 }
               ],
               captcha: [{
@@ -303,14 +303,11 @@
       methods:{
           onSubmit(){
             window.console.log("注册提交中。。。。")
-            this.$refs.registerForm.validate(
-              valid =>{
-                window.console.log("注册信息有效性验证成功")
-              }
-            )
-            /*this.$refs.registerForm.validate( valid =>{
-              window.console.log("注册信息有效性验证成功")
+
+            this.$refs.registerForm.validate( valid =>{
+
               if(valid){
+                window.console.log("注册信息有效性验证成功")
                 this.loading=true
                 let userInfo = {
                   userName:this.registerForm.userName, //用户名
@@ -349,6 +346,7 @@
                     })
                   }
                 }).catch(error =>{
+                  this.loading = false
                   this.$notify({
                     title:'注册提示',
                     message:error.message,
@@ -357,8 +355,7 @@
                   })
                 })
               }
-            })*/
-            console.log('submit')
+            })
 
           },
           onLogin(){

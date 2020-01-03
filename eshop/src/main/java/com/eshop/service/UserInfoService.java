@@ -7,4 +7,5 @@ public interface UserInfoService {
  int queryUser(Map<String,Object> map);
  UserInfo queryUserInfoByid(int id);
  UserInfo queryUserInfoByName(String userName);
+ int saveUserInfo(Map<String,Object> map);
 }

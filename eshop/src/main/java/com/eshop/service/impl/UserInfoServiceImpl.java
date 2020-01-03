@@ -27,5 +27,10 @@ public class UserInfoServiceImpl implements UserInfoService {
 	public UserInfo queryUserInfoByName(String userName) {
 		return userInfoDao.queryUserInfoByName(userName);
 	}
+	
+	@Override
+	public int saveUserInfo(Map<String,Object> map) {
+		return userInfoDao.saveUserInfo(map);
+	}
 
 }
