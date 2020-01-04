@@ -138,6 +138,9 @@ public class UserInfoController {
 	@RequestMapping(value ="/register",produces ="application/json;charset=utf-8")
 	public  ResponseBody saveRegisterInfo(@RequestBody Map<String,Object> map) {
 		System.out.println("注册用户：后台响应了");
+		String userName = (String)map.get("userName");
+		UserInfo user = userInfoService.queryUserInfoByName(userName);
+		if(user ==null) {
 		int result = userInfoService.saveUserInfo(map);
 		if(result > 0 ) { 
 			System.out.println("用户注册成功");
@@ -146,7 +149,10 @@ public class UserInfoController {
 			System.out.println("用户注册失败");
 			return new AssembleResponseMsg().failure(200, "600", "注册失败");
 		}
+	}else {
+		System.out.println("注册失败");
+		return new AssembleResponseMsg().failure(200, "601", "已存在该用户名，请重新注册");
 	}
-	
+}
 }
 

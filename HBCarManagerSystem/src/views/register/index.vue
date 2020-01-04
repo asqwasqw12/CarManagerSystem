@@ -330,12 +330,13 @@
                   this.loading = false
                   const data = response.data
                   console.log(data)
-                  if(data.info.code === 0) {
+                  if(data.info.code === '0') {
                     this.$notify({
                       title: '注册提示',
-                      message: data.info.message,
+                      message: "注册成功，请耐心等待审核",
                       position: 'bottom-right',
-                      type: 'success'
+                      type: 'success',
+                      duration:3000
                     })
                   }else{
                       this.$notify({
