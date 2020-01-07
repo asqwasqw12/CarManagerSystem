@@ -15,7 +15,7 @@ const asyncRoutes = [
         name:'car_overview',
         component:() => import('@/views/car/car_overview.vue'),
         meta:{
-          icon:'fa truck',
+          icon:'fa fa-truck',
           title:'车辆监管'
         }
       }
@@ -30,7 +30,7 @@ const asyncRoutes = [
         name:'statistic_analysis',
         component:() => import('@/views/analysis/statistic_analysis.vue'),
         meta:{
-          icon:'fa line-chart',
+          icon:'fa fa-line-chart',
           title:'统计分析',
           roles:['admin','technical']
         }
@@ -46,7 +46,7 @@ const asyncRoutes = [
         name:'customer_manager',
         component:() => import('@/views/customer/customer_manager.vue'),
         meta:{
-          icon:'simle-o',
+          icon:'fa fa-smile-o',
           title:'客户管理',
           roles:['sale','admin']
         }
@@ -62,7 +62,7 @@ const asyncRoutes = [
         name:'info_in',
         component:() => import('@/views/infomation/info_in.vue'),
         meta:{
-          icon:'fa pencil',
+          icon:'fa fa-pencil',
           title:'信息录入',
           roles:['admin','operator']
         }
@@ -78,7 +78,7 @@ const asyncRoutes = [
         name:'sys_log',
         component:() => import('@/views/log/sys_log.vue'),
         meta:{
-          icon:'fa file-text-to',
+          icon:'fa fa-file-text-o',
           title:'系统日志',
           roles:['admin','operator']
         }
@@ -94,7 +94,7 @@ const asyncRoutes = [
         name:'repair_manager',
         component:() => import('@/views/support/repair_manager.vue'),
         meta:{
-          icon:'fa wrench',
+          icon:'fa fa-wrench',
           title:'维修管理',
           roles:['service','admin']
         }
@@ -110,7 +110,7 @@ const asyncRoutes = [
         name:'remote_upgrade',
         component:() => import('@/views/upgrade/remote_upgrade.vue'),
         meta:{
-          icon:'fa cloud-downdload',
+          icon:'fa fa-cloud-download',
           title:'远程升控',
           roles:['admin','operator','technical']
         }
@@ -126,7 +126,7 @@ const asyncRoutes = [
         name:'upkeep_manager',
         component:() => import('@/views/upkeep/upkeep_manager.vue'),
         meta:{
-          icon:'fa gears',
+          icon:'fa fa-gears',
           title:'保养管理',
           roles:['admin','operator']
         }
@@ -142,7 +142,7 @@ const asyncRoutes = [
         name:'user_manager',
         component:() => import('@/views/user/user_manager.vue'),
         meta:{
-          icon:'fa user-plus',
+          icon:'fa fa-user-plus',
           title:'用户管理',
           roles:['admin','operator']
         }

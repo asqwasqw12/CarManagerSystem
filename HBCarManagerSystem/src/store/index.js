@@ -3,6 +3,8 @@ import Vuex from 'vuex'
 import getters from './getters'
 import permission from './modules/permission'
 import user from './modules/user'
+import app from './modules/app'
+import tagsView from './modules/tagsView'
 
 Vue.use(Vuex)
 /*const moduleFiles = require.context('./modules',false,/\.js$/ )    //三个参数：1.要搜索的文件夹目录；2.是否应该搜索它的子目录；3.匹配文件的正则表达式
@@ -20,7 +22,9 @@ const modules = moduleFiles.keys().reduce(
 const store = new Vuex.Store({
   modules:{
     permission,
-    user
+    user,
+    app,
+    tagsView
   },
   getters
 })
