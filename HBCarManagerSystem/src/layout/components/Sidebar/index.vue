@@ -47,6 +47,7 @@
           return path
         },
         variables(){
+            console.log('variables=' ,variables)
             return variables
         },
         isCollapse(){

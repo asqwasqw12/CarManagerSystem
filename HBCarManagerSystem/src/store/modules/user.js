@@ -81,11 +81,15 @@ const user = {
     },
     //根据token信息获取后台信息，将vuex中的token和用户姓名和角色等清空，将coookies的token信息清空
     logout:({ commit,state }) => {
+      let param = new URLSearchParams()
+      param.append('token',state.token)
       return new Promise( (resolve,reject) => {
         request({
           url:'/api/logout',
-          method:'get',
-          data:{token:state.token}
+          method:'post',
+          contentType: "application/json; charset=utf-8",
+          dataType: "json",
+          data:param
         }).then(response => {
           commit('setToken','')
           commit('setName','')

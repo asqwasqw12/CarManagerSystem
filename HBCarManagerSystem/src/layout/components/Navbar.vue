@@ -11,7 +11,9 @@
       </div>
       <el-dropdown-menu slot="dropdown">
         <el-dropdown-item>个人中心</el-dropdown-item>
-        <el-dropdown-item>退出登录</el-dropdown-item>
+        <el-dropdown-item>
+          <span style="display:block;" @click="logout">退出登录</span>
+        </el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
   </div>
@@ -25,6 +27,13 @@
       data(){
           return {
             userName:this.$store.getters.name
+          }
+      },
+      methods:{
+          async logout(){
+            await this.$store.dispatch('logout')
+            console.log(this.$route.fullPath)
+            this.$router.push(`/login?redirect=${this.$route.fullPath}`)
           }
       }
     }

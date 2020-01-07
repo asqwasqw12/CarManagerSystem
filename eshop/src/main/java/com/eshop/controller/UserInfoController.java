@@ -154,5 +154,17 @@ public class UserInfoController {
 		return new AssembleResponseMsg().failure(200, "601", "已存在该用户名，请重新注册");
 	}
 }
+	@RequestMapping(value = "/logout",produces ="application/json;charset=utf-8")
+	public ResponseBody logout(String token) {
+		System.out.println("使用token退出登录");
+		System.out.println(token);
+		if(null != token) {
+            boolean result = JwtUtil.verify(token);//验证token是否正确
+            	System.out.println("token正常");
+            	return new AssembleResponseMsg().success("Ok");
+            }else {
+            	return new AssembleResponseMsg().failure(200,"2","token错误或者过期");
+            }
+	}
 }
 
