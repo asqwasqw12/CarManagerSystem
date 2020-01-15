@@ -7,7 +7,6 @@
           <navbar></navbar>
         </div>
         <app-main></app-main>
-        <router-view/>
       </div>
     </div>
 

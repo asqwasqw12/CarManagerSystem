@@ -4,19 +4,20 @@
     <router-link v-if="onlyOneChild.meta" :to="resolvePath(onlyOneChild.path)">
       <el-menu-item :index="resolvePath(onlyOneChild.path)" :class="{'submenu-title-noDropdown':!isNest}">
         <i :class="onlyOneChild.meta.icon||(item.meta && item.meta.icon)"></i>
-        <span v-if="onlyOneChild.meta.title">{{ onlyOneChild.meta.title }}</span>
+        <span v-if="onlyOneChild.meta.title">{{ onlyOneChild.meta.title }}+main</span>
       </el-menu-item>
     </router-link>
   </template>
   <el-submenu v-else ref="subMenu" :index="resolvePath(item.path)" popper-append-to-body>
-      <template slot="title1">
-       <i v-if="item.meta" :class="onlyOneChild.meta.icon||(item.meta && item.meta.icon)"></i>
-        <span v-if="item.meta" slot="title1">{{ item.meta.title}}</span>
+      <template slot="title">
+       <i v-if="item.meta" :class="(item.meta && item.meta.icon)||onlyOneChild.meta.icon"></i>
+        <span v-if="item.meta" slot="title">{{ item.meta.title}}+sub</span>
       </template>
     <sidebar-item
     v-for="child in item.children"
     :key="child.path"
     :is-nest="true"
+    :item="child"
     :base-path="resolvePath(child.path)"
     class="nest-menu"
     ></sidebar-item>
@@ -64,6 +65,8 @@
                 return true
               }
             })
+            console.log('showingChildren:'+showingChildren);
+            console.log('onlyOneChild'+this.onlyOneChild);
             if(showingChildren.length === 1){
               return true
             }
@@ -74,6 +77,7 @@
             return false
           },
         resolvePath(routePath){
+          console.log(path.resolve(this.basePath,routePath))
             return path.resolve(this.basePath,routePath)  //连接路径，形成绝对路径
         }
       }

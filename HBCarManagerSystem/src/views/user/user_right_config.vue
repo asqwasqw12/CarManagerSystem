@@ -1,10 +1,10 @@
 <template>
-    <h2>用户管理界面</h2>
+<h2>用户权限设置</h2>
 </template>
 
 <script>
     export default {
-        name: "user_manager"
+        name: "user_right_config"
     }
 </script>
 
