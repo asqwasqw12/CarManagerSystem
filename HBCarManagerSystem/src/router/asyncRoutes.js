@@ -15,7 +15,8 @@ const asyncRoutes = [
       {
         path:'right_config',
         name:'right_config',
-        component:()=>('@views/user/user_right_config.vue'),
+        component: () => import('@/views/user/user_right_config.vue'),
+        //component:() => import('@/views/car/car_overview.vue'),
         meta:{
           icon:'fa fa-users',
           title:'权限设置',
@@ -25,7 +26,8 @@ const asyncRoutes = [
       {
         path:'new_user_check',
         name:'new_user_check',
-        component:() => ('@views/user/new_user_check.vue'),
+        component:() => import('@/views/user/new_user_check.vue'),
+        //component:() => import('@/views/car/car_overview.vue'),
         meta:{
           icon:'fa fa-user-plus',
           title:'新用户审核',
