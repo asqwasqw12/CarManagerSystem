@@ -38,16 +38,16 @@ const asyncRoutes = [
   },
   {
     path:'/home',
-    redirect:'/home/car_overview',
+    redirect:'/car_overview/index',
     component:layout,
     hidden:true
   },
   {
-    path: '/home',
+    path: '/car_overview',
     component:layout,
     children:[
       {
-         path:'car_overview',
+         path:'index',
          name:'car_overview',
         component:() => import('@/views/car/car_overview.vue'),
         meta:{

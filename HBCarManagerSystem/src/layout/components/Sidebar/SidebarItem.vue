@@ -4,14 +4,14 @@
     <router-link v-if="onlyOneChild.meta" :to="resolvePath(onlyOneChild.path)">
       <el-menu-item :index="resolvePath(onlyOneChild.path)" :class="{'submenu-title-noDropdown':!isNest}">
         <i :class="onlyOneChild.meta.icon||(item.meta && item.meta.icon)"></i>
-        <span v-if="onlyOneChild.meta.title">{{ onlyOneChild.meta.title }}+main</span>
+        <span v-if="onlyOneChild.meta.title">{{ onlyOneChild.meta.title }}</span>
       </el-menu-item>
     </router-link>
   </template>
   <el-submenu v-else ref="subMenu" :index="resolvePath(item.path)" popper-append-to-body>
       <template slot="title">
        <i v-if="item.meta" :class="(item.meta && item.meta.icon)||onlyOneChild.meta.icon"></i>
-        <span v-if="item.meta" slot="title">{{ item.meta.title}}+sub</span>
+        <span v-if="item.meta" slot="title">{{ item.meta.title}}</span>
       </template>
     <sidebar-item
     v-for="child in item.children"

@@ -16,6 +16,7 @@
             return this.$store.state.cachedViews
           },
         key(){
+            console.log('this.route.path:'+this.$route.path)
             return this.$route.path
         }
       }

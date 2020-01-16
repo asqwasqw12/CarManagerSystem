@@ -5,6 +5,7 @@
       <div  class="main-container">
         <div :class="{'fixed-header':true }">
           <navbar></navbar>
+          <tags-view/>
         </div>
         <app-main></app-main>
       </div>
