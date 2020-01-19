@@ -8,7 +8,9 @@ const tagsView = {
     ADD_VISITED_VIEW:(state,view) => {
       if (state.visitedViews.some(v => v.path === view.path)) return
       state.visitedViews.push(
-        Object.assign({},view,{title:view.meta.title || 'no-name'})
+        Object.assign({},view,{title:view.meta.title || 'no-name'})  //Object.assign方法的第一个参数是目标对象，后面的参数都是源对象。
+                                                                                      //注意，如果目标对象与源对象有同名属性，
+                                                                                       // 或多个源对象有同名属性，则后面的属性会覆盖前面的属性。本例中{}是目标对象，view和title为源对象
        /* {name: view.name,
         path: view.fullPath,
         title: view.meta.title || 'no-name'}*/
@@ -29,24 +31,26 @@ const tagsView = {
       }
     },
     DEL_CACHED_VIEW:(state,view) => {
-      for(const i of state.cachedViews){
+      /*for(const i of state.cachedViews){
         if(i === view.name){
           const index = state.cachedViews.indexOf(i)
           index > -1 && state.cachedViews.splice(index,1)       //如果存在则删除当前元素
           break
         }
-      }
+      }*/
+      const index = state.cachedViews.indexOf(view.name)
+      index > -1 && state.cachedViews.splice(index,1)
     },
-    DEL_OTHERS_VIEWS:(state,view) => {
-      for (const [i, v] of state.visitedViews.entries()) {
+    DEL_OTHERS_VISITED_VIEWS:(state,view) => {
+      /*for (const [i, v] of state.visitedViews.entries()) {
         if (v.path === view.path) {
           state.visitedViews = state.visitedViews.slice(i, i + 1)
           break
         }
-      }
-      /*state.visitedViews = state.visitedViews.filter( v =>{
+      }*/
+      state.visitedViews = state.visitedViews.filter( v =>{
         return v.meta.affix || v.path === view.path
-      })*/
+      })
     },
     DEL_OTHERS_CACHED_VIEWS:(state,view) =>{
       const index = state.cachedViews.indexOf(view.name)
@@ -65,7 +69,9 @@ const tagsView = {
       }*/
     },
     DEL_ALL_VISITED_VIEWS:(state) =>{
-      state.visitedViews = []
+      //保留需要固定在标题栏中的标题，删除其他
+      const affixTags = state.visitedViews.filter( tag => tag.meta.affix)
+      state.visitedViews = affixTags
     },
     DEL_ALL_CACHED_VIEWS:(state) =>{
       state.cachedViews = []

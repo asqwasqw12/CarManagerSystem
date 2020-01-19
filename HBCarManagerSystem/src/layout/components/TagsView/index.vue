@@ -17,10 +17,10 @@
       </router-link>
     </scroll-pane>
     <ul v-show="visible" :style="{left:left+'px',top:top+'px'}" class="contextmenu">
-      <li @click="refreshSelectedTag(selectedTag)">Refresh</li>
-      <li v-if="!isAffix(selectedTag)" @click="closeSelectedTag(selectedTag)">Close</li>
-      <li @click="closeOthersTags">Close Others</li>
-      <li @click="closeAllTags(selectedTag)">Close All</li>
+      <li @click="refreshSelectedTag(selectedTag)">刷新</li>
+      <li v-if="!isAffix(selectedTag)" @click="closeSelectedTag(selectedTag)">关闭</li>
+      <li @click="closeOthersTags">关闭其他</li>
+      <li @click="closeAllTags(selectedTag)">关闭所有</li>
     </ul>
   </div>
 </template>
@@ -45,7 +45,7 @@
         return this.$store.getters.visitedViews
       },
       routes() {
-        return this.$store.getters.routes
+        return this.$store.getters.permission_routes
       }
     },
     watch: {
@@ -66,12 +66,16 @@
       this.addTags()
     },
     methods: {
+      //判断是否为当前活动显示的页面
       isActive(route) {
         return route.path === this.$route.path
       },
+      //判断是否固定的标题
       isAffix(tag) {
         return tag.meta && tag.meta.affix
       },
+
+      //查找需要固定在tagsView上的标题
       filterAffixTags(routes, basePath = '/') {
         let tags = []
         if(!routes) {
@@ -96,6 +100,8 @@
         })
         return tags
       },
+
+      //将需要固定在标题栏的标题添加到VisitedView中
       initTags() {
         const affixTags = this.affixTags = this.filterAffixTags(this.routes)
         for (const tag of affixTags) {
@@ -105,12 +111,13 @@
           }
         }
       },
+      //将当前的路由添加到VisitedView和cachedView中
       addTags() {
         const { name } = this.$route
         if (name) {
           this.$store.dispatch('addView', this.$route)
         }
-        return false
+        return false         //该行代码是否存在问题？？？？？？
       },
       moveToCurrentTag() {
         const tags = this.$refs.tag
@@ -132,7 +139,8 @@
           const { fullPath } = view
           this.$nextTick(() => {
             this.$router.replace({
-              path: '/redirect' + fullPath
+              //path: '/redirect' + fullPath   //等加入redirect组件后才能起作用
+              path:fullPath
             })
           })
         })
@@ -152,10 +160,13 @@
       },
       closeAllTags(view) {
         this.$store.dispatch('delAllViews').then(({ visitedViews }) => {
-          if (this.affixTags.some(tag => tag.path === view.path)) {
+
+          /*if (this.affixTags.some(tag => tag.path === view.path)) {
             return
-          }
+          }*/
           this.toLastView(visitedViews, view)
+        }).catch(error => {
+          console.log('出现错误')
         })
       },
       toLastView(visitedViews, view) {
@@ -165,9 +176,12 @@
         } else {
           // now the default is to redirect to the home page if there is no tags-view,
           // you can adjust it according to your needs.
-          if (view.name === 'Dashboard') {
+          if (view.name === 'car_overview') {
             // to reload home page
-            this.$router.replace({ path: '/redirect' + view.fullPath })
+            this.$router.replace({
+            // path: '/redirect' + view.fullPath  //等加入 redirect组件后才能起作用,暂时先用view.fullPath代替
+            path:view.fullPath
+            })
           } else {
             this.$router.push('/')
           }
@@ -208,6 +222,7 @@
       .tags-view-item {
         display: inline-block;
         position: relative;
+        float:left;
         cursor: pointer;
         height: 26px;
         line-height: 26px;

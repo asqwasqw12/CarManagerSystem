@@ -52,7 +52,8 @@ const asyncRoutes = [
         component:() => import('@/views/car/car_overview.vue'),
         meta:{
           icon:'fa fa-truck',
-          title:'车辆监管'
+          title:'车辆监管',
+          affix:true             //固定在tagsView中，没有关闭按钮
         }
       }
     ]
