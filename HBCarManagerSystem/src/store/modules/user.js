@@ -19,6 +19,14 @@ const user = {
     }
   },
   actions:{
+    resetToken({ commit }) {
+      return new Promise(resolve => {
+        commit('setToken','')
+        commit('setName','')
+        commit('setRole','')
+        resolve()
+      })
+    },
     login: ({commit}, userInfo) => {
 
       userInfo.userName = userInfo.userName.trim()    //去掉头尾空格
@@ -68,8 +76,8 @@ const user = {
           const data = response.data
           window.console.log(data)
           const body = data.data
-          if(data.info.code ==='1'){
-            reject(data)
+          if(data.info.code !=='0'){
+            reject('认证失败，请重新登录')
           }
           commit('setName',body.userName)
           commit('setRole',body.roles)
@@ -80,7 +88,7 @@ const user = {
       })
     },
     //根据token信息获取后台信息，将vuex中的token和用户姓名和角色等清空，将coookies的token信息清空
-    logout:({ commit,state }) => {
+    logout:({ commit,state,dispatch }) => {
       let param = new URLSearchParams()
       param.append('token',state.token)
       return new Promise( (resolve,reject) => {
@@ -96,6 +104,7 @@ const user = {
           commit('setRole','')
           resetRouter()
           cookies.set('token','')
+          dispatch('tagsView/delAllViews')
           resolve(response.data)
         }).catch( error => {
           reject(error)

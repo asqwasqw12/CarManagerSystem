@@ -1,6 +1,6 @@
 import router from './router'
 import store from './store'
-
+import { Message } from 'element-ui'
 const whiteList = ['/login','/register']
 
 router.beforeEach(async(to,from,next) => {
@@ -16,7 +16,15 @@ window.console.log('token =' + store.getters.token)
        } else {
         if (store.getters.role === '') {     //如果有token,路径不是登录，用户角色为空，那么获取用户信息，
           window.console.log('role is empty,and get user info...')
-          await store.dispatch('getUserInfo')
+          try{
+            await store.dispatch('getUserInfo')
+          }catch(error){
+            store.dispatch('resetToken')
+            Message.error(error || 'Has Error')
+            console.log("确实执行了resetToken....................................")
+            next('/login')
+          }
+
           window.console.log('get permission routes map.........')
           window.console.log(store.getters.role)
           const addRoutes = await store.dispatch('generateRoutes', store.getters)
