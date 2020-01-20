@@ -7,7 +7,6 @@ router.beforeEach(async(to,from,next) => {
   window.console.log('route begin judging ...')
   window.console.log(router)
 window.console.log('token =' + store.getters.token)
-
   if(store.getters.token && typeof (store.getters.token) != "undefined" && store.getters.token != 'undefined') {           //如果有token
       window.console.log('has token,goto path is' + to.path)
       if (to.path === '/login' ) {       //如果有token,并且路径是登录，直接去往主页
