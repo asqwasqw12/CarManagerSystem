@@ -255,8 +255,6 @@
   footer{
     margin-top:20px;
   }
-</style>
-<style>
   body{
     background-color: #282828;
     background-image: -webkit-radial-gradient(black 15%, transparent 16%), -webkit-radial-gradient(black 15%, transparent 16%), -webkit-radial-gradient(rgba(255, 255, 255, 0.1) 15%, transparent 20%), -webkit-radial-gradient(rgba(255, 255, 255, 0.1) 15%, transparent 20%);
@@ -266,4 +264,15 @@
     text-aglin:center;
     height:1200px;
   }
+</style>
+<style>
+  /*body{
+    background-color: #282828;
+    background-image: -webkit-radial-gradient(black 15%, transparent 16%), -webkit-radial-gradient(black 15%, transparent 16%), -webkit-radial-gradient(rgba(255, 255, 255, 0.1) 15%, transparent 20%), -webkit-radial-gradient(rgba(255, 255, 255, 0.1) 15%, transparent 20%);
+    background-image: radial-gradient(black 15%, transparent 16%), radial-gradient(black 15%, transparent 16%), radial-gradient(rgba(255, 255, 255, 0.1) 15%, transparent 20%), radial-gradient(rgba(255, 255, 255, 0.1) 15%, transparent 20%);
+    background-position: 0 0px, 8px 8px, 0 1px, 8px 9px;
+    background-size: 16px 16px;
+    text-aglin:center;
+    height:1200px;
+  }*/
 </style>
