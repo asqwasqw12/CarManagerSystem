@@ -3,6 +3,7 @@ package com.eshop.controller;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
@@ -22,7 +23,10 @@ import com.eshop.common.AssembleResponseMsg;
 import com.eshop.common.IOUtils;
 import com.eshop.common.JwtUtil;
 import com.eshop.pojo.ResponseBody;
+import com.eshop.pojo.Role;
 import com.eshop.pojo.UserInfo;
+import com.eshop.pojo.UserRole;
+import com.eshop.service.RoleService;
 import com.eshop.service.UserInfoService;
 import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.Producer;
@@ -36,7 +40,8 @@ public class UserInfoController {
 	
 	@Autowired
 	private UserInfoService userInfoService;
-
+	@Autowired
+    private RoleService roleService;
 	
 	
 	/*
@@ -80,12 +85,28 @@ public class UserInfoController {
 		if(flag == 1) {
 			System.out.println("成功查询用户");
 			UserInfo user = userInfoService.queryUserInfoByName(userName);
+			
 			if(user != null) {
 			int userId = user.getId();
+			
 			String token = JwtUtil.sign(user.getUserName(), String.valueOf(user.getId()));
 			System.out.println("token is" + token);
 			userMap.put("userName",user.getUserName());
-			userMap.put("role",user.getRoles());
+			System.out.println("userid="+userId);
+			//System.out.println("准备开始选择UserRole...");
+			//List<UserRole> userRoles = roleService.selectUserRoleByUserId(userId);
+			//System.out.println("准备开始选择roles...");
+			//List<Role> roles = roleService.selectRoleByUserId(userId);
+			System.out.println("准备开始选择rolename...");
+			List<String> roles = roleService.selectByUserId(userId);
+			System.out.println(roles);
+			if(roles.size()>0)
+			{
+				userMap.put("roles",roles);
+			}else {
+				System.out.println("查询角色出错");
+				return new AssembleResponseMsg().failure(200, "10", "查询角色出错");
+			}
 			userMap.put("token",token);
 			return new AssembleResponseMsg().success(userMap);
 			}else {
@@ -101,7 +122,7 @@ public class UserInfoController {
 	public ResponseBody queryUserInfo( String token) {
 		System.out.println("使用token查询用户");
 		System.out.println(token);
-		
+		Map<String,Object> userMap = new HashMap<>();
 		if(null != token) {
             boolean result = JwtUtil.verify(token);//验证token是否正确
             if (result) {
@@ -114,10 +135,17 @@ public class UserInfoController {
             	if(id != null) {     
             		System.out.println("根据token转换id成功");
             		
-            		UserInfo data = userInfoService.queryUserInfoByid(Integer.valueOf(id));
-            		if(data !=null) {
+            		UserInfo user = userInfoService.queryUserInfoByid(Integer.valueOf(id));
+            		if(user !=null) {
             		System.out.println("根据id成功查询用户");
-            		return new AssembleResponseMsg().success(data);
+            		List<String> roles = roleService.selectByUserId(Integer.valueOf(id));
+            		if(roles.size()>0) {
+            			userMap.put("roles", roles);
+            		}else {
+            			return new AssembleResponseMsg().failure(200, "10", "查询角色失败");
+            		}
+            		userMap.put("userName", user.getUserName());
+            		return new AssembleResponseMsg().success(userMap);
             		}else {
             			System.out.println("根据id查找用户失败");
             			return new AssembleResponseMsg().failure(200,"22","无此用户");

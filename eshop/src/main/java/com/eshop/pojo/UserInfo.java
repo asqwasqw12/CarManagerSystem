@@ -13,10 +13,10 @@ public class UserInfo implements Serializable {
 	private String sex;				 //性别
 	private String address;			 //地址
 	private String email;			 //邮箱
-	private String regDate;			 //注册日期
+	private String regdate;			 //注册日期
 	private int status;				 //状态
     private String roles;			 //角色
-    
+    private String mobilephone;		//手机号码
     public String getRoles() {
     	return roles;
     }
@@ -82,11 +82,11 @@ public class UserInfo implements Serializable {
 	}
 
 	public String getRegDate() {
-		return regDate;
+		return regdate;
 	}
 
 	public void setRegDate(String regDate) {
-		this.regDate = regDate;
+		this.regdate = regDate;
 	}
 
 	public int getStatus() {
@@ -95,6 +95,12 @@ public class UserInfo implements Serializable {
 
 	public void setStatus(int status) {
 		this.status = status;
+	}
+	public String getMobilephone() {
+		return mobilephone;
+	}
+	public void setMobilephone(String Mobilephone) {
+		this.mobilephone = Mobilephone;
 	}
 	
 	@Override

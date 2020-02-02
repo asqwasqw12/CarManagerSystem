@@ -46,7 +46,7 @@ const user = {
             window.console.log("验证成功")
             window.console.log("data = " + body)
             window.console.log("body.token = "+ body.token)
-            window.console.log("body.role = "+body.role)
+            window.console.log("body.roles = "+body.roles)
             commit('setToken', body.token)             //存储token到vuex
             cookies.set('token', body.token)           //存储token到cookies
             window.console.log('cookies token = ',cookies.get('token'))
@@ -101,7 +101,7 @@ const user = {
         }).then(response => {
           commit('setToken','')
           commit('setName','')
-          commit('setRole','')
+          commit('setRole',[])
           resetRouter()
           cookies.set('token','')
           dispatch('tagsView/delAllViews')
