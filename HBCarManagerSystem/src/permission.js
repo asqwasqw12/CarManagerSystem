@@ -9,11 +9,13 @@ router.beforeEach(async(to,from,next) => {
 window.console.log('token =' + store.getters.token)
   if(store.getters.token && typeof (store.getters.token) != "undefined" && store.getters.token != 'undefined') {           //如果有token
       window.console.log('has token,goto path is' + to.path)
+      window.console.log('role=' + store.getters.role)
       if (to.path === '/login' ) {       //如果有token,并且路径是登录，直接去往主页
         window.console.log('jumper home /')
         next('/')
        } else {
-        if (store.getters.role === '') {     //如果有token,路径不是登录，用户角色为空，那么获取用户信息，
+        const hasRoles = store.getters.role && store.getters.role.length > 0
+        if (!hasRoles) {     //如果有token,路径不是登录，用户角色为空，那么获取用户信息，
           window.console.log('role is empty,and get user info...')
           try{
             await store.dispatch('getUserInfo')

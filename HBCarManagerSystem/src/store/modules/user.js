@@ -5,7 +5,7 @@ const user = {
   state:{
     token:cookies.get('token'),     //使用令牌进行路由，cookies.get()保证刷新页面可以不用重新登录
     name:'',
-    role:''
+    role:[]
   },
   mutations:{
     setName: (state,name) => {
@@ -23,7 +23,7 @@ const user = {
       return new Promise(resolve => {
         commit('setToken','')
         commit('setName','')
-        commit('setRole','')
+        commit('setRole',[])
         resolve()
       })
     },

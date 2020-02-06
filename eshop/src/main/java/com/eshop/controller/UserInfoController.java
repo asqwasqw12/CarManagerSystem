@@ -140,7 +140,7 @@ public class UserInfoController {
             		System.out.println("根据id成功查询用户");
             		List<String> roles = roleService.selectByUserId(Integer.valueOf(id));
             		if(roles.size()>0) {
-            			userMap.put("roles", roles);
+            			userMap.put("roles", roles); 
             		}else {
             			return new AssembleResponseMsg().failure(200, "10", "查询角色失败");
             		}
@@ -172,6 +172,13 @@ public class UserInfoController {
 		int result = userInfoService.saveUserInfo(map);
 		if(result > 0 ) { 
 			System.out.println("用户注册成功");
+			UserRole userRole = new UserRole();
+			userRole.setRoleId(2); //赋予新用户角色	
+			UserInfo newUser = userInfoService.queryUserInfoByName(userName);
+			if(newUser !=null) {
+			userRole.setUserId(newUser.getId());
+			}
+			roleService.saveUserRoleDetail(userRole);
 			return new AssembleResponseMsg().success("OK");
 		}else {
 			System.out.println("用户注册失败");

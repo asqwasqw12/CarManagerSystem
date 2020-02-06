@@ -9,4 +9,5 @@ public interface RoleService {
 	public List<String> selectByUserId(int userid);
     public List<Role> selectRoleByUserId(int userid);
     public List<UserRole> selectUserRoleByUserId(int userid);
+    public int saveUserRoleDetail(UserRole userRole);
 }

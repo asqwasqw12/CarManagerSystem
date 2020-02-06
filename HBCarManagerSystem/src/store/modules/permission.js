@@ -34,14 +34,14 @@ import { asyncRoutes,constantRoutes } from '@/router'
 }*/
 
 //如果是不需要权限的路由或者是角色可以通过的路由，返回true,否则返回false
-/*function hasPermission(route,roles){
+function hasPermission(route,roles){
   if(route.meta && route.meta.roles){
     return roles.some(role => route.meta.roles.indexOf(role) >= 0) //array.indexof()返回元素下标位置，没有返回-1，array.some()数组元素第一个符合条件直接返回true,所有不符合返回false
   }else {
-    return true
+    return true  //如果是非权限路由，返回true
   }
-}*/
-const hasPermission = (route,role) => {
+}
+/*const hasPermission = (route,role) => {
   if(route.meta && route.meta.roles ) {
     if (route.meta.roles.includes(role)) {    //如果路由包含该角色，返回true
       return true
@@ -51,7 +51,7 @@ const hasPermission = (route,role) => {
   } else{
     return true     //如果是非权限路由，返回true
   }
-}
+}*/
 //递归过滤路由表，返回符合用户角色权限的路由表
 function filterAsyncRouter(asyncRouterMap,roles){
   const accessedRouter = asyncRouterMap.filter(route => {
