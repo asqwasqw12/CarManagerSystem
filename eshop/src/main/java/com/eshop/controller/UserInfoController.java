@@ -201,5 +201,25 @@ public class UserInfoController {
             	return new AssembleResponseMsg().failure(200,"2","token错误或者过期");
             }
 	}
+	
+
+	@RequestMapping(value = "/getUserInfoByStatus",produces ="application/json;charset=utf-8")
+	public ResponseBody getUserInfoByStatus(String status) {
+		Map<String,Object> userMap = new HashMap<>();
+		System.out.println("status="+status);
+		if(null !=status) {
+			System.out.println("status="+status);
+			List<UserInfo> userInfoByStatus = userInfoService.queryUserInfoByStatus(Integer.valueOf(status));
+			System.out.println("List="+userInfoByStatus);
+			if(userInfoByStatus.size()>0) {
+				userMap.put("userInfo", userInfoByStatus);
+				return new AssembleResponseMsg().success(userMap);
+			}else {
+				return new AssembleResponseMsg().failure(200, "1000", "无新用户或查找失败");
+			}
+		}else {
+			return new AssembleResponseMsg().failure(200, "1001", "客户端请求信息失败");
+		}
+	}
 }
 

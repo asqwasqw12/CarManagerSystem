@@ -8,25 +8,47 @@
         <!--点-->
         <bm-marker :position="map.center" :draggable="map.dragging" animation="BMAP_ANIMATION_DROP">
           <!--提示信息-->
-          <bm-info-window :show="map.show">Hello</bm-info-window>
+          <bm-info-window :show="map.show">Hello，合加新能源汽车</bm-info-window>
         </bm-marker>
+          <!--行车路径-->
+          <bm-driving start="合加新能源汽车有限公司" end="咸宁区交通运输局" @searchcomplete="handleSearchComplete" :panel="false" :autoViewport="true"></bm-driving>
+          <bml-lushu
+            @stop="reset"
+            :path="path"
+            :icon="icon"
+            :play="play"
+            :speed="500"
+            :rotation="true">
+          </bml-lushu>
+
       </baidu-map>
     </div>
 </template>
 
 <script>
+  import {BmlLushu} from 'vue-baidu-map'
     export default {
+      components: {
+        BmlLushu
+      },
         name: "car_overview",
       data(){
           return {
             map:{
               center:{
-                lng:121.4472540000,
-                lat:31.3236200000
+                lng:114.339969,
+                lat:29.871057
               },
               zoom:15,
               show:true,
               dragging:true
+            },
+            play: true,
+            path: [],
+            icon: {
+              url: 'http://api.map.baidu.com/library/LuShu/1.2/examples/car.png',
+              size: {width: 52, height: 26},
+              opts: {anchor: {width: 27, height:13}}
             }
           }
       },
@@ -40,7 +62,13 @@
             map.addEventListener('click',function(e){
               console.log(e.point.lng,e.point.lat)
             })
-          }
+          },
+        reset () {
+          this.play = false
+        },
+        handleSearchComplete (res) {
+          this.path = res.getPlan(0).getRoute(0).getPath()
+        }
       }
     }
 </script>

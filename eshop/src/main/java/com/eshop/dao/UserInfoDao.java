@@ -1,5 +1,6 @@
 package com.eshop.dao;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Insert;
@@ -22,4 +23,7 @@ public interface UserInfoDao {
 			+ "values(#{userName},#{password},#{realName},#{sex},#{company},#{departmentname},#{post},#{email},#{mobilephone})")
 	@Options(useGeneratedKeys = true, keyProperty = "id")
 	public int  saveUserInfo(Map<String,Object> map);
+	
+	@Select("select * from user_info where status=#{status}")
+	public List<UserInfo> queryUserInfoByStatus(int status);
 }
