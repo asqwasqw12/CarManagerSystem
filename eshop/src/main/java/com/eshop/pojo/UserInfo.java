@@ -16,6 +16,8 @@ public class UserInfo implements Serializable {
 	private String regdate;			 //注册日期
 	private int status;				 //状态
     private String roles;			 //角色
+    private String departmentname;   //部门
+    private String post;			//职务
     private String mobilephone;		//手机号码
     public String getRoles() {
     	return roles;
@@ -81,16 +83,31 @@ public class UserInfo implements Serializable {
 		this.email = email;
 	}
 
-	public String getRegDate() {
+	public String getRegdate() {
 		return regdate;
 	}
 
-	public void setRegDate(String regDate) {
-		this.regdate = regDate;
+	public void setRegdate(String regdate) {
+		this.regdate = regdate;
 	}
 
 	public int getStatus() {
 		return status;
+	}
+	
+	public void setDepartmentname(String departmentname) {
+		this.departmentname = departmentname;
+	}
+	
+	public String getDepartmentname() {
+		return this.departmentname;
+	}
+	public void setPost(String post) {
+		this.post = post;
+	}
+	
+	public String getPost() {
+		return this.post;
 	}
 
 	public void setStatus(int status) {
@@ -110,7 +127,7 @@ public class UserInfo implements Serializable {
 	           ",userName='" + userName + '\'' +
 	           ",password='" + password + '\'' +
 	           ",realName='" + realName + '\'' +
-	           ",sex='" + sex +
+	           ",regdate='" + regdate +
 	           '}';
 	}
 }

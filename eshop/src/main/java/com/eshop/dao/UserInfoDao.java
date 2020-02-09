@@ -6,6 +6,9 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.Results;
+
 import com.eshop.pojo.UserInfo;
 
 
@@ -25,5 +28,7 @@ public interface UserInfoDao {
 	public int  saveUserInfo(Map<String,Object> map);
 	
 	@Select("select * from user_info where status=#{status}")
+	@Results({
+		@Result(column="gmt_create",property="regdate") })
 	public List<UserInfo> queryUserInfoByStatus(int status);
 }

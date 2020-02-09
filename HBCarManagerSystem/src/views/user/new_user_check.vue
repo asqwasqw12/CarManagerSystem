@@ -3,49 +3,64 @@
     <el-table
       v-loading="listLoading"
       :data="list"
+      height="530"
       border
       fit
       highlight-current-row
       style="width: 100%;"
       @sort-change="sortChange"
     >
-      <el-table-column type="index" width="60" label="序号">
+      <el-table-column type="index"  header-align="center" align="center" width="60" label="序号">
       </el-table-column>
       <el-table-column
         prop="userName"
         header-align="center"
         align="center"
-        width="80"
+        width="120"
         label="用户名">
       </el-table-column>
       <el-table-column
         prop="realName"
         header-align="center"
         align="center"
-        width="80"
+        width="120"
         label="姓名">
       </el-table-column>
-        <el-table-column
+      <el-table-column
           prop="sex"
           header-align="center"
           align="center"
-          width="80"
+          width="60"
           label="性别">
       </el-table-column>
-        <el-table-column
+      <el-table-column
           prop="departmentname"
           header-align="center"
           align="center"
-          width="80"
+          width="120"
           label="部门">
         </el-table-column>
-          <el-table-column
+      <el-table-column
+        prop="post"
+        header-align="center"
+        align="center"
+        width="120"
+        label="职务">
+      </el-table-column>
+      <el-table-column
             prop="mobilephone"
             header-align="center"
             align="center"
-            width="80"
+            width="120"
             label="电话">
-          </el-table-column>
+      </el-table-column>
+      <el-table-column
+        prop="regdate"
+        header-align="center"
+        align="center"
+        width="180"
+        label="注册时间">
+      </el-table-column>
       <el-table-column label="Actions" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
           <el-button type="primary" size="mini" @click="passApplication(row)">
