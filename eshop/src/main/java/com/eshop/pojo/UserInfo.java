@@ -19,6 +19,7 @@ public class UserInfo implements Serializable {
     private String departmentname;   //部门
     private String post;			//职务
     private String mobilephone;		//手机号码
+    private String company;			//公司
     public String getRoles() {
     	return roles;
     }
@@ -108,6 +109,13 @@ public class UserInfo implements Serializable {
 	
 	public String getPost() {
 		return this.post;
+	}
+	public void setCompany(String company) {
+		this.company = company;
+	}
+	
+	public String getCompany() {
+		return this.company;
 	}
 
 	public void setStatus(int status) {

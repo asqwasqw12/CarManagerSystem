@@ -72,7 +72,26 @@
         </template>
       </el-table-column>
     </el-table>
-
+    <el-dialog title="审核新用户" :visible.sync="dialogFormVisible" :close-on-click-modal="false">
+      <el-form ref="dataForm"  :model="temp" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;" size="mini">
+            <el-form-item label="用户名" prop="userName">
+              <el-input v-model="temp.userName" disabled="true" />
+            </el-form-item>
+            <el-form-item label="姓名" prop="realName" >
+              <el-input v-model="temp.realName" disabled="true"/>
+            </el-form-item>
+            <el-form-item label="部门" prop="departmentname">
+              <el-input v-model="temp.departmentname" />
+            </el-form-item>
+            <el-form-item label="职务" prop="post">
+              <el-input v-model="temp.post" />
+            </el-form-item>
+        <el-form-item label="公司" prop="company" >
+          <el-input v-model="temp.company" disabled="true"/>
+        </el-form-item>
+        
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
@@ -82,8 +101,17 @@
     name: 'new_user_check',
     data() {
       return {
-        list: [],
-        listLoading: true
+        list: [],           //数据源
+        listLoading: true,  //加载状态
+        dialogFormVisible: false,  //对话框显示属性
+        temp:{             //行数据临时存储
+          userName:'',
+          realName:'',
+          departmentname:'',
+          post:'',
+          mobilephone:'',
+          company:''
+        }
       }
     },
     created() {
@@ -121,6 +149,10 @@
       },
       sortChange(){
 
+      },
+      passApplication(row) {
+        this.temp = Object.assign({}, row) //复制所在行数据
+        this.dialogFormVisible=true     //显示对话框
       },
       formatJson(filterVal, jsonData) {
         return jsonData.map(v => filterVal.map(j => {
