@@ -10,4 +10,5 @@ public interface RoleService {
     public List<Role> selectRoleByUserId(int userid);
     public List<UserRole> selectUserRoleByUserId(int userid);
     public int saveUserRoleDetail(UserRole userRole);
+    public List<String> selectAllDescription();
 }

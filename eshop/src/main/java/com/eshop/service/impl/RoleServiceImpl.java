@@ -41,5 +41,11 @@ public class RoleServiceImpl implements RoleService {
 	public List<UserRole> selectUserRoleByUserId(int userid){
 		return roleDao.selectUserRoleByUserId(userid);
 	}
+	
+	//查询所有的角色描述
+	@Override
+	 public List<String> selectAllDescription(){
+		return roleDao.selectAllDescription();
+	}
 
 }

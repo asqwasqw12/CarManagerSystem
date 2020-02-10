@@ -74,23 +74,36 @@
     </el-table>
     <el-dialog title="审核新用户" :visible.sync="dialogFormVisible" :close-on-click-modal="false">
       <el-form ref="dataForm"  :model="temp" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;" size="mini">
-            <el-form-item label="用户名" prop="userName">
-              <el-input v-model="temp.userName" disabled="true" />
-            </el-form-item>
-            <el-form-item label="姓名" prop="realName" >
-              <el-input v-model="temp.realName" disabled="true"/>
-            </el-form-item>
-            <el-form-item label="部门" prop="departmentname">
-              <el-input v-model="temp.departmentname" />
-            </el-form-item>
-            <el-form-item label="职务" prop="post">
-              <el-input v-model="temp.post" />
-            </el-form-item>
-        <el-form-item label="公司" prop="company" >
-          <el-input v-model="temp.company" disabled="true"/>
+        <el-form-item label="用户名" prop="userName">
+              <el-input v-model="temp.userName" :disabled="true" />
         </el-form-item>
-        
+        <el-form-item label="姓名" prop="realName" >
+              <el-input v-model="temp.realName" :disabled="true"/>
+        </el-form-item>
+        <el-form-item label="部门" prop="departmentname">
+              <el-input v-model="temp.departmentname" />
+        </el-form-item>
+        <el-form-item label="职务" prop="post">
+              <el-input v-model="temp.post" />
+        </el-form-item>
+        <el-form-item label="公司" prop="company" >
+          <el-input v-model="temp.company" :disabled="true"/>
+        </el-form-item>
+        <el-form-item label="用户角色">
+          <el-checkbox-group v-model="checkedDescriptions" :min="1">
+            <el-checkbox v-for="des in descriptions" :label="des" :key="des">{{des}}</el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
       </el-form>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">
+          取消
+        </el-button>
+        <el-button type="primary" @click="updateData()">
+          确定
+        </el-button>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -101,17 +114,22 @@
     name: 'new_user_check',
     data() {
       return {
-        list: [],           //数据源
+        list: [],           //新用户数据源
+        descriptions:[],    //角色数据源
+        checkedDescriptions:['普通用户'],   //审核后的角色
         listLoading: true,  //加载状态
         dialogFormVisible: false,  //对话框显示属性
         temp:{             //行数据临时存储
+          id:'',
           userName:'',
           realName:'',
           departmentname:'',
           post:'',
           mobilephone:'',
-          company:''
-        }
+          company:'',
+          status:''
+          //checkedDescriptions:[]
+        },
       }
     },
     created() {
@@ -132,7 +150,6 @@
           this.listLoading = false
           const data = response.data
           if (data.info.code === '0') {
-            console.log("userInfo="+data.data.userInfo)
             this.list = data.data.userInfo
           } else {
             this.$message.error(data.info.msg)
@@ -147,12 +164,65 @@
           })
         })
       },
+      getDescriptions(){
+        request({
+          url: '/api/role/getDescriptions',
+          method: 'get',
+          contentType: "application/json; charset=utf-8",
+          dataType: "json",
+        }).then(response => {
+          const data = response.data
+          console.log('data='+data.data)
+          this.descriptions = data.data.descriptions
+          console.log('descriptions='+this.descriptions)
+        }).catch(error =>{
+          this.$notify({
+            title:'获取数据提示',
+            message:error.message,
+            position:'bottom-right',
+            type:'error'
+          })
+        })
+      },
+      updateData(){
+        let param = new URLSearchParams()
+        this.temp.status = '1'    //将用户状态由新用户改为正常
+        param.append('userInfo',this.temp)
+        param.append('descriptions',this.checkedDescriptions)
+        console.log('userInfo = ' + param.get('userInfo'))
+        console.log('descriptions = ' + param.get('descriptions'))
+        this.dialogFormVisible = false
+        this.$notify({
+          title: 'Success',
+          message: 'Update Successfully',
+          type: 'success',
+          duration: 2000
+        })
+      },
       sortChange(){
 
       },
       passApplication(row) {
+        this.getDescriptions()        //获取所有角色
         this.temp = Object.assign({}, row) //复制所在行数据
         this.dialogFormVisible=true     //显示对话框
+
+      },
+      rejectApplication(row){
+        let str='确定拒绝用户 '+ row.userName + ' 的申请么？'
+        this.$confirm(str, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          let param = new URLSearchParams()
+          param.append('id',row.id)
+          param.append('status','2')    //将该用户设置成禁用状态
+          this.$message({
+            type: 'success',
+            message: '已禁用该用户!'
+          });
+        })
       },
       formatJson(filterVal, jsonData) {
         return jsonData.map(v => filterVal.map(j => {

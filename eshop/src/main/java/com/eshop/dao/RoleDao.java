@@ -18,6 +18,10 @@ public interface RoleDao {
 	@Select("select rolename from sys_role where roleid in (select roleid from user_role where userid = #{userid} )")
     public List<String> selectByUserId(int userid);
 	
+	//查询所有角色描述
+		@Select("select description from sys_role" )
+	    public List<String> selectAllDescription();
+	
 	//保存用户角色关系
 	@Insert("insert into user_role(userid,roleid) values(#{userid},#{roleid})")
 	@Options(useGeneratedKeys = true,keyProperty = "userroleid")
