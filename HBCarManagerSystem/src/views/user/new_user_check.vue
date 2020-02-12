@@ -90,8 +90,11 @@
           <el-input v-model="temp.company" :disabled="true"/>
         </el-form-item>
         <el-form-item label="用户角色">
-          <el-checkbox-group v-model="checkedDescriptions" :min="1">
+          <!--<el-checkbox-group v-model="checkedDescriptions" :min="1">
             <el-checkbox v-for="des in descriptions" :label="des" :key="des">{{des}}</el-checkbox>
+          </el-checkbox-group>-->
+          <el-checkbox-group v-model="checkedRoleIds" :min="1">
+            <el-checkbox v-for="role in rolesList" :label="role.roleid" :key="role.roleid">{{role.description}}</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
       </el-form>
@@ -116,7 +119,8 @@
       return {
         list: [],           //新用户数据源
         descriptions:[],    //角色数据源
-        checkedDescriptions:['普通用户'],   //审核后的角色
+        rolesList:[],       //角色数据源
+        checkedRoleIds:[2,4],   //审核后的角色，默认选择普通用户
         listLoading: true,  //加载状态
         dialogFormVisible: false,  //对话框显示属性
         temp:{             //行数据临时存储
@@ -143,9 +147,10 @@
         request({
           url: '/api/getUserInfoByStatus',
           method: 'post',
-          contentType: "application/json; charset=utf-8",
-          dataType: "json",
-          data:param                                   //携带数据发送请求到后台
+          headers:{
+            'Content-Type':'application/x-www-form-urlencoded'
+          },
+          data:param                              //携带数据发送请求到后台
         }).then(response => {
           this.listLoading = false
           const data = response.data
@@ -168,13 +173,13 @@
         request({
           url: '/api/role/getDescriptions',
           method: 'get',
-          contentType: "application/json; charset=utf-8",
-          dataType: "json",
         }).then(response => {
           const data = response.data
           console.log('data='+data.data)
-          this.descriptions = data.data.descriptions
-          console.log('descriptions='+this.descriptions)
+          //this.descriptions = data.data.descriptions
+          //console.log('descriptions='+this.descriptions)
+          this.rolesList = data.data.rolesList
+          console.log('rolesList='+this.rolesList)
         }).catch(error =>{
           this.$notify({
             title:'获取数据提示',
@@ -187,17 +192,51 @@
       updateData(){
         let param = new URLSearchParams()
         this.temp.status = '1'    //将用户状态由新用户改为正常
-        param.append('userInfo',this.temp)
-        param.append('descriptions',this.checkedDescriptions)
-        console.log('userInfo = ' + param.get('userInfo'))
-        console.log('descriptions = ' + param.get('descriptions'))
+       // param.append('userInfo',this.temp)
+       // param.append('roleIds',this.checkedRoleIds)
+        //let userInfo = param.get('userInfo')
+        //console.log(userInfo.userName)
+        //console.log('descriptions = ' + param.get('roleIds'))
+
         this.dialogFormVisible = false
-        this.$notify({
-          title: 'Success',
-          message: 'Update Successfully',
-          type: 'success',
-          duration: 2000
+        //let roleIds =JSON.stringify(this.checkedRoleIds)
+        let roleIds = "djkldfsjlkdsjlk"
+        /*let data={ userInfo:this.temp,
+        roleIds:roleIds }*/
+        //let userInfo=[]
+       // userInfo.push(this.temp)
+        let  effectRow = new Object();
+        //effectRow["userInfo"]=JSON.stringify(userInfo)
+        let userInfo="kljlkdssjlk"
+        effectRow["userInfo"]=userInfo
+        effectRow["roleIds"]=roleIds
+       // let data1={userInfo:'djlfjf',roleIds:'dkjlfkjffff'}
+        let data1={
+          roleIds:"12346",
+          userInfo:"jdklfjlkfj"
+        };
+        param.append('userInfo',this.temp)
+        param.append('roleIds','this.checkedRoleIds')
+        request({
+          url: '/api/role/updateUserRole',
+          method: 'post',
+          //contentType: 'application/json; charset=utf-8',
+          //dataType: 'json',
+          headers:{
+            'Content-Type':'application/x-www-form-urlencoded'
+          },
+          data:data1
+        }).then( response =>{
+
+          this.$notify({
+            title: 'Success',
+            message: 'Update Successfully',
+            type: 'success',
+            duration: 2000
+          })
+
         })
+
       },
       sortChange(){
 

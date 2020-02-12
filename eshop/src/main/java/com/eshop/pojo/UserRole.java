@@ -6,22 +6,22 @@ public class UserRole {
 	private int userid;				//用户id
 	private long roleid;			//角色id
 	
-	public void setUserRoleId(long userRoleId) {
-		this.userroleid = userRoleId;
+	public void setUserRoleId(long userRoleid) {
+		this.userroleid = userRoleid;
 	}
-	public long getUserRoleIdd() {
+	public long getUserRoleid() {
 		return userroleid;
 	}
-	public void setRoleId(long roleId) {
-		this.roleid = roleId;
+	public void setRoleId(long roleid) {
+		this.roleid = roleid;
 	}
-	public long getRoleId() {
+	public long getRoleid() {
 		return roleid;
 	}
-	public void setUserId(int userId) {
-		this.userid = userId;
+	public void setUserId(int userid) {
+		this.userid = userid;
 	}
-	public int getUserId() {
+	public int getUserid() {
 		return userid;
 	}
 }

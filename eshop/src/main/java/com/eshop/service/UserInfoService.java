@@ -10,4 +10,5 @@ public interface UserInfoService {
  UserInfo queryUserInfoByName(String userName);
  int saveUserInfo(Map<String,Object> map);
  List<UserInfo> queryUserInfoByStatus(int status);
+ int updateUserInfo(UserInfo ui);
 }

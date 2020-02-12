@@ -35,8 +35,9 @@ const user = {
         request({
           url: '/api/login',
           method: 'post',
-          contentType: "application/json; charset=utf-8",
-          dataType: "json",
+          headers:{
+            'Content-Type':'application/json'
+          },
           data:userInfo                                    //携带数据发送请求到后台
         }).then(response => {                         //后台响应返回数据
           const data = response.data
@@ -69,8 +70,9 @@ const user = {
         request({
           url:'/api/getUserInfo',
           method:'post',
-          contentType: "application/json; charset=utf-8",
-          dataType: "json",
+          headers:{
+            'Content-Type':'application/x-www-form-urlencoded'
+          },
           data: param
         }).then(response => {
           const data = response.data
@@ -95,8 +97,9 @@ const user = {
         request({
           url:'/api/logout',
           method:'post',
-          contentType: "application/json; charset=utf-8",
-          dataType: "json",
+          headers:{
+            'Content-Type':'application/x-www-form-urlencoded'
+          },
           data:param
         }).then(response => {
           commit('setToken','')

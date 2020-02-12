@@ -93,10 +93,6 @@ public class UserInfoController {
 			System.out.println("token is" + token);
 			userMap.put("userName",user.getUserName());
 			System.out.println("userid="+userId);
-			//System.out.println("准备开始选择UserRole...");
-			//List<UserRole> userRoles = roleService.selectUserRoleByUserId(userId);
-			//System.out.println("准备开始选择roles...");
-			//List<Role> roles = roleService.selectRoleByUserId(userId);
 			System.out.println("准备开始选择rolename...");
 			List<String> roles = roleService.selectByUserId(userId);
 			System.out.println(roles);
@@ -206,11 +202,11 @@ public class UserInfoController {
 	@RequestMapping(value = "/getUserInfoByStatus",produces ="application/json;charset=utf-8")
 	public ResponseBody getUserInfoByStatus(String status) {
 		Map<String,Object> userMap = new HashMap<>();
-		System.out.println("status="+status);
+		//System.out.println("status="+status);
 		if(null !=status) {
 			System.out.println("status="+status);
 			List<UserInfo> userInfoByStatus = userInfoService.queryUserInfoByStatus(Integer.valueOf(status));
-			System.out.println("List="+userInfoByStatus);
+			//System.out.println("List="+userInfoByStatus);
 			if(userInfoByStatus.size()>0) {
 				userMap.put("userInfo", userInfoByStatus);
 				return new AssembleResponseMsg().success(userMap);
@@ -221,5 +217,6 @@ public class UserInfoController {
 			return new AssembleResponseMsg().failure(200, "1001", "客户端请求信息失败");
 		}
 	}
+	
 }
 

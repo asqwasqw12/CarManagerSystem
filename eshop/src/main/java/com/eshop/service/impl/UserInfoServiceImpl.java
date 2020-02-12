@@ -38,5 +38,9 @@ public class UserInfoServiceImpl implements UserInfoService {
 	public List<UserInfo> queryUserInfoByStatus(int status){
 		return userInfoDao.queryUserInfoByStatus(status);
 	}
-
+   
+	@Override
+	public int updateUserInfo(UserInfo ui) {
+		return userInfoDao.updateUserInfo(ui);
+	}
 }

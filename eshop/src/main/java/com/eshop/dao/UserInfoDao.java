@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.UpdateProvider;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 
@@ -31,4 +32,8 @@ public interface UserInfoDao {
 	@Results({
 		@Result(column="gmt_create",property="regdate") })
 	public List<UserInfo> queryUserInfoByStatus(int status);
+	
+	//更新用户信息
+	@UpdateProvider(type = UserInfoDynaSqlProvider.class,method = "updateUserInfo")
+	int updateUserInfo(UserInfo ui);
 }

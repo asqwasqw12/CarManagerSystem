@@ -323,8 +323,9 @@
                 request({
                   url: '/api/register',
                   method: 'post',
-                  contentType: "application/json; charset=utf-8",
-                  dataType: "json",
+                  headers:{
+                    'Content-Type':'application/json'
+                  },
                   data:userInfo                                    //携带数据发送请求到后台
                 }).then(response =>{
                   this.loading = false

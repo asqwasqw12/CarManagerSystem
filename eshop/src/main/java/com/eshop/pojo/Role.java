@@ -5,14 +5,14 @@ public class Role {
 	private String rolename; //角色姓名
 	private String description; //角色描述
 
-	public void setRoleId(long roleId) {
-		this.roleid = roleId;
+	public void setRoleId(long roleid) {
+		this.roleid = roleid;
 	}
-	public long getRoleId() {
+	public long getRoleid() {
 		return roleid;
 	}
-	public void setRoleName(String roleName) {
-		this.rolename = roleName;
+	public void setRoleName(String rolename) {
+		this.rolename = rolename;
 	}
 	public String getRoleName() {
 		return rolename;

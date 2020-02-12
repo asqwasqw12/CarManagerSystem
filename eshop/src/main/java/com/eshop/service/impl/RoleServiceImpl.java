@@ -32,20 +32,30 @@ public class RoleServiceImpl implements RoleService {
 		return roleDao.saveUserRoleDetail(userRole);
 	}
 	
-	@Override
-	public List<Role> selectRoleByUserId(int userid){
-		return roleDao.selectRoleByUserId(userid);
-	}
-	
-	@Override
-	public List<UserRole> selectUserRoleByUserId(int userid){
-		return roleDao.selectUserRoleByUserId(userid);
-	}
-	
 	//查询所有的角色描述
 	@Override
 	 public List<String> selectAllDescription(){
 		return roleDao.selectAllDescription();
+	}
+	
+	//根据角色id出现角色信息
+	@Override
+	public List<Role> selectRoleByRoleId(long roleid){
+		return roleDao.selectRoleByRoleId(roleid);
+	}
+	
+	//查询所有角色信息
+	public List<Role> selectAllRoles(){
+		return roleDao.selectAllRoles();
+	}
+	
+	//删除角色信息
+	public int deleteUserRole(UserRole ur) {
+		return roleDao.deleteUserRole(ur);
+	}
+	
+	public int updateUserRole(UserRole ur) {
+		return roleDao.updateUserRole(ur);
 	}
 
 }
