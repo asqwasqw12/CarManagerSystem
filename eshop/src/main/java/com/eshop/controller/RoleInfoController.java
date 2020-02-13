@@ -16,6 +16,7 @@ import com.eshop.pojo.ResponseBody;
 import com.eshop.pojo.Role;
 import com.eshop.pojo.UserInfo;
 import com.eshop.service.RoleService;
+import com.eshop.service.UserInfoService;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -27,7 +28,8 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 public class RoleInfoController {
 	@Autowired
     private RoleService roleService;
-	
+	@Autowired
+	private UserInfoService userInfoService;
 	
 	//获取所有角色描述
 	@RequestMapping(value ="/getDescriptions",produces = "application/json;charset=utf-8")
@@ -71,8 +73,9 @@ public class RoleInfoController {
 			mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 			System.out.println(userInfo);
 			System.out.println(roleIds);
-			//UserInfo ui = mapper.readValue(userInfo, UserInfo[].class)[0];
-			//System.out.println(ui);
+			UserInfo ui = mapper.readValue(userInfo, UserInfo.class);
+			userInfoService.updateUserInfo(ui);
+			System.out.println(ui);
 			return new AssembleResponseMsg().success("OK");
 		}catch (Exception e) {
 			System.out.println(e);

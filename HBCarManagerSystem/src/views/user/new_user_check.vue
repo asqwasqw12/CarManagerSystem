@@ -179,6 +179,10 @@
           //this.descriptions = data.data.descriptions
           //console.log('descriptions='+this.descriptions)
           this.rolesList = data.data.rolesList
+          let ids = this.rolesList.map( item => item.roleid).toString()
+          console.log('ids='+ids)
+          let idArray = (ids+'').split(',')
+          console.log('idArray='+ idArray)
           console.log('rolesList='+this.rolesList)
         }).catch(error =>{
           this.$notify({
@@ -190,42 +194,20 @@
         })
       },
       updateData(){
+        this.dialogFormVisible = false
         let param = new URLSearchParams()
         this.temp.status = '1'    //将用户状态由新用户改为正常
-       // param.append('userInfo',this.temp)
-       // param.append('roleIds',this.checkedRoleIds)
-        //let userInfo = param.get('userInfo')
-        //console.log(userInfo.userName)
-        //console.log('descriptions = ' + param.get('roleIds'))
-
-        this.dialogFormVisible = false
-        //let roleIds =JSON.stringify(this.checkedRoleIds)
-        let roleIds = "djkldfsjlkdsjlk"
-        /*let data={ userInfo:this.temp,
-        roleIds:roleIds }*/
-        //let userInfo=[]
-       // userInfo.push(this.temp)
-        let  effectRow = new Object();
-        //effectRow["userInfo"]=JSON.stringify(userInfo)
-        let userInfo="kljlkdssjlk"
-        effectRow["userInfo"]=userInfo
-        effectRow["roleIds"]=roleIds
-       // let data1={userInfo:'djlfjf',roleIds:'dkjlfkjffff'}
-        let data1={
-          roleIds:"12346",
-          userInfo:"jdklfjlkfj"
-        };
-        param.append('userInfo',this.temp)
-        param.append('roleIds','this.checkedRoleIds')
+        let roleIds = this.checkedRoleIds.join(",")  //将数组转换为字符串
+        let userInfo=JSON.stringify(this.temp)
+        param.append('userInfo',userInfo)
+        param.append('roleIds',roleIds)
         request({
           url: '/api/role/updateUserRole',
           method: 'post',
-          //contentType: 'application/json; charset=utf-8',
-          //dataType: 'json',
           headers:{
             'Content-Type':'application/x-www-form-urlencoded'
           },
-          data:data1
+          data:param
         }).then( response =>{
 
           this.$notify({
@@ -234,7 +216,7 @@
             type: 'success',
             duration: 2000
           })
-
+          this.getUserInfoByStatus()
         })
 
       },
