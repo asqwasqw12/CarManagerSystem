@@ -202,7 +202,7 @@
         param.append('userInfo',userInfo)
         param.append('roleIds',roleIds)
         request({
-          url: '/api/role/updateUserRole',
+          url: '/api/userRole/updateUserRole',
           method: 'post',
           headers:{
             'Content-Type':'application/x-www-form-urlencoded'

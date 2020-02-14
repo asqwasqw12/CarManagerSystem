@@ -28,6 +28,7 @@ import com.eshop.pojo.UserInfo;
 import com.eshop.pojo.UserRole;
 import com.eshop.service.RoleService;
 import com.eshop.service.UserInfoService;
+import com.eshop.service.UserRoleService;
 import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.Producer;
 
@@ -40,6 +41,8 @@ public class UserInfoController {
 	
 	@Autowired
 	private UserInfoService userInfoService;
+	@Autowired
+    private UserRoleService userRoleService;
 	@Autowired
     private RoleService roleService;
 	
@@ -174,7 +177,7 @@ public class UserInfoController {
 			if(newUser !=null) {
 			userRole.setUserId(newUser.getId());
 			}
-			roleService.saveUserRoleDetail(userRole);
+			userRoleService.saveUserRoleDetail(userRole);
 			return new AssembleResponseMsg().success("OK");
 		}else {
 			System.out.println("用户注册失败");
