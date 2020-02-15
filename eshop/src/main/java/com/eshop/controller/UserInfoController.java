@@ -221,5 +221,12 @@ public class UserInfoController {
 		}
 	}
 	
+	@RequestMapping(value="/rejectUserAppliction",produces ="application/json;charset=utf-8")
+	public ResponseBody rejectUserApplication(@RequestBody UserInfo userInfo) {
+		 userInfoService.updateUserInfo(userInfo);
+		 return new AssembleResponseMsg().success("Ok");
+	}
+	
+	
 }
 

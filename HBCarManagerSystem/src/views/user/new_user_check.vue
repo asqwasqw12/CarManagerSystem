@@ -61,12 +61,12 @@
         width="180"
         label="注册时间">
       </el-table-column>
-      <el-table-column label="Actions" align="center" width="230" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
           <el-button type="primary" size="mini" @click="passApplication(row)">
             通过
           </el-button>
-          <el-button v-if="row.status!='published'" size="mini" type="success" @click="rejectApplication(row)">
+          <el-button  size="mini" type="success" @click="rejectApplication(row)">
             拒绝
           </el-button>
         </template>
@@ -90,9 +90,6 @@
           <el-input v-model="temp.company" :disabled="true"/>
         </el-form-item>
         <el-form-item label="用户角色">
-          <!--<el-checkbox-group v-model="checkedDescriptions" :min="1">
-            <el-checkbox v-for="des in descriptions" :label="des" :key="des">{{des}}</el-checkbox>
-          </el-checkbox-group>-->
           <el-checkbox-group v-model="checkedRoleIds" :min="1">
             <el-checkbox v-for="role in rolesList" :label="role.roleid" :key="role.roleid">{{role.description}}</el-checkbox>
           </el-checkbox-group>
@@ -118,7 +115,6 @@
     data() {
       return {
         list: [],           //新用户数据源
-        descriptions:[],    //角色数据源
         rolesList:[],       //角色数据源
         checkedRoleIds:[2,4],   //审核后的角色，默认选择普通用户
         listLoading: true,  //加载状态
@@ -132,8 +128,7 @@
           mobilephone:'',
           company:'',
           status:''
-          //checkedDescriptions:[]
-        },
+        }
       }
     },
     created() {
@@ -176,8 +171,6 @@
         }).then(response => {
           const data = response.data
           console.log('data='+data.data)
-          //this.descriptions = data.data.descriptions
-          //console.log('descriptions='+this.descriptions)
           this.rolesList = data.data.rolesList
           let ids = this.rolesList.map( item => item.roleid).toString()
           console.log('ids='+ids)
@@ -229,30 +222,30 @@
         this.dialogFormVisible=true     //显示对话框
 
       },
-      rejectApplication(row){
-        let str='确定拒绝用户 '+ row.userName + ' 的申请么？'
+      rejectApplication(row) {
+        let str = '确定拒绝用户 ' + row.userName + ' 的申请么？'
         this.$confirm(str, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          let param = new URLSearchParams()
-          param.append('id',row.id)
-          param.append('status','2')    //将该用户设置成禁用状态
-          this.$message({
-            type: 'success',
-            message: '已禁用该用户!'
-          });
+          row.status = 2  //将该用户设置成禁用状态
+          let userInfo = row
+          request({
+            url: '/api/rejectUserAppliction',
+            method: 'post',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            data: userInfo
+          }).then(response => {
+            this.$message({
+              type: 'success',
+              message: '已禁用该用户!'
+            });
+            this.getUserInfoByStatus()
+          })
         })
-      },
-      formatJson(filterVal, jsonData) {
-        return jsonData.map(v => filterVal.map(j => {
-          if (j === 'timestamp') {
-            return parseTime(v[j])
-          } else {
-            return v[j]
-          }
-        }))
       }
     }
   }
