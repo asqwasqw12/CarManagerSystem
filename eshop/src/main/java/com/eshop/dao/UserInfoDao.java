@@ -1,15 +1,16 @@
 package com.eshop.dao;
-
 import java.util.List;
 import java.util.Map;
-
+import com.eshop.dao.provider.UserInfoDynaSqlProvider;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.annotations.UpdateProvider;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 
+import com.eshop.dao.provider.UserInfoDynaSqlProvider;
 import com.eshop.pojo.UserInfo;
 
 
@@ -35,5 +36,15 @@ public interface UserInfoDao {
 	
 	//更新用户信息
 	@UpdateProvider(type = UserInfoDynaSqlProvider.class,method = "updateUserInfo")
-	int updateUserInfo(UserInfo ui);
+	public int updateUserInfo(UserInfo ui);
+	
+	//分页条件查询用户列表
+	@SelectProvider(type = UserInfoDynaSqlProvider.class,method = "queryByPage")
+	@Results({
+		@Result(column="gmt_create",property="regdate") })
+	 public List<UserInfo> queryByPage(Map<String, Object> params);
+	
+	//条件查询用户总数
+	@SelectProvider(type = UserInfoDynaSqlProvider.class,method = "count")
+	public Integer count(Map<String, Object> params);
 }

@@ -69,7 +69,7 @@
           prop="company"
           header-align="center"
           align="center"
-          width="120"
+          width="180"
           label="公司">
         </el-table-column>
       <el-table-column
@@ -81,38 +81,38 @@
         label="注册时间"
         :class-name="getSortClass('regdate')">
       </el-table-column>
-      <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="120" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
           <el-button type="primary" size="mini" @click="edit(row)">
             编辑
           </el-button>
-          <el-button  size="mini" type="success" @click="forbidden(row)">
-            禁用
-          </el-button>
         </template>
       </el-table-column>
       </el-table>
-
+    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
 
   </div>
 </template>
 
 <script>
   import request from '@/utils/request'
+  import Pagination from '@/components/Pagination' // 二次包装 el-pagination
     export default {
         name: "user_right_config",
+      components:{ Pagination },
        data(){
           return{
             listQuery: {
               page: 1,            //默认第一页
-              limit: 20,          //默认一页20行
+              limit: 10,          //默认一页20行
               userName: undefined,  //根据用户名查询
               realName: undefined,  //根据姓名查询
               departmentname:undefined, //根据部门查询
               company:undefined,    //根据公司查询
-              regdate:undefined,    //注册时间
-              sort:'+regdate'       //默认注册时间排序
+              sort:'+regdate',       //默认注册时间排序
+              status:1                //只获取正常用户
             },
+            total: 0,           //查询总行数
             list: [],           //新用户数据源
             rolesList:[],       //角色数据源
             modifiedRoleIds:[],   //修改后的角色
@@ -150,20 +150,19 @@
         },
         getList(){
           this.listLoading = true
-          let param = new URLSearchParams()
-          param.append('status','1')
           request({
-            url: '/api/getUserInfoByStatus',
+            url: '/api/getUserInfoList',
             method: 'post',
             headers:{
-              'Content-Type':'application/x-www-form-urlencoded'
+              'Content-Type':'application/json'
             },
-            data:param                              //携带数据发送请求到后台
+            data:this.listQuery                             //携带数据发送请求到后台
           }).then(response => {
             this.listLoading = false
             const data = response.data
             if (data.info.code === '0') {
               this.list = data.data.userInfo
+              this.total = data.data.total
             } else {
               this.$message.error(data.info.msg)
             }
@@ -208,5 +207,9 @@
   margin-left: 20px;
   width:800px;
   text-align:left;
+ /* position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 9;*/
 }
 </style>

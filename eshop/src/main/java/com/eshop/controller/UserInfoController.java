@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.eshop.common.AssembleResponseMsg;
 import com.eshop.common.IOUtils;
 import com.eshop.common.JwtUtil;
+import com.eshop.pojo.Pager;
 import com.eshop.pojo.ResponseBody;
 import com.eshop.pojo.Role;
 import com.eshop.pojo.UserInfo;
@@ -205,20 +206,60 @@ public class UserInfoController {
 	@RequestMapping(value = "/getUserInfoByStatus",produces ="application/json;charset=utf-8")
 	public ResponseBody getUserInfoByStatus(String status) {
 		Map<String,Object> userMap = new HashMap<>();
-		//System.out.println("status="+status);
-		if(null !=status) {
 			System.out.println("status="+status);
 			List<UserInfo> userInfoByStatus = userInfoService.queryUserInfoByStatus(Integer.valueOf(status));
 			//System.out.println("List="+userInfoByStatus);
-			if(userInfoByStatus.size()>0) {
+			try{
 				userMap.put("userInfo", userInfoByStatus);
 				return new AssembleResponseMsg().success(userMap);
-			}else {
-				return new AssembleResponseMsg().failure(200, "1000", "无新用户或查找失败");
+			}catch(Exception e) {
+				System.out.println(e);
+				return new AssembleResponseMsg().failure(200, "1000", "查找失败");
 			}
-		}else {
-			return new AssembleResponseMsg().failure(200, "1001", "客户端请求信息失败");
+	
+	}
+	
+	@RequestMapping(value = "/getUserInfoList",produces ="application/json;charset=utf-8")
+	public ResponseBody getUserInfoList(@RequestBody Map<String,Object> map ) {
+		System.out.println("map="+map);
+		int status = (int)map.get("status");
+		int page =(int)map.get("page");
+		int limit =(int)map.get("limit");
+		String sort = (String)map.get("sort");
+		Pager pager = new Pager();
+		pager.setCurPage(page);
+		pager.setPerPageRows(limit);
+		UserInfo userInfo =new UserInfo();
+		if(map.containsKey("userName")) {
+			userInfo.setUserName((String)map.get("userName"));
 		}
+		if(map.containsKey("realName")) {
+			userInfo.setRealName((String)map.get("realName"));
+		}
+		if(map.containsKey("departmentname")) {
+			userInfo.setDepartmentname((String)map.get("departmentname"));
+		}
+		if(map.containsKey("company")) {
+			userInfo.setCompany((String)map.get("company"));
+		}
+		userInfo.setStatus(status);
+		Map<String,Object> params = new HashMap<>();
+		System.out.println("userInfo="+userInfo);
+		params.put("userInfo", userInfo);
+		try {
+			int totalCount = userInfoService.count(params);
+			System.out.println("totalCount="+totalCount);
+		    List<UserInfo> userInfoList = userInfoService.queryUserInfo(userInfo,pager);	
+		    System.out.println("userInfoList="+userInfoList);
+		Map<String,Object> results = new HashMap<>();
+		results.put("userInfo", userInfoList);
+		results.put("total", totalCount);
+		return new AssembleResponseMsg().success(results);
+		}catch (Exception e) {
+			System.out.println(e);
+			return new AssembleResponseMsg().failure(200,"1000", "查找失败");
+		}
+		
 	}
 	
 	@RequestMapping(value="/rejectUserAppliction",produces ="application/json;charset=utf-8")
@@ -227,6 +268,6 @@ public class UserInfoController {
 		 return new AssembleResponseMsg().success("Ok");
 	}
 	
-	
+
 }
 

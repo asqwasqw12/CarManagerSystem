@@ -1,8 +1,10 @@
 package com.eshop.service.impl;
 import com.eshop.dao.UserInfoDao;
+import com.eshop.pojo.Pager;
 import com.eshop.pojo.UserInfo;
 import com.eshop.service.UserInfoService;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,5 +44,24 @@ public class UserInfoServiceImpl implements UserInfoService {
 	@Override
 	public int updateUserInfo(UserInfo ui) {
 		return userInfoDao.updateUserInfo(ui);
+	}
+	
+	//分页条件查询用户
+	@Override
+	 public List<UserInfo> queryUserInfo(UserInfo ui,Pager pager){
+					
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("userInfo", ui);
+		int recordCount = userInfoDao.count(params);
+		pager.setRowCount(recordCount);
+		if (recordCount > 0) {
+			params.put("pager", pager);
+		}
+		return userInfoDao.queryByPage(params);
+	}
+	
+	 //条件查询用户总数
+	public Integer count(Map<String, Object> params) {
+		return userInfoDao.count(params);
 	}
 }
