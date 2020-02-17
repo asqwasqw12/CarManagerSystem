@@ -28,19 +28,14 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 public class RoleInfoController {
 	@Autowired
     private RoleService roleService;
-	@Autowired
-	private UserInfoService userInfoService;
 	
 	//获取所有角色描述
 	@RequestMapping(value ="/getDescriptions",produces = "application/json;charset=utf-8")
 	public ResponseBody getRoleInfo(){
 		Map<String,Object> roleMap = new HashMap<>();
-		//List<String> listOfDescription = roleService.selectAllDescription();
-		//System.out.println(listOfDescription);
-		//roleMap.put("descriptions",listOfDescription);
-		//roleMap.put("rolesList", listOfDescription);
 		List<Role> listAllRoles = roleService.selectAllRoles();
 		roleMap.put("rolesList", listAllRoles);
 		return new AssembleResponseMsg().success(roleMap);
 	}	
+	
 }

@@ -226,6 +226,11 @@ public class UserInfoController {
 		int page =(int)map.get("page");
 		int limit =(int)map.get("limit");
 		String sort = (String)map.get("sort");
+		String order;
+		if(sort.charAt(0)=='-') {
+			 order="DESC";
+		}else {
+			order="ASC";}
 		Pager pager = new Pager();
 		pager.setCurPage(page);
 		pager.setPerPageRows(limit);
@@ -249,7 +254,7 @@ public class UserInfoController {
 		try {
 			int totalCount = userInfoService.count(params);
 			System.out.println("totalCount="+totalCount);
-		    List<UserInfo> userInfoList = userInfoService.queryUserInfo(userInfo,pager);	
+		    List<UserInfo> userInfoList = userInfoService.queryUserInfo(userInfo,pager,order);	
 		    System.out.println("userInfoList="+userInfoList);
 		Map<String,Object> results = new HashMap<>();
 		results.put("userInfo", userInfoList);

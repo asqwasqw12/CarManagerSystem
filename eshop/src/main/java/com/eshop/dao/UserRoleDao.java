@@ -15,6 +15,10 @@ public interface UserRoleDao {
 		@Select("select * from user_role where userid=#{userid}")
 		public List<UserRole> selectAllbyUserId(int userid);
 		
+		//根据用户id查询角色id
+		@Select("select roleid from user_role where userid=#{userid}")
+		public List<Long> selectRoleIdByUserId(int userid);
+		
 		//更新用户角色信息
 		@Update("update user_role set roleid=#{roleid} where roleid=#{roleid} and userid=#{userid}")
 		public int updateUserRole(UserRole ur);

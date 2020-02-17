@@ -14,7 +14,7 @@ public interface UserInfoService {
  public int updateUserInfo(UserInfo ui);
  
  //分页条件查询用户
- public List<UserInfo> queryUserInfo(UserInfo ui,Pager pager);
+ public List<UserInfo> queryUserInfo(UserInfo ui,Pager pager,String order);
  
  //条件查询用户总数
  public Integer count(Map<String, Object> params);

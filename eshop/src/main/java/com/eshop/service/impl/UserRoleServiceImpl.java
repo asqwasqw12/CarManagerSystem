@@ -24,6 +24,11 @@ public class UserRoleServiceImpl implements UserRoleService {
 		{
 			return  userRoleDao.selectAllbyUserId(userid);
 		}
+	   
+	   //根据用户id查询角色id
+	   public List<Long> selectRoleIdByUserId(int userid){
+		   return userRoleDao.selectRoleIdByUserId(userid);
+	   }
 		
 		//更新用户角色
 		@Override

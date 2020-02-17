@@ -1,0 +1,2 @@
+USE `eshop`;
+insert  into `user_info`(`userName`,`realName`,`password`,`sex`,`post`,`departmentname`,`company`,`status`,`email`,`mobilephone`) values ('zhangsan5','张三5','123456','男','销售经理','销售部','合加新能源汽车有限公司',0,'13112345678@163.com','13787295142');

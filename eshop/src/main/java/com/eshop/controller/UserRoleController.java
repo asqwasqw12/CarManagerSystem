@@ -1,7 +1,9 @@
 package com.eshop.controller;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,8 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.eshop.common.AssembleResponseMsg;
 import com.eshop.pojo.ResponseBody;
+import com.eshop.pojo.Role;
 import com.eshop.pojo.UserInfo;
 import com.eshop.pojo.UserRole;
+import com.eshop.service.RoleService;
 import com.eshop.service.UserInfoService;
 import com.eshop.service.UserRoleService;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -26,6 +30,7 @@ public class UserRoleController {
 	private UserInfoService userInfoService;
 	@Autowired
 	private UserRoleService userRoleService;
+	@Autowired RoleService roleService;
 	
 	@RequestMapping(value ="/updateUserRole",produces = "application/json;charset=utf-8")
 	public ResponseBody updateUserRole(String userInfo, String roleIds)throws JsonParseException, JsonMappingException, IOException {
@@ -65,5 +70,22 @@ public class UserRoleController {
 			return new AssembleResponseMsg().failure(200,"1003","JSON数据转换失败");
 		}
   }
+	
+	//获取用户角色id
+	@RequestMapping(value ="/getRoleId",produces = "application/json;charset=utf-8")
+	public ResponseBody getRoleId(String id) {
+		Map<String,Object> roleMap = new HashMap<>();
+		List<Role> listAllRoles = roleService.selectAllRoles();
+		List<Long> listRoleIds = userRoleService.selectRoleIdByUserId(Integer.valueOf(id));
+		System.out.println("listAllRoles="+listAllRoles);
+		System.out.println("listRoleIds="+listRoleIds);
+		//如果用户角色为空，就赋与为普通用户
+		if(listRoleIds.size()==0) {
+			listRoleIds.add((long) 2);
+		}
+		roleMap.put("rolesList", listAllRoles);
+		roleMap.put("roleIdList",listRoleIds);
+		return new AssembleResponseMsg().success(roleMap);
+	}
 
 }

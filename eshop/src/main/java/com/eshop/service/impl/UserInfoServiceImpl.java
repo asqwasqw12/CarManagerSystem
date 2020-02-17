@@ -48,10 +48,11 @@ public class UserInfoServiceImpl implements UserInfoService {
 	
 	//分页条件查询用户
 	@Override
-	 public List<UserInfo> queryUserInfo(UserInfo ui,Pager pager){
+	 public List<UserInfo> queryUserInfo(UserInfo ui,Pager pager,String order){
 					
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("userInfo", ui);
+		params.put("sort",order);
 		int recordCount = userInfoDao.count(params);
 		pager.setRowCount(recordCount);
 		if (recordCount > 0) {

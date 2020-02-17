@@ -172,11 +172,6 @@
           const data = response.data
           console.log('data='+data.data)
           this.rolesList = data.data.rolesList
-          let ids = this.rolesList.map( item => item.roleid).toString()
-          console.log('ids='+ids)
-          let idArray = (ids+'').split(',')
-          console.log('idArray='+ idArray)
-          console.log('rolesList='+this.rolesList)
         }).catch(error =>{
           this.$notify({
             title:'获取数据提示',

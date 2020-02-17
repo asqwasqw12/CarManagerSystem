@@ -70,7 +70,9 @@ public class UserInfoDynaSqlProvider {
 				}
 			}
 		}.toString();
-		System.out.println("before:sql="+sql);
+		if(params.get("sort") !=null) {
+			sql +=" order by gmt_create ${sort} ";
+		}
 		if (params.get("pager") != null) {
 			sql += " limit #{pager.firstLimitParam} , #{pager.perPageRows}  ";
 		}
