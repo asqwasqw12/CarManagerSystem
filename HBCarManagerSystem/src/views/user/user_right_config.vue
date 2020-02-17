@@ -131,6 +131,7 @@
 
 <script>
   import request from '@/utils/request'
+  import { parseTime } from '@/utils'
   import Pagination from '@/components/Pagination' // 二次包装 el-pagination
     export default {
       name: "user_right_config",
@@ -265,8 +266,28 @@
         this.getList()
       },
       handleDownload() {
-
+        this.downloadLoading = true
+        import('@/vendor/Export2Excel').then(excel => {
+          const tHeader = ['ID', 'userName', 'realName', 'post', 'departmentname']
+          const filterVal = ['id', 'userName', 'realName', 'post', 'departmentname']
+          const data = this.formatJson(filterVal, this.list)
+          excel.export_json_to_excel({
+            header: tHeader,
+            data,
+            filename: 'table-list'
+          })
+          this.downloadLoading = false
+        })
       },
+        formatJson(filterVal, jsonData) {
+          return jsonData.map(v => filterVal.map(j => {
+            if (j === 'timestamp') {
+              return parseTime(v[j])
+            } else {
+              return v[j]
+            }
+          }))
+        },
       getList() {
         this.listLoading = true
         request({
