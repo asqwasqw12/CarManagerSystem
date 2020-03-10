@@ -1,12 +1,49 @@
 //封装axios
 import axios from 'axios'
+import Cookies from "js-cookie";
+import router from "@/router";
  const service = axios.create({
+   headers: {
+     'Content-Type': 'application/json;charset=UTF-8'
+   },
    timeout:5000
  });
-
+// 添加请求拦截器
+service.interceptors.request.use(
+  config => {
+    let token = Cookies.get('token')
+    // 发送请求时携带token
+    if (token) {
+      config.headers.token = token
+    } else {
+      // 重定向到登录页面
+      router.push('/login')
+    }
+    return config
+  },
+  error => {
+    // 请求发生错误时
+    console.log('request:', error)
+    // 判断请求超时
+    if (error.code === 'ECONNABORTED' && error.message.indexOf('timeout') !== -1) {
+      console.log('timeout请求超时')
+    }
+    // 需要重定向到错误页面
+    const errorInfo = error.response
+    console.log(errorInfo)
+    if (errorInfo) {
+      error = errorInfo.data  // 页面那边catch的时候就能拿到详细的错误信息,看最下边的Promise.reject
+      const errorStatus = errorInfo.status; // 404 403 500 ...
+      router.push({
+        path: `/error/${errorStatus}`
+      })
+    }
+    return Promise.reject(error) // 在调用的那边可以拿到(catch)你想返回的错误信息
+  }
+);
 //添加响应拦截器
 service.interceptors.response.use(response =>{
-  return response;
+  return response.data;
 },error => {
   switch (error.response.status) {
     case 400:
@@ -50,13 +87,6 @@ service.interceptors.response.use(response =>{
   }
     return Promise.reject(error);
   });
-
-//添加请求拦截器
-service.interceptors.request.use( config => {
-  return config;
-},error => {
-  return Promise.reject(error);
-})
 
 
 export  default service;
