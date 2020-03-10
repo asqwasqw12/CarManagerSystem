@@ -5,7 +5,7 @@ const app = {
       opened: !+Cookies('sidebarStatus'),     //默认侧边框为打开
       withoutAnimation: false                //无动画属性默认为无
 },
-    device:'desktop'        //设备默认为桌面系统
+    size: Cookies.get('size') || 'small'
   },
   mutations:{
 
@@ -29,7 +29,11 @@ const app = {
     //修改设备
     TOGGLE_DEVICE:(state,device)=>{
       state.device = device
-}
+},
+    SET_SIZE: (state, size) => {
+      state.size = size
+      Cookies.set('size', size)
+    }
   },
   actions:{
     ToggleSidebar:({commit})=>{
@@ -41,6 +45,9 @@ const app = {
     ToggleDevice:({commit},device) => {
       commit('TOGGLE_DEVICE',device)
     }
+  },
+  setSize({ commit }, size) {
+    commit('SET_SIZE', size)
   }
 
 }
