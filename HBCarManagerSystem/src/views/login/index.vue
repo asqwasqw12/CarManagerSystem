@@ -90,7 +90,7 @@
             marginRight: "auto",
            width: "1280px",
            height: "800px",
-           background:  "url(" + require("../../assets/index_background-5.jpg") + ")",
+           background:  "url(" + require("../../assets/index_background-9.jpg") + ")",
             backgroundSize: "cover",
           border: "2px solid #ccc"
           },

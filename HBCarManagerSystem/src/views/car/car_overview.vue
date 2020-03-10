@@ -17,7 +17,7 @@
             :path="path"
             :icon="icon"
             :play="play"
-            :speed="500"
+            :speed="1000"
             :rotation="true">
           </bml-lushu>
 
