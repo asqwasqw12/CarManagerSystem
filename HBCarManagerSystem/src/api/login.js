@@ -20,3 +20,11 @@ export function logout() {
     method: 'post'
   })
 }
+
+export function getInfo(token) {
+  return request({
+    url: '/api/getUserInfo',
+    method: 'get',
+    params: { token }
+  })
+}

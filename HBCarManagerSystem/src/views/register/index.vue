@@ -118,7 +118,7 @@
 </template>
 
 <script>
-    import router from "../../router";
+    import router from "@/router/routers";
     import request from '@/utils/request'
     import SIdentify from '../../components/identify'
     export default {

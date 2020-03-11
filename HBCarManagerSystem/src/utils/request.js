@@ -1,7 +1,7 @@
 //封装axios
 import axios from 'axios'
 import Cookies from "js-cookie";
-import router from "@/router";
+import router from "@/router/routers";
  const service = axios.create({
    headers: {
      'Content-Type': 'application/json;charset=UTF-8'

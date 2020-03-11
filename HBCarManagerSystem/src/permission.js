@@ -1,4 +1,4 @@
-import router from './router'
+import router from '@/router/routers'
 import store from './store'
 import { Message } from 'element-ui'
 const whiteList = ['/login','/register']
@@ -25,6 +25,13 @@ window.console.log('token =' + store.getters.token)
             console.log("确实执行了resetToken....................................")
             next('/login')
           }
+
+
+
+
+
+
+
 
           window.console.log('get permission routes map.........')
           window.console.log(store.getters.role)

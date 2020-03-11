@@ -1,5 +1,6 @@
 import variables from '@/assets/styles/element-variables.scss'
 import defaultSettings from '@/settings'
+import permission from "@/store/modules/permission";
 
 const { tagsView, fixedHeader, sidebarLogo, uniqueOpened, showFooter, footerTxt, caseNumber } = defaultSettings
 
@@ -29,10 +30,5 @@ const actions = {
   }
 }
 
-export default {
-  namespaced: true,
-  state,
-  mutations,
-  actions
-}
+export default settings
 
