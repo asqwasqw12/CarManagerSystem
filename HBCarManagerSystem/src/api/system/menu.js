@@ -1,41 +1,38 @@
 import request from '@/utils/request'
 
-export function getMenusTree() {
+// 保存
+export function save(data) {
   return request({
-    url: 'api/menus/tree',
-    method: 'get'
-  })
-}
-
-export function buildMenus() {
-  return request({
-    url: 'api/menus/build',
-    method: 'get'
-  })
-}
-
-export function add(data) {
-  return request({
-    url: 'api/menus',
+    url: '/menu/save',
     method: 'post',
     data
   })
 }
-
-export function del(ids) {
+// 删除
+export function batchDelete(data) {
   return request({
-    url: 'api/menus',
-    method: 'delete',
-    data: ids
-  })
-}
-
-export function edit(data) {
-  return request({
-    url: 'api/menus',
-    method: 'put',
+    url: '/menu/delete',
+    method: 'post',
     data
   })
 }
+// 查找导航菜单树
+export function findNavTree(params) {
+  return request({
+    url: '/menu/findNavTree',
+    method: 'get',
+    params
+  })
+}
+// 查找导航菜单树
+export function findMenuTree() {
+  return request({
+    url: '/menu/findMenuTree',
+    method: 'get'
+  })
+}
 
-export default { add, edit, del, getMenusTree }
+
+export default { save, batchDelete, findMenuTree, findNavTree }
+
+

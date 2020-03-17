@@ -1,61 +1,65 @@
 import request from '@/utils/request'
 import { encrypt } from '@/utils/rsaEncrypt'
 
-export function add(data) {
+// 保存
+export function save(data) {
   return request({
-    url: 'api/users',
+    url: '/user/save',
     method: 'post',
     data
   })
 }
 
-export function del(ids) {
+//删除
+export function batchDelete(data) {
   return request({
-    url: 'api/users',
-    method: 'delete',
-    data: ids
-  })
-}
-
-export function edit(data) {
-  return request({
-    url: 'api/users',
-    method: 'put',
-    data
-  })
-}
-
-export function editUser(data) {
-  return request({
-    url: 'api/users/center',
-    method: 'put',
-    data
-  })
-}
-
-export function updatePass(user) {
-  const data = {
-    oldPass: encrypt(user.oldPass),
-    newPass: encrypt(user.newPass)
-  }
-  return request({
-    url: 'api/users/updatePass/',
+    url: '/user/delete',
     method: 'post',
     data
   })
 }
 
-export function updateEmail(form) {
-  const data = {
-    password: encrypt(form.pass),
-    email: form.email
-  }
+//分页查询
+export function findPage(data) {
   return request({
-    url: 'api/users/updateEmail/' + form.code,
+    url: '/user/findPage',
     method: 'post',
     data
   })
 }
 
-export default { add, edit, del }
+// 导出Excel用户信息
+export function exportUserExcelFile(data) {
+  return request({
+    url: '/user/exportUserExcelFile',
+    method: 'post',
+    data
+  })
+}
 
+// 查找用户的菜单权限标识集合
+export function findPermissions(params) {
+  return request({
+    url: '/user/findPermissions',
+    method: 'get',
+    params
+  })
+}
+
+// 根据用户名查找
+export function findByName(params) {
+  return request({
+    url: '/user/findByName',
+    method: 'get',
+    params
+  })
+}
+// 更新用户密码
+export function updatePassword(params){
+  return request({
+    url: '/user/updatePassword',
+    method: 'get',
+    params
+  })
+}
+export default { updatePassword, findByName, findPermissions, exportUserExcelFile,findPage,batchDelete,save}
