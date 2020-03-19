@@ -38,6 +38,7 @@ export const constantRouterMap = [
     path: '/',
     component: Layout,
     redirect: '/home',
+    hidden:true,
     children: [
       {
         path: 'home',

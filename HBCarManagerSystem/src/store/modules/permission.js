@@ -1,7 +1,8 @@
 import { constantRouterMap } from '@/router/routers'
 import {getIFramePath, getIFrameUrl} from "@/utils/iframe";
 import store from "@/store/index";
-
+import asyncRoutes from "@/router/asyncRoutes";
+import layout from '@/layout'
 const permission = {
   state: {
     routes: constantRouterMap,
@@ -18,7 +19,9 @@ const permission = {
       return new Promise(resolve => {
         let accessedRoutes
         accessedRoutes = filterMenu(navMenuTree)
+
         commit('SET_ROUTES', accessedRoutes)
+        //commit('SET_ROUTES', asyncRoutes)
         resolve(accessedRoutes)
       })
     }
@@ -38,8 +41,9 @@ export function filterMenu(menuList) {
         index: menu.id,
         title:menu.name
       },
-      component:'layout'
+      component:layout
     }
+
     if(menu.parentId != 0) {
       let path = getIFramePath(menu.url)
       if (path) {
@@ -52,7 +56,7 @@ export function filterMenu(menuList) {
         store.commit('addIFrameUrl', iFrameUrl)
       } else {
         try {
-          tmp.component = resolve => require([`@/views/${menu.url}`], resolve)
+          tmp.component = resolve => require([`@/views/${menu.location}`], resolve)
         }catch(e){}
       }
     }

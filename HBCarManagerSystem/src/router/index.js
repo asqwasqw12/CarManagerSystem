@@ -2,7 +2,9 @@ import router from './routers'
 import store from '@/store'
 import Config from '@/settings'
 import NProgress from 'nprogress' // progress bar
-import 'nprogress/nprogress.css'// progress bar style
+import 'nprogress/nprogress.css'
+import asyncRoutes from "@/router/asyncRoutes";
+// progress bar style
 NProgress.configure({ showSpinner: false })// NProgress Configuration
 const whiteList = ['/login','/register']// no redirect whitelist
 
@@ -33,6 +35,7 @@ router.beforeEach(async(to, from, next) => {
           await store.dispatch('findPermissions',store.getters.name)
           console.log('accessRoutes='+accessRoutes)
           router.addRoutes(accessRoutes)
+          //router.addRoutes(asyncRoutes)
           next({ ...to, replace: true })
           }catch (error) {
           // remove token and go to login page to re-login
