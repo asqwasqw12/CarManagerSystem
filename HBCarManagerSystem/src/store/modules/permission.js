@@ -1,5 +1,6 @@
 import { constantRouterMap } from '@/router/routers'
-import Layout from '@/layout/index'
+import {getIFramePath, getIFrameUrl} from "@/utils/iframe";
+import store from "@/store/index";
 
 const permission = {
   state: {
@@ -13,31 +14,53 @@ const permission = {
     }
   },
   actions: {
-    GenerateRoutes({ commit }, asyncRoutes) {
-      commit('SET_ROUTES', asyncRoutes)
+    generateRoutes({commit}, navMenuTree) {
+      return new Promise(resolve => {
+        let accessedRoutes
+        accessedRoutes = filterMenu(navMenuTree)
+        commit('SET_ROUTES', accessedRoutes)
+        resolve(accessedRoutes)
+      })
     }
   }
 }
 
-export const filterAsyncRouter = (routes) => { // 遍历后台传来的路由字符串，转换为组件对象
-  return routes.filter(route => {
-    if (route.component) {
-      if (route.component === 'Layout') { // Layout组件特殊处理
-        route.component = Layout
+
+
+export function filterMenu(menuList) {
+  const res = []
+  menuList.forEach(menu => {
+    const tmp = {
+      path: menu.url,
+      name: menu.name,
+      meta: {
+        icon: menu.icon,
+        index: menu.id,
+        title:menu.name
+      },
+      component:'layout'
+    }
+    if(menu.parentId != 0) {
+      let path = getIFramePath(menu.url)
+      if (path) {
+        // 如果是嵌套页面, 通过iframe展示
+        tmp.path = path
+        tmp.component = resolve => require([`@/views/IFrame/IFrame`], resolve)
+        // 存储嵌套页面路由路径和访问URL
+        let url = getIFrameUrl(menu.url)
+        let iFrameUrl = {'path': path, 'url': url}
+        store.commit('addIFrameUrl', iFrameUrl)
       } else {
-        const component = route.component
-        route.component = loadView(component)
+        try {
+          tmp.component = resolve => require([`@/views/${menu.url}`], resolve)
+        }catch(e){}
       }
     }
-    if (route.children && route.children.length) {
-      route.children = filterAsyncRouter(route.children)
+    if (menu.children) {
+      tmp.children = filterMenu(menu.children)
     }
-    return true
+    res.push(tmp)
   })
+  return res
 }
-
-export const loadView = (view) => {
-  return () => import(`@/views/${view}`)
-}
-
 export default permission

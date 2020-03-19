@@ -1,6 +1,9 @@
 import cookies from 'js-cookie'
 import { resetRouter } from "@/router/routers"
 import { login, logout,getInfo } from '@/api/login'
+import {findNavTree} from "@/api/system/menu";
+import {findPermissions} from "@/api/system/user";
+import store from "@/store/index";
 const user = {
   state:{
     token:cookies.get('token'),     //使用令牌进行路由，cookies.get()保证刷新页面可以不用重新登录
@@ -42,6 +45,34 @@ const user = {
         resolve()
       })
     },
+    findNavTree:({commit},name) =>{
+      return new Promise(
+      (resolve,reject) =>{
+        findNavTree({'userName':name}).then(response =>{
+          if(response.msg !=='ok'){
+            reject('获取菜单树失败，请重新登录')
+          }
+          commit('setNavTree',response.data)
+          resolve(response.data)
+          }).catch(error => {
+          reject(error)
+        })
+      })
+},
+    findPermissions:({commit},name) => {
+      return new Promise(
+        (resolve,reject) => {
+          findPermissions({'name':name}).then(response => {
+            if(response.msg !=='ok'){
+              reject('获取权限集合失败，请重新登录')
+            }
+            commit('setPerms', response.data)
+            resolve(response)
+          }).catch(error => {
+            reject(error)
+          })
+        })
+    },
     login: ({commit}, userInfo) => {
       const user = userInfo
       //user.userName = user.userName.trim()    //去掉头尾空格
@@ -69,7 +100,6 @@ const user = {
       return new Promise( (resolve,reject) => {
        getInfo(state.token).then(response => {
           const data = response
-          window.console.log(data)
           if(data.msg !=='ok'){
             reject('认证失败，请重新登录')
           }

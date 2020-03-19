@@ -3,13 +3,64 @@ import store from '@/store'
 import Config from '@/settings'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css'// progress bar style
-import {batchDelete, findMenuTree, findNavTree, save} from "@/api/system/menu"
-import {exportUserExcelFile, findByName, findPage, findPermissions, updatePassword} from "@/api/system/user";
-import { getIFramePath, getIFrameUrl } from '@/utils/iframe'
 NProgress.configure({ showSpinner: false })// NProgress Configuration
-import  asyncRoutes  from './asyncRoutes'
 const whiteList = ['/login','/register']// no redirect whitelist
 
+router.beforeEach(async(to, from, next) => {
+  console.log("开始路由。。。")
+  if (to.meta.title) {
+    document.title = to.meta.title + ' - ' + Config.title
+  }
+  NProgress.start()
+  if (store.getters.token && typeof (store.getters.token) != "undefined" && store.getters.token != 'undefined') {
+    // 已登录且要跳转的页面是登录页
+
+    if (to.path === '/login') {
+      console.log("跳转到/login页面")
+      next({ path: '/' })
+      NProgress.done()
+    } else {
+      console.log("跳转到非login页面")
+      console.log("path:"+to.path)
+      if (store.getters.navTree.length === 0 ) { // 判断当前用户是否获取菜单信息
+        console.log("根据token获取用户信息。。。")
+        try{
+          await store.dispatch('getInfo')
+          // 处理IFrame嵌套页面
+          handleIFrameUrl(to.path)
+          await store.dispatch('findNavTree',store.getters.name)
+          const accessRoutes = await store.dispatch('generateRoutes',store.getters.navTree)
+          await store.dispatch('findPermissions',store.getters.name)
+          console.log('accessRoutes='+accessRoutes)
+          router.addRoutes(accessRoutes)
+          next({ ...to, replace: true })
+          }catch (error) {
+          // remove token and go to login page to re-login
+          await store.dispatch('resetToken')
+          console.log(error)
+          next(`/login?redirect=${to.path}`)
+          NProgress.done()
+        }
+      } else {
+        next()
+      }
+    }
+  } else {
+    /* has no token*/
+    if (whiteList.indexOf(to.path) !== -1) { // 在免登录白名单，直接进入
+      next()
+    } else {
+      next(`/login?redirect=${to.path}`) // 否则全部重定向到登录页
+      NProgress.done()
+    }
+  }
+})
+
+router.afterEach(() => {
+  NProgress.done() // finish progress bar
+})
+
+/*
 router.beforeEach((to, from, next) => {
   console.log("开始路由。。。")
   if (to.meta.title) {
@@ -48,25 +99,24 @@ router.beforeEach((to, from, next) => {
     }
   } else {
     /* has no token*/
-    if (whiteList.indexOf(to.path) !== -1) { // 在免登录白名单，直接进入
-      next()
-    } else {
-      next(`/login?redirect=${to.path}`) // 否则全部重定向到登录页
-      NProgress.done()
-    }
-  }
+/*
+if (whiteList.indexOf(to.path) !== -1) { // 在免登录白名单，直接进入
+  next()
+} else {
+  next(`/login?redirect=${to.path}`) // 否则全部重定向到登录页
+  NProgress.done()
+}
+}
 })
+ */
 
 
 
-router.afterEach(() => {
-  NProgress.done() // finish progress bar
-})
 
 /**
 * 加载动态菜单和路由
 */
-function addDynamicMenuAndRoutes(userName, to, from) {
+/*function addDynamicMenuAndRoutes(userName, to, from) {
   // 处理IFrame嵌套页面
   handleIFrameUrl(to.path)
   if(store.state.user.loadMenus ) {
@@ -106,7 +156,7 @@ function addDynamicMenuAndRoutes(userName, to, from) {
   })
     .catch(function(res) {
     })
-}
+}*/
 
 /**
  * 处理IFrame嵌套页面
@@ -129,7 +179,6 @@ function handleIFrameUrl(path) {
  * 添加动态(菜单)路由
  * @param {*} menuList 菜单列表
  * @param {*} routes 递归创建的动态(菜单)路由
- */
 function addDynamicRoutes (menuList = [], routes = []) {
   var temp = []
   for (var i = 0; i < menuList.length; i++) {
@@ -217,5 +266,5 @@ export function filterMenu(menuList) {
       res.push(tmp)
     })
   return res
-}
+}*/
 
