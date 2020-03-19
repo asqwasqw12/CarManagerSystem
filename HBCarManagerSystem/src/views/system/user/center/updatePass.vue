@@ -1,4 +1,13 @@
 <template>
+  <div>用户界面</div>
+</template>
+
+<script>
+  export default {
+    name: "updatePass"
+  }
+</script>
+<!--<template>
   <div style="display: inline-block">
     <el-dialog :visible.sync="dialog" :close-on-click-modal="false" :before-close="cancel" :title="title" append-to-body width="500px" @close="cancel">
       <el-form ref="form" :model="form" :rules="rules" size="small" label-width="88px">
@@ -88,7 +97,7 @@ export default {
     }
   }
 }
-</script>
+</script>-->
 
 <style scoped>
 

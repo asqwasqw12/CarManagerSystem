@@ -71,7 +71,7 @@ export const constantRouterMap = [
 {
   //path:'/index.html',
   path:'/index.html',
-    redirect:'/login',
+  redirect:'/login',
   hidden:true
 }
 ]

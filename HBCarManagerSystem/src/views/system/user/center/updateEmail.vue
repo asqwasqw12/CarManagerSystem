@@ -1,4 +1,14 @@
+
 <template>
+  <div>用户界面</div>
+</template>
+
+<script>
+  export default {
+    name: "updateEmail"
+  }
+</script>
+<!--<template>
   <div style="display: inline-block;">
     <el-dialog :visible.sync="dialog" :close-on-click-modal="false" :before-close="cancel" :title="title" append-to-body width="475px" @close="cancel">
       <el-form ref="form" :model="form" :rules="rules" size="small" label-width="88px">
@@ -81,10 +91,10 @@ export default {
           })
           this.codeLoading = false
           this.isDisabled = true
-          this.buttonName = this.time-- + '秒后重新发送'
+          this.buttonName = this.time&#45;&#45; + '秒后重新发送'
           this.timer = window.setInterval(function() {
             _this.buttonName = _this.time + '秒后重新发送'
-            --_this.time
+            &#45;&#45;_this.time
             if (_this.time < 0) {
               _this.buttonName = '重新发送'
               _this.time = 60
@@ -132,7 +142,7 @@ export default {
     }
   }
 }
-</script>
+</script>-->
 
 <style scoped>
 

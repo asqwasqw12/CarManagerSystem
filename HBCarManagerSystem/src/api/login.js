@@ -16,14 +16,14 @@ export function login(data) {
 //退出登录
 export function logout() {
   return request({
-    url: '/user/logout',
+    url: '/api/logout',
     method: 'post'
   })
 }
 
 export function getInfo(token) {
   return request({
-    url: '/api/getUserInfo',
+    url: '/api/getInfo',
     method: 'get',
     params: { token }
   })

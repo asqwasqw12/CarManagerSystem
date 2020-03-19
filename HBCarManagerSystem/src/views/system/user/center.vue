@@ -1,4 +1,13 @@
 <template>
+  <div>用户界面</div>
+</template>
+
+<script>
+  export default {
+    name: "center"
+  }
+</script>
+<!--<template>
   <div class="app-container">
     <el-row :gutter="20">
       <el-col :xs="24" :sm="24" :md="8" :lg="6" :xl="5" style="margin-bottom: 10px">
@@ -37,7 +46,7 @@
         </el-card>
       </el-col>
       <el-col :xs="24" :sm="24" :md="16" :lg="18" :xl="19">
-        <!--    用户资料    -->
+        &lt;!&ndash;    用户资料    &ndash;&gt;
         <el-card class="box-card">
           <el-tabs v-model="activeName" @tab-click="handleClick">
             <el-tab-pane label="用户资料" name="first">
@@ -61,7 +70,7 @@
                 </el-form-item>
               </el-form>
             </el-tab-pane>
-            <!--    操作日志    -->
+            &lt;!&ndash;    操作日志    &ndash;&gt;
             <el-tab-pane label="操作日志" name="second">
               <el-table v-loading="loading" :data="data" style="width: 100%;">
                 <el-table-column prop="description" label="行为" />
@@ -86,7 +95,7 @@
                   </template>
                 </el-table-column>
               </el-table>
-              <!--分页组件-->
+              &lt;!&ndash;分页组件&ndash;&gt;
               <el-pagination
                 :total="total"
                 :current-page="page + 1"
@@ -240,4 +249,4 @@ export default {
       }
     }
   }
-</style>
+</style>-->

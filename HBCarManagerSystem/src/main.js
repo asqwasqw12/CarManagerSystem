@@ -6,8 +6,9 @@ import router from '@/router/routers'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import 'font-awesome/css/font-awesome.min.css'
+
 import store from './store'
-import '@/permission'
+import '@/router/index' // permission control
 import BaiduMap from 'vue-baidu-map'
 import echarts from 'echarts'
 Vue.config.productionTip = false

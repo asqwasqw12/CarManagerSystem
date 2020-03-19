@@ -43,17 +43,19 @@ const user = {
       })
     },
     login: ({commit}, userInfo) => {
-
-      userInfo.userName = userInfo.userName.trim()    //去掉头尾空格
+      const user = userInfo
+      //user.userName = user.userName.trim()    //去掉头尾空格
       return new Promise(
         (resolve, reject) => {
-          login(userInfo).then(response => {             //后台响应返回数据
+          login(user).then(response => {             //后台响应返回数据
           const data = response
           if (data.msg === 'ok' ) {                      //验证成功
             commit('setToken', data.data.token )        //存储token到vuex
-            commit('setName', userInfo.userName )       //存储token到vuex
+            commit('setName', user.account )       //存储token到vuex
             cookies.set('token', data.data.token)       //存储token到cookies
             commit('SET_LOAD_MENUS', false)             //要求重新加载菜单
+          }else{
+            reject(data.msg)
           }
           resolve(data)
         }).catch(error => {

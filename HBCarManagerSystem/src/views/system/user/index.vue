@@ -1,7 +1,16 @@
 <template>
+  <div>用户界面</div>
+</template>
+
+<script>
+  export default {
+    name: "index"
+  }
+</script>
+<!--<template>
   <div class="app-container">
     <el-row :gutter="20">
-      <!--侧边部门数据-->
+      &lt;!&ndash;侧边部门数据&ndash;&gt;
       <el-col :xs="9" :sm="6" :md="4" :lg="4" :xl="4">
         <div class="head-container">
           <el-input
@@ -22,12 +31,12 @@
           @node-click="handleNodeClick"
         />
       </el-col>
-      <!--用户数据-->
+      &lt;!&ndash;用户数据&ndash;&gt;
       <el-col :xs="15" :sm="18" :md="20" :lg="20" :xl="20">
-        <!--工具栏-->
+        &lt;!&ndash;工具栏&ndash;&gt;
         <div class="head-container">
           <div v-if="crud.props.searchToggle">
-            <!-- 搜索 -->
+            &lt;!&ndash; 搜索 &ndash;&gt;
             <el-input
               v-model="query.blurry"
               clearable
@@ -68,7 +77,7 @@
           </div>
           <crudOperation show="" :permission="permission" />
         </div>
-        <!--表单渲染-->
+        &lt;!&ndash;表单渲染&ndash;&gt;
         <el-dialog append-to-body :close-on-click-modal="false" :before-close="crud.cancelCU" :visible.sync="crud.status.cu > 0" :title="crud.status.title" width="570px">
           <el-form ref="form" :inline="true" :model="form" :rules="rules" size="small" label-width="66px">
             <el-form-item label="用户名" prop="username">
@@ -141,7 +150,7 @@
             <el-button :loading="crud.status.cu === 2" type="primary" @click="crud.submitCU">确认</el-button>
           </div>
         </el-dialog>
-        <!--表格渲染-->
+        &lt;!&ndash;表格渲染&ndash;&gt;
         <el-table ref="table" v-loading="crud.loading" :data="crud.data" style="width: 100%;" @selection-change="crud.selectionChangeHandler">
           <el-table-column :selectable="checkboxT" type="selection" width="55" />
           <el-table-column v-if="columns.visible('username')" :show-overflow-tooltip="true" prop="username" label="用户名" />
@@ -186,7 +195,7 @@
             </template>
           </el-table-column>
         </el-table>
-        <!--分页组件-->
+        &lt;!&ndash;分页组件&ndash;&gt;
         <pagination />
       </el-col>
     </el-row>
@@ -423,4 +432,4 @@ export default {
 </script>
 
 <style scoped>
-</style>
+</style>-->

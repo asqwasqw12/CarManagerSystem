@@ -3,8 +3,8 @@ import defaultSettings from '@/settings'
 import permission from "@/store/modules/permission";
 
 const { tagsView, fixedHeader, sidebarLogo, uniqueOpened, showFooter, footerTxt, caseNumber } = defaultSettings
-
-const state = {
+const settings ={
+state : {
   theme: variables.theme,
   showSettings: false,
   tagsView: tagsView,
@@ -14,21 +14,21 @@ const state = {
   showFooter: showFooter,
   footerTxt: footerTxt,
   caseNumber: caseNumber
-}
+},
 
-const mutations = {
+ mutations:{
   CHANGE_SETTING: (state, { key, value }) => {
     if (state.hasOwnProperty(key)) {
       state[key] = value
     }
   }
-}
+},
 
-const actions = {
+actions :{
   changeSetting({ commit }, data) {
     commit('CHANGE_SETTING', data)
   }
 }
-
+}
 export default settings
 

@@ -11,7 +11,9 @@ const getters = {
   sidebar:state => state.app.sidebar,     //侧边栏
   device:state => state.app.device,        //使用的设备
   visitedViews: state => state.tagsView.visitedViews,
-  cachedViews: state => state.tagsView.cachedViews
+  cachedViews: state => state.tagsView.cachedViews,
+  iframeUrl: state => state.iframe.iframeUrl,   // 当前嵌套页面路由路径
+  iframeUrls: state => state.iframe.iframeUrls   // 所有嵌套页面路由路径访问URL
 
 }
 

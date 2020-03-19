@@ -6,6 +6,7 @@ import user from './modules/user'
 import app from './modules/app'
 import tagsView from './modules/tagsView'
 import settings from './modules/settings'
+import iframe from './modules/iframe'
 Vue.use(Vuex)
 /*const moduleFiles = require.context('./modules',false,/\.js$/ )    //三个参数：1.要搜索的文件夹目录；2.是否应该搜索它的子目录；3.匹配文件的正则表达式
                                                                     //返回值：1个函数（3个属性），resolve(函数），返回请求被解析后得到的id
@@ -25,7 +26,8 @@ const store = new Vuex.Store({
     user,
     app,
     tagsView,
-    settings
+    settings,
+    iframe
   },
   getters
 })

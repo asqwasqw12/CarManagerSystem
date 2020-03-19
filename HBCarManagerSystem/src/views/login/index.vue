@@ -67,8 +67,8 @@
         let validatePassword = (rule, value, callback) => {
           if (value.length === 0) {
             callback(new Error('请输入密码'))
-          } else if (value.length < 6) {
-            callback(new Error('密码不能小于6位'))
+          } else if (value.length < 5) {
+            callback(new Error('密码不能小于5位'))
           } else {
             callback()
           }
@@ -147,36 +147,28 @@
             if (valid) {
               this.loading = true
               let userInfo = {
-                userName:this.loginForm.userName,
+                account:this.loginForm.userName,
                 password:this.loginForm.password,
               //captcha: this.loginForm.captcha
                 }
               setTimeout(() => {
                 this.$store.dispatch('login', userInfo).then(
                   res => {
-                    if (res.info.code === '0') {
+                    if (res.msg === 'ok' )  {
                       this.clearNotifies()
                       this.$router.push('/')
-                    } else {
-                      this.$notify({
-                        title: '登录提示',
-                        message: res.info.message,
-                        position: 'bottom-right',
-                        type: 'error'
-                      })
-                      this.loading = false
                     }
+                    this.loading = false
                   }).catch(error =>{
                     this.loading = false
                     this.$notify({
                       title:'登录提示',
-                      message:error.message,
+                      message:error,
                       position:'center',
                       type:'error'
                     })
                 })
-
-              }, 2000)
+              }, 5000)
             }else{
               return false
             }

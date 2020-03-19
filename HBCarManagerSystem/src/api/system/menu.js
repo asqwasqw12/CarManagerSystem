@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 保存
 export function save(data) {
   return request({
-    url: '/menu/save',
+    url: '/api/menu/save',
     method: 'post',
     data
   })
@@ -11,7 +11,7 @@ export function save(data) {
 // 删除
 export function batchDelete(data) {
   return request({
-    url: '/menu/delete',
+    url: '/api/menu/delete',
     method: 'post',
     data
   })
@@ -19,7 +19,7 @@ export function batchDelete(data) {
 // 查找导航菜单树
 export function findNavTree(params) {
   return request({
-    url: '/menu/findNavTree',
+    url: '/api/menu/findNavTree',
     method: 'get',
     params
   })
@@ -27,7 +27,7 @@ export function findNavTree(params) {
 // 查找导航菜单树
 export function findMenuTree() {
   return request({
-    url: '/menu/findMenuTree',
+    url: '/api/menu/findMenuTree',
     method: 'get'
   })
 }
