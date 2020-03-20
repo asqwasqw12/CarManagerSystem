@@ -15,7 +15,8 @@ const getters = {
   iframeUrl: state => state.iframe.iframeUrl,   // 当前嵌套页面路由路径
   iframeUrls: state => state.iframe.iframeUrls ,  // 所有嵌套页面路由路径访问URL
   sqlApi: state => state.app.sqlApi,
-  swaggerApi: state => state.app.swaggerApi
+  swaggerApi: state => state.app.swaggerApi,
+  serverApi: state => state.app.swaggerApi
 
 }
 
