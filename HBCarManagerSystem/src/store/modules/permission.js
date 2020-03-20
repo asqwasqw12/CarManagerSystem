@@ -21,7 +21,7 @@ const permission = {
         accessedRoutes = filterMenu(navMenuTree)
 
         commit('SET_ROUTES', accessedRoutes)
-        //commit('SET_ROUTES', asyncRoutes)
+       // commit('SET_ROUTES', asyncRoutes)
         resolve(accessedRoutes)
       })
     }

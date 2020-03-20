@@ -5,7 +5,9 @@ const app = {
       opened: !+Cookies('sidebarStatus'),     //默认侧边框为打开
       withoutAnimation: false                //无动画属性默认为无
 },
-    size: Cookies.get('size') || 'small'
+    size: Cookies.get('size') || 'small',
+    sqlApi: 'http://127.0.0.1:8080'+'/druid/login.html',                  // Sql 监控
+    swaggerApi: 'http://127.0.0.1:8080' + '/swagger-ui.html',             // swagger
   },
   mutations:{
 

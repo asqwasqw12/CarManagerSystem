@@ -31,6 +31,7 @@ router.beforeEach(async(to, from, next) => {
           // 处理IFrame嵌套页面
           handleIFrameUrl(to.path)
           await store.dispatch('findNavTree',store.getters.name)
+          console.log("已经获取了navtree")
           const accessRoutes = await store.dispatch('generateRoutes',store.getters.navTree)
           await store.dispatch('findPermissions',store.getters.name)
           console.log('accessRoutes='+accessRoutes)
