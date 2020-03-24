@@ -8,7 +8,6 @@ const app = {
     size: Cookies.get('size') || 'small',
     sqlApi: 'http://127.0.0.1:8080'+'/druid/login.html',                  // Sql 监控
     swaggerApi: 'http://127.0.0.1:8080' + '/swagger-ui.html',             // swagger
-    serverApi: 'http://127.0.0.1:8080' + '/swagger-ui.html',             // server
   },
   mutations:{
 
