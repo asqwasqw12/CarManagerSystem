@@ -1,11 +1,11 @@
 <template>
-  <div class="navbar">
-    <div class="right-menu">
-      <el-menu class="el-menu-demo" mode="horizontal">
+  <div class="navbar" :style="{'background':themeColor}">
+    <span class="right-menu" >
+      <el-menu class="el-menu-demo" mode="horizontal" :background-color="themeColor" :active-text-color="themeColor">
         <el-menu-item index="3" v-popover:popover-message>
           <!-- 我的私信 -->
           <el-badge :value="5" :max="99" class="badge">
-            <li style="color:#fff;" class="fa fa-envelope-o fa-lg"></li>
+            <i class="el-icon-message-solid" style="color:#fff;"></i>
           </el-badge>
           <el-popover ref="popover-message" placement="bottom-end" trigger="click">
             <message-panel></message-panel>
@@ -14,7 +14,7 @@
         <el-menu-item index="4" v-popover:popover-notice>
           <!-- 系统通知 -->
           <el-badge :value="4" :max="99" class="badge">
-            <li style="color:#fff;" class="fa fa-bell-o fa-lg"></li>
+            <i class="el-icon-message" style="color:#fff;"></i>
           </el-badge>
           <el-popover ref="popover-notice" placement="bottom-end" trigger="click">
             <notice-panel></notice-panel>
@@ -28,11 +28,12 @@
           </el-popover>
         </el-menu-item>
       </el-menu>
-    </div>
+    </span>
   </div>
 </template>
 
 <script>
+  import { mapState } from 'vuex'
   import NoticePanel from "@/views/core/NoticePanel"
   import MessagePanel from "@/views/core/MessagePanel"
   import PersonalPanel from "@/views/core/PersonalPanel"
@@ -67,6 +68,11 @@
         console.log("this.$route.fullPath"+this.$route.fullPath)
         this.$router.push(`/login?redirect=${this.$route.fullPath}`)
       }
+    },
+    computed:{
+      ...mapState({
+        themeColor: state=>state.settings.themeColor
+      })
     }
   }
 </script>
@@ -76,7 +82,6 @@
     height: 50px;
     overflow: hidden;
     position: relative;
-    background: #fff;
     box-shadow: 0 1px 4px rgba(0, 21, 41, .08);
 
     .hamburger-container {
@@ -94,12 +99,6 @@
 
     .breadcrumb-container {
       float: left;
-    }
-
-    .errLog-container {
-      display: inline-block;
-      vertical-align: top;
-
     }
 
     .right-menu {

@@ -1,11 +1,11 @@
-import variables from '@/assets/styles/element-variables.scss'
+import variables from '@/styles/element-variables.scss'
 import defaultSettings from '@/settings'
 import permission from "@/store/modules/permission";
 
 const { tagsView, fixedHeader, sidebarLogo, uniqueOpened, showFooter, footerTxt, caseNumber } = defaultSettings
 const settings ={
 state : {
-  theme: variables.theme,
+  themeColor: variables.theme,
   showSettings: false,
   tagsView: tagsView,
   fixedHeader: fixedHeader,
