@@ -2,13 +2,13 @@
   <div class="notice-panel">
     <div class="header">您有 {{data.length}} 条通知</div>
     <div class="notice-content">
-      <div v-for="item in data" :key="item.key" class="notice-item">
+      <div v-for="item in data" :key="item.key" class="notice-item" @click="handleClick(item.key)">
         <span class="notice-icon">
           <li :class="item.icon"></li>
-        </span>  
+        </span>
         <span class="notice-cotent">
           {{ item.content }}
-        </span>  
+        </span>
       </div>
     </div>
     <div class="notice-footer">查看所有通知</div>
@@ -21,27 +21,7 @@ export default {
   props: {
     data: {
       type: Array,
-      default: () => [
-        {
-          key: "1",
-          icon:'fa fa-envelope-o',
-          content:'你修改了用户密码'
-        },
-        {
-          key: "2",
-          icon:'fa fa-music',
-          content:'你修改了用户头像'
-        },
-        {
-          key: "3",
-          icon:'fa fa-edit',
-          content:'今日25名新成员加入'
-        },
-        {
-          key: "4",
-          icon:'fa fa-edit',
-          content:'您发表了一篇新随笔'
-        }]
+      default: () => []
     }
   },
   data() {
@@ -49,9 +29,19 @@ export default {
     }
   },
   methods: {
-    handleClick: function () {
-      // 按钮操作处理函数
+    handleClick: function (key) {
+      this.spliceKey(key)
+      this.$emit('update:data',this.data)
+      // 按钮操作处理函数,暂时没用
       this.$emit('click', {})
+    },
+    spliceKey: function (key){
+      for(let i = 0;i<this.data.length;i++){
+        if(this.data[i].key === key){
+          this.data.splice(i,1);
+          i--;
+        }
+      }
     }
   },
   mounted() {

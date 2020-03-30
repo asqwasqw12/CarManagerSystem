@@ -4,20 +4,20 @@
       <el-menu class="el-menu-demo" mode="horizontal" :background-color="themeColor" :active-text-color="themeColor">
         <el-menu-item index="3" v-popover:popover-message>
           <!-- 我的私信 -->
-          <el-badge :value="5" :max="99" class="badge">
+          <el-badge :value="messageData.length" :max="99" class="badge">
             <i class="el-icon-message-solid" style="color:#fff;"></i>
           </el-badge>
           <el-popover ref="popover-message" placement="bottom-end" trigger="click">
-            <message-panel></message-panel>
+            <message-panel :data.sync="messageData"></message-panel>
           </el-popover>
         </el-menu-item>
         <el-menu-item index="4" v-popover:popover-notice>
           <!-- 系统通知 -->
-          <el-badge :value="4" :max="99" class="badge">
+          <el-badge :value="noticeData.length" :max="99" class="badge">
             <i class="el-icon-message" style="color:#fff;"></i>
           </el-badge>
           <el-popover ref="popover-notice" placement="bottom-end" trigger="click">
-            <notice-panel></notice-panel>
+            <notice-panel :data.sync="noticeData"></notice-panel>
           </el-popover>
         </el-menu-item>
         <el-menu-item index="5" v-popover:popover-personal>
@@ -48,7 +48,65 @@
     data(){
       return {
         userName:this.$store.getters.name,
-        userInfo:{}
+        userInfo:{},
+        messageNumbers:0,
+        messageData:[
+          {
+            key: "1",
+            avatar:'@/assets/user.png',
+            content:'你修改了用户密码',
+            sender:'张三1',
+            time:'5分钟前'
+          },
+          {
+            key: "2",
+            avatar:'@/assets/user.png',
+            content:'你修改了用户头像',
+            sender:'张三2',
+            time:'2小时前'
+          },
+          {
+            key: "3",
+            avatar:'@/assets/user.png',
+            content:'今日25名新成员加入',
+            sender:'李四1',
+            time:'昨天'
+          },
+          {
+            key: "4",
+            avatar:'@/assets/user.png',
+            content:'您发表了一篇新随笔',
+            sender:'李四2',
+            time:'昨天'
+          },
+          {
+            key: "5",
+            avatar:'@/assets/user.png',
+            content:'您发表了一篇新随笔',
+            sender:'王五1',
+            time:'前天'
+          }],
+        noticeData:[
+          {
+            key: "1",
+            icon:'fa fa-envelope-o',
+            content:'你修改了用户密码'
+          },
+          {
+            key: "2",
+            icon:'fa fa-music',
+            content:'你修改了用户头像'
+          },
+          {
+            key: "3",
+            icon:'fa fa-edit',
+            content:'今日25名新成员加入'
+          },
+          {
+            key: "4",
+            icon:'fa fa-edit',
+            content:'您发表了一篇新随笔'
+          }]
       }
     },
     mounted() {
@@ -124,139 +182,3 @@
   }
 
 </style>
-
-<!--
-<template>
-<div class="navbar">
-  <div class="right-menu">
-    <div class="welcome">
-    你好，{{ userName }}
-    </div>
-    <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
-      <div class="avatar-wrapper">
-        <i class="fa fa-address-card-o"/>
-        <i class="el-icon-caret-bottom" />
-      </div>
-      <el-dropdown-menu slot="dropdown">
-        <el-dropdown-item>个人中心</el-dropdown-item>
-        <el-dropdown-item>
-          <span style="display:block;" @click="logout">退出登录</span>
-        </el-dropdown-item>
-      </el-dropdown-menu>
-    </el-dropdown>
-  </div>
-</div>
-</template>
-
-<script>
-  //<i class="fa fa-address-card-o"/>
-    export default {
-        name: "Navbar",
-      data(){
-          return {
-            userName:this.$store.getters.name
-          }
-      },
-      methods:{
-          async logout(){
-            await this.$store.dispatch('logout')
-            console.log(this.$route.fullPath)
-            this.$router.push(`/login?redirect=${this.$route.fullPath}`)
-          }
-      }
-    }
-</script>
-
-<style lang="scss" scoped>
-  .navbar {
-    height: 50px;
-    overflow: hidden;
-    position: relative;
-    background: #fff;
-    box-shadow: 0 1px 4px rgba(0, 21, 41, .08);
-
-  .hamburger-container {
-    line-height: 46px;
-    height: 100%;
-    float: left;
-    cursor: pointer;
-    transition: background .3s;
-    -webkit-tap-highlight-color:transparent;
-
-  &:hover {
-     background: rgba(0, 0, 0, .025)
-   }
-  }
-
-  .breadcrumb-container {
-    float: left;
-  }
-
-  .errLog-container {
-    display: inline-block;
-    vertical-align: top;
-
-  }
-
-  .right-menu {
-    float: right;
-    height: 100%;
-    line-height: 50px;
-    .welcome{
-      float:left;
-      display:inline-block;
-      line-height: 50px;
-      height: 50px;
-      text-align: center;
-    }
-
-  &:focus {
-     outline: none;
-   }
-
-  .right-menu-item {
-    display: inline-block;
-    padding: 0 8px;
-    height: 100%;
-    font-size: 18px;
-    color: #5a5e66;
-    vertical-align: text-bottom;
-
-  &.hover-effect {
-     cursor: pointer;
-     transition: background .3s;
-
-  &:hover {
-     background: rgba(0, 0, 0, .025)
-   }
-  }
-  }
-
-  .avatar-container {
-    margin-right: 30px;
-
-  .avatar-wrapper {
-    margin-top: 5px;
-    position: relative;
-
-  .user-avatar {
-    cursor: pointer;
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
-  }
-
-  .el-icon-caret-bottom {
-    cursor: pointer;
-    position: absolute;
-    right: -20px;
-    top: 25px;
-    font-size: 12px;
-  }
-  }
-  }
-  }
-  }
-
-</style>
--->
