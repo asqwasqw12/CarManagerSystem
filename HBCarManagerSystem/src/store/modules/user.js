@@ -120,7 +120,7 @@ const user = {
           commit('setNavTree','')
           resetRouter()
           cookies.set('token','')
-          dispatch('tagsView/delAllViews')
+          dispatch('delAllViews')
           resolve(response.data)
         }).catch( error => {
           reject(error)

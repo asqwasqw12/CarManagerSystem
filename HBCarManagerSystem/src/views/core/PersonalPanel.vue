@@ -10,18 +10,20 @@
         <div class="registe-info">
           <span class="registe-info">
             <li class="fa fa-clock-o"></li>
-            {{ this.dateFormat(user.createTime) }}
+           {{ this.dateFormat(user.createTime) }}
           </span>
         </div>
     </div>
     <div class="personal-relation">
-        <span class="relation-item">followers</span>
-        <span class="relation-item">watches</span>
-        <span class="relation-item">friends</span>
+        <span class="relation-item"></span>
+        <span class="relation-item"></span>
+        <span class="relation-item"></span>
     </div>
     <div class="main-operation">
-        <span class="main-operation-item" @click="openPersonCenter">
+        <span class="main-operation-item" >
+          <router-link to="/user/center">
           <el-button size="small" icon="fa fa-male" > 个人中心</el-button>
+          </router-link>
         </span>
         <span class="main-operation-item" @click="openupdatePasswordDialog">
           <el-button size="small" icon="fa fa-key"> 修改密码</el-button>
@@ -46,8 +48,8 @@
       退出登录
     </div>
     <!--修改密码界面-->
-    <el-dialog title="修改密码" width="40%" :visible.sync="updatePwdDialogVisible" :close-on-click-modal="false" :modal="false">
-      <el-form :model="updatePwdDataForm" label-width="100px" :rules="updatePwdDataFormRules" ref="updatePwdDataForm" :size="size">
+    <el-dialog title="修改密码" width="500px"  append-to-body :visible.sync="updatePwdDialogVisible" :close-on-click-modal="false" :modal="true">
+      <el-form :model="updatePwdDataForm" label-width="88px" :rules="updatePwdDataFormRules" ref="updatePwdDataForm" :size="size">
         <el-form-item label="原密码" prop="password">
           <el-input v-model="updatePwdDataForm.password" type="password" auto-complete="off"></el-input>
         </el-form-item>
@@ -77,12 +79,21 @@ export default {
       default: {
         realName: "用户",
         avatar: "@/assets/user.png",
-        role: "超级管理员",
-        registeInfo: "注册时间：2018-12-25 "
+        roleNames: "超级管理员",
+        createTime: "注册时间：2018-12-25 "
       }
     }
   },
   data() {
+    let validatePassword = (rule, value, callback) => {
+      if (value.length === 0) {
+        callback(new Error('请输入新密码'))
+      } else if (value.length < 3) {
+        callback(new Error('密码不能小于3位'))
+      } else {
+        callback()
+      }
+    }
     return {
       onlineUser: 0,
       accessTimes: 0,
@@ -99,10 +110,10 @@ export default {
 					{ required: true, message: '请输入原密码', trigger: 'blur' }
         ],
         newPassword: [
-					{ required: true, message: '请输入新密码', trigger: 'blur' }
+					{ required: true,  trigger: 'blur',validator:validatePassword }
         ],
         comfirmPassword: [
-					{ required: true, message: '请确认密码', trigger: 'blur' }
+					{ required: true, trigger: 'blur',message: '请再次输入新密码' }
 				]
 			},
     }
@@ -163,12 +174,11 @@ export default {
       })
       .catch(() => {})
     },
-    logoutApi() {
-      sessionStorage.removeItem("user")
-        this.$router.push("/login")
-        this.$api.login.logout().then((res) => {
-          }).catch(function(res) {
-        })
+    async logoutApi() {
+
+        await this.$store.dispatch('logout')
+        console.log("this.$route.fullPath"+this.$route.fullPath)
+        this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     },
     // 清除Cookie
     deleteCookie(name){

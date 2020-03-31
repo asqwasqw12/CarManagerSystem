@@ -18,6 +18,7 @@ const permission = {
       return new Promise(resolve => {
         let accessedRoutes
         accessedRoutes = filterMenu(navMenuTree)
+        accessedRoutes.push({ path: '*', redirect: '/404', hidden: true })  //这个路由地址必须加在最后面，如果加在router前面，路由就会直接跳到404页面
         commit('SET_ROUTES', accessedRoutes)
        // commit('SET_ROUTES', asyncRoutes)
         resolve(accessedRoutes)

@@ -67,8 +67,8 @@
         let validatePassword = (rule, value, callback) => {
           if (value.length === 0) {
             callback(new Error('请输入密码'))
-          } else if (value.length < 5) {
-            callback(new Error('密码不能小于5位'))
+          } else if (value.length < 3) {
+            callback(new Error('密码不能小于3位'))
           } else {
             callback()
           }
