@@ -1,13 +1,4 @@
 <template>
-  <div>用户界面</div>
-</template>
-
-<script>
-  export default {
-    name: "center"
-  }
-</script>
-<!--<template>
   <div class="app-container">
     <el-row :gutter="20">
       <el-col :xs="24" :sm="24" :md="8" :lg="6" :xl="5" style="margin-bottom: 10px">
@@ -25,20 +16,18 @@
                 :action="updateAvatarApi"
                 class="avatar-uploader"
               >
-                <img :src="user.avatar ? baseApi + '/avatar/' + user.avatar : Avatar" title="点击上传头像" class="avatar">
+                <img :src="userInfo.avatar ? baseApi + '/avatar/' + userInfo.avatar : Avatar" title="点击上传头像" class="avatar">
               </el-upload>
             </div>
             <ul class="user-info">
-              <li><div style="height: 100%"><svg-icon icon-class="login" /> 登录账号<div class="user-right">{{ user.username }}</div></div></li>
-              <li><svg-icon icon-class="user1" /> 用户昵称 <div class="user-right">{{ user.nickName }}</div></li>
-              <li><svg-icon icon-class="phone" /> 手机号码 <div class="user-right">{{ user.phone }}</div></li>
-              <li><svg-icon icon-class="email" /> 用户邮箱 <div class="user-right">{{ user.email }}</div></li>
-              <li><svg-icon icon-class="dept" /> 所属部门 <div class="user-right"> {{ user.dept }} / {{ user.job }}</div></li>
-              <li>
-                <svg-icon icon-class="anq" /> 安全设置
+              <li><div style="height: 100%"><i class="fa-address-card"></i>登录账号<div class="user-right">{{ userInfo.username }}</div></div></li>
+              <li><i class="fa-user"></i> 用户姓名 <div class="user-right">{{ userInfo.realName }}</div></li>
+              <li><i class="fa-phone"></i> 手机号码 <div class="user-right">{{ userInfo.mobile }}</div></li>
+              <li><i class="fa-envelope-o"></i> 用户邮箱 <div class="user-right">{{ userInfo.email }}</div></li>
+              <li><i class="fa-cubes"></i><i class="fa-pencil"></i> 所属部门 <div class="user-right"> {{ userInfo.deptId }}</div></li>
+              <li><svg-icon icon-class="dept" /> 信息修改
                 <div class="user-right">
-                  <a @click="$refs.pass.dialog = true">修改密码</a>
-                  <a @click="$refs.email.dialog = true">修改邮箱</a>
+                  <a @click="$refs.userForm.dialogVisible = true">邮箱/手机</a>
                 </div>
               </li>
             </ul>
@@ -46,176 +35,105 @@
         </el-card>
       </el-col>
       <el-col :xs="24" :sm="24" :md="16" :lg="18" :xl="19">
-        &lt;!&ndash;    用户资料    &ndash;&gt;
+        <!--    用户资料    -->
         <el-card class="box-card">
           <el-tabs v-model="activeName" @tab-click="handleClick">
-            <el-tab-pane label="用户资料" name="first">
-              <el-form ref="form" :model="form" :rules="rules" style="margin-top: 10px;" size="small" label-width="65px">
-                <el-form-item label="昵称" prop="nickName">
-                  <el-input v-model="form.nickName" style="width: 35%" />
-                  <span style="color: #C0C0C0;margin-left: 10px;">用户昵称不作为登录使用</span>
-                </el-form-item>
-                <el-form-item label="手机号" prop="phone">
-                  <el-input v-model="form.phone" style="width: 35%;" />
-                  <span style="color: #C0C0C0;margin-left: 10px;">手机号码不能重复</span>
-                </el-form-item>
-                <el-form-item label="性别">
-                  <el-radio-group v-model="form.sex" style="width: 178px">
-                    <el-radio label="男">男</el-radio>
-                    <el-radio label="女">女</el-radio>
-                  </el-radio-group>
+            <el-tab-pane label="其他配置" name="first">
+              <el-form ref="form" :model="form"  style="margin-top: 10px;" size="small" label-width="65px">
+                <el-form-item label="其他">
                 </el-form-item>
                 <el-form-item label="">
                   <el-button :loading="saveLoading" size="mini" type="primary" @click="doSubmit">保存配置</el-button>
                 </el-form-item>
               </el-form>
             </el-tab-pane>
-            &lt;!&ndash;    操作日志    &ndash;&gt;
+            <!--    操作日志    -->
             <el-tab-pane label="操作日志" name="second">
-              <el-table v-loading="loading" :data="data" style="width: 100%;">
-                <el-table-column prop="description" label="行为" />
-                <el-table-column prop="requestIp" label="IP" />
-                <el-table-column :show-overflow-tooltip="true" prop="address" label="IP来源" />
-                <el-table-column prop="browser" label="浏览器" />
-                <el-table-column prop="time" label="请求耗时" align="center">
-                  <template slot-scope="scope">
-                    <el-tag v-if="scope.row.time <= 300">{{ scope.row.time }}ms</el-tag>
-                    <el-tag v-else-if="scope.row.time <= 1000" type="warning">{{ scope.row.time }}ms</el-tag>
-                    <el-tag v-else type="danger">{{ scope.row.time }}ms</el-tag>
-                  </template>
-                </el-table-column>
-                <el-table-column
-                  align="right"
-                >
-                  <template slot="header">
-                    <div style="display:inline-block;float: right;cursor: pointer" @click="init">创建日期<i class="el-icon-refresh" style="margin-left: 40px" /></div>
-                  </template>
-                  <template slot-scope="scope">
-                    <span>{{ parseTime(scope.row.createTime) }}</span>
-                  </template>
-                </el-table-column>
-              </el-table>
-              &lt;!&ndash;分页组件&ndash;&gt;
-              <el-pagination
-                :total="total"
-                :current-page="page + 1"
-                style="margin-top: 8px;"
-                layout="total, prev, pager, next, sizes"
-                @size-change="sizeChange"
-                @current-change="pageChange"
-              />
             </el-tab-pane>
           </el-tabs>
         </el-card>
       </el-col>
     </el-row>
-    <updateEmail ref="email" :email="user.email" />
-    <updatePass ref="pass" />
+    <update-user  v-if="showDialog" ref="userForm" :email="userInfo.email" :mobile="userInfo.mobile" />
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import updatePass from './center/updatePass'
-import updateEmail from './center/updateEmail'
-import { getToken } from '@/utils/auth'
-import store from '@/store'
-import { isvalidPhone } from '@/utils/validate'
-import { parseTime } from '@/utils/index'
-import crud from '@/mixins/crud'
-import { editUser } from '@/api/system/user'
-import Avatar from '@/assets/images/avatar.png'
-export default {
-  name: 'Center',
-  components: { updatePass, updateEmail },
-  mixins: [crud],
-  data() {
-    // 自定义验证
-    const validPhone = (rule, value, callback) => {
-      if (!value) {
-        callback(new Error('请输入电话号码'))
-      } else if (!isvalidPhone(value)) {
-        callback(new Error('请输入正确的11位手机号码'))
-      } else {
-        callback()
+  import { mapGetters } from 'vuex'
+  import UpdateUser from './center/UpdateUser'
+  import store from '@/store'
+  import { parseTime } from '@/utils/index'
+  import {findByName} from '@/api/system/user'
+  import Avatar from '@/assets/images/avatar.png'
+  import { baseUrl } from '@/utils/global'
+  export default {
+    name: 'Center',
+    components: {  UpdateUser },
+    data() {
+      return {
+        baseApi:baseUrl,
+        Avatar: Avatar,
+        activeName: 'first',
+        saveLoading: false,
+        headers: {
+          'Authorization': store.getters.token
+        },
+        userName:this.$store.getters.name,
+        userInfo: {},
+        form:{},
+        showDialog:false,
       }
-    }
-    return {
-      Avatar: Avatar,
-      activeName: 'first',
-      saveLoading: false,
-      headers: {
-        'Authorization': getToken()
+    },
+    computed: {
+      ...mapGetters([
+        'updateAvatarApi'
+      ])
+    },
+    mounted() {
+      this.$nextTick( () => {
+        if (this.userName) {
+          let params = {name:this.userName}
+          findByName(params).then((res) => {
+            if(res.code == 200) {
+              this.userInfo = res.data
+              this.showDialog = true
+            }
+          })
+        }
+      })
+    },
+    methods: {
+      parseTime,
+      handleClick(tab, event) {
+        if (tab.name === 'second') {
+          this.init()
+        }
       },
-      form: {},
-      rules: {
-        nickName: [
-          { required: true, message: '请输入用户昵称', trigger: 'blur' },
-          { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
-        ],
-        phone: [
-          { required: true, trigger: 'blur', validator: validPhone }
-        ]
-      }
-    }
-  },
-  computed: {
-    ...mapGetters([
-      'user',
-      'updateAvatarApi',
-      'baseApi'
-    ])
-  },
-  created() {
-    this.form = { id: this.user.id, nickName: this.user.nickName, sex: this.user.sex, phone: this.user.phone }
-    store.dispatch('GetInfo').then(() => {})
-  },
-  methods: {
-    parseTime,
-    handleClick(tab, event) {
-      if (tab.name === 'second') {
-        this.init()
-      }
-    },
-    beforeInit() {
-      this.url = 'api/logs/user'
-      return true
-    },
-    handleSuccess(response, file, fileList) {
-      this.$notify({
-        title: '头像修改成功',
-        type: 'success',
-        duration: 2500
-      })
-      store.dispatch('GetInfo').then(() => {})
-    },
-    // 监听上传失败
-    handleError(e, file, fileList) {
-      const msg = JSON.parse(e.message)
-      this.$notify({
-        title: msg.message,
-        type: 'error',
-        duration: 2500
-      })
-    },
-    doSubmit() {
-      if (this.$refs['form']) {
-        this.$refs['form'].validate((valid) => {
-          if (valid) {
-            this.saveLoading = true
-            editUser(this.form).then(() => {
-              this.editSuccessNotify()
-              store.dispatch('GetInfo').then(() => {})
-              this.saveLoading = false
-            }).catch(() => {
-              this.saveLoading = false
-            })
-          }
+      beforeInit() {
+        this.url = 'api/logs/user'
+        return true
+      },
+      handleSuccess(response, file, fileList) {
+        this.$notify({
+          title: '头像修改成功',
+          type: 'success',
+          duration: 2500
         })
+        store.dispatch('GetInfo').then(() => {})
+      },
+      // 监听上传失败
+      handleError(e, file, fileList) {
+        const msg = JSON.parse(e.message)
+        this.$notify({
+          title: msg.message,
+          type: 'error',
+          duration: 2500
+        })
+      },
+      doSubmit() {
       }
     }
   }
-}
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
@@ -249,4 +167,4 @@ export default {
       }
     }
   }
-</style>-->
+</style>
