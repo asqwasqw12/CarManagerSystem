@@ -6,7 +6,7 @@ const app = {
       withoutAnimation: false                //无动画属性默认为无
 },
     size: Cookies.get('size') || 'small',
-    updateAvatarApi: 'http://127.0.0.1:8080' + '/users/updateAvatar', // 修改头像
+    updateAvatarApi: 'http://127.0.0.1:8080' + '/user/updateAvatar', // 修改头像
     sqlApi: 'http://127.0.0.1:8080'+'/druid/login.html',                  // Sql 监控
     swaggerApi: 'http://127.0.0.1:8080' + '/swagger-ui.html',             // swagger
   },

@@ -2,7 +2,7 @@
   <div class="personal-panel">
     <div class="personal-desc" :style="{'background':this.$store.state.settings.themeColor}">
         <div class="avatar-container">
-          <img class="avatar" :src="require('@/assets/user.png')" />
+          <img class="userAvatar" :src="user.avatar ? baseApi + '/avatar/' + user.avatar : Avatar" />
         </div>
         <div class="name-role">
           <span class="sender">{{ user.realName }} - {{ user.roleNames }}</span>
@@ -70,7 +70,9 @@
 
 <script>
 import { format } from "@/utils/datetime"
-import {updatePassword} from "@/api/system/user";
+import {updatePassword} from "@/api/system/user"
+import Avatar from '@/assets/images/avatar.png'
+import { baseUrl } from '@/utils/global'
 export default {
   name: 'PersonalPanel',
   props: {
@@ -78,8 +80,8 @@ export default {
       type: Object,
       default: {
         realName: "用户",
-        avatar: "@/assets/user.png",
-        roleNames: "超级管理员",
+        avatar: Avatar,
+        roleNames: "普通用户",
         createTime: "注册时间：2018-12-25 "
       }
     }
@@ -95,6 +97,8 @@ export default {
       }
     }
     return {
+      Avatar:Avatar,
+      baseApi:baseUrl,
       onlineUser: 0,
       accessTimes: 0,
       size: 'small',
@@ -235,7 +239,7 @@ export default {
   padding: 15px;
   color: #fff;
 }
-.avatar {
+.userAvatar {
   width: 80px;
   height: 80px;
   border-radius: 90px;

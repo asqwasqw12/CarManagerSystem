@@ -22,7 +22,7 @@
         </el-menu-item>
         <el-menu-item index="5" v-popover:popover-personal>
           <!-- 用户信息 -->
-          <span class="user-info"><img :src="userInfo.avatar" />{{userInfo.realName}}</span>
+          <span class="user-info"><img :src="userInfo.avatar ? baseApi + '/avatar/' + userInfo.avatar : Avatar" >{{userInfo.realName}}</span>
           <el-popover ref="popover-personal" placement="bottom-end" trigger="click" :visible-arrow="false">
             <personal-panel :user="userInfo"></personal-panel>
           </el-popover>
@@ -37,7 +37,9 @@
   import NoticePanel from "@/views/core/NoticePanel"
   import MessagePanel from "@/views/core/MessagePanel"
   import PersonalPanel from "@/views/core/PersonalPanel"
-  import {findByName} from "@/api/system/user";
+  import {findByName} from "@/api/system/user"
+  import Avatar from '@/assets/images/avatar.png'
+  import { baseUrl } from '@/utils/global'
   export default {
     components:{
       NoticePanel,
@@ -49,6 +51,8 @@
       return {
         userName:this.$store.getters.name,
         userInfo:{},
+        Avatar:Avatar,
+        baseApi:baseUrl,
         messageNumbers:0,
         messageData:[
           {
@@ -115,7 +119,6 @@
         findByName(params).then((res) => {
           if(res.code == 200) {
             this.userInfo = res.data
-            this.userInfo.avatar = require("@/assets/user.png")
           }
         })
       }

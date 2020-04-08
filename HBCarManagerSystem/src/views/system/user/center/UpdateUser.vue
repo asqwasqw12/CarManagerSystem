@@ -19,16 +19,13 @@
 <script>
   import store from '@/store'
   import { validEmail,isvalidPhone } from '@/utils/validate'
+  import {save} from "@/api/system/user";
   export default {
     name: 'UpdateUser',
     props: {
-      email: {
-        type: String,
-        required: true
-      },
-      mobile: {
-        type: String,
-        required: true
+      userData:{
+        type:Object,
+        required:true
       }
     },
     data() {
@@ -75,18 +72,33 @@
         this.$refs['form'].validate((valid) => {
           if (valid) {
             this.loading = true
-            updateEmail(this.form).then(res => {
+            let user = this.userData
+            user.email= this.form.email
+            user.mobile = this.form.mobile
+            save(user).then(res => {
               this.loading = false
-              this.resetForm()
-              this.$notify({
-                title: '邮箱修改成功',
-                type: 'success',
-                duration: 1500
-              })
-              store.dispatch('GetInfo').then(() => {})
+              if(res.code === 200){
+                this.$notify({
+                  title: '修改成功',
+                  type: 'success',
+                  duration: 1500
+                })
+              }else{
+                this.$notify({
+                  title: '登录提示',
+                  type: 'error',
+                  message:res.msg,
+                  duration: 1500
+                })
+              }
+              //store.dispatch('GetInfo').then(() => {})
             }).catch(err => {
               this.loading = false
-              console.log(err.response.data.message)
+                this.$notify({
+                  title:'登录提示',
+                  message:err.message ,
+                  type:'error'
+                })
             })
           } else {
             return false
@@ -95,8 +107,8 @@
       },
     },
     mounted() {
-      this.form.email = this.email
-      this.form.mobile = this.mobile
+      this.form.email = this.userData.email
+      this.form.mobile = this.userData.mobile
     },
   }
 </script>

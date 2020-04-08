@@ -20,16 +20,12 @@
               </el-upload>
             </div>
             <ul class="user-info">
-              <li><div style="height: 100%"><i class="fa-address-card"></i>登录账号<div class="user-right">{{ userInfo.username }}</div></div></li>
-              <li><i class="fa-user"></i> 用户姓名 <div class="user-right">{{ userInfo.realName }}</div></li>
-              <li><i class="fa-phone"></i> 手机号码 <div class="user-right">{{ userInfo.mobile }}</div></li>
-              <li><i class="fa-envelope-o"></i> 用户邮箱 <div class="user-right">{{ userInfo.email }}</div></li>
-              <li><i class="fa-cubes"></i><i class="fa-pencil"></i> 所属部门 <div class="user-right"> {{ userInfo.deptId }}</div></li>
-              <li><svg-icon icon-class="dept" /> 信息修改
-                <div class="user-right">
-                  <a @click="$refs.userForm.dialogVisible = true">邮箱/手机</a>
-                </div>
-              </li>
+              <li><svg-icon icon-class="login" />登录账号<div class="user-right">{{ userInfo.name }}</div></li>
+              <li><svg-icon icon-class="user1" /> 用户姓名 <div class="user-right">{{ userInfo.realName }}</div></li>
+              <li><svg-icon icon-class="phone" /> 手机号码 <div class="user-right">{{ userInfo.mobile }}</div></li>
+              <li><svg-icon icon-class="email" /> 用户邮箱 <div class="user-right">{{ userInfo.email }}</div></li>
+              <li><svg-icon icon-class="dept" /> 所属部门 <div class="user-right"> {{ userInfo.deptId }}</div></li>
+              <li><svg-icon icon-class="anq" /> 信息修改<div class="user-right"><a @click="$refs.userForm.dialogVisible = true">邮箱/手机</a></div></li>
             </ul>
           </div>
         </el-card>
@@ -54,7 +50,7 @@
         </el-card>
       </el-col>
     </el-row>
-    <update-user  v-if="showDialog" ref="userForm" :email="userInfo.email" :mobile="userInfo.mobile" />
+    <update-user  v-if="showDialog" ref="userForm"  :user-data="userInfo" />
   </div>
 </template>
 
@@ -79,6 +75,7 @@
           'Authorization': store.getters.token
         },
         userName:this.$store.getters.name,
+
         userInfo: {},
         form:{},
         showDialog:false,
@@ -119,7 +116,7 @@
           type: 'success',
           duration: 2500
         })
-        store.dispatch('GetInfo').then(() => {})
+        store.dispatch('getInfo').then(() => {})
       },
       // 监听上传失败
       handleError(e, file, fileList) {
@@ -154,16 +151,22 @@
   .user-info {
     padding-left: 0;
     list-style: none;
-    li{
+
+    li {
+      text-align: left;
       border-bottom: 1px solid #F0F3F4;
       padding: 11px 0;
       font-size: 13px;
     }
+
     .user-right {
       float: right;
 
-      a{
+      a {
         color: #317EF3;
+      }
+      a:hover {
+        cursor: pointer;
       }
     }
   }
