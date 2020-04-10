@@ -107,10 +107,10 @@
             <el-button type="primary" @click="onLogin">重新登录</el-button>
           </el-form-item>
         </el-form>
-        <p style="font-size:12px;">为了确保您的注册信息通过审核，请提供您的真实个人信息</p>
+        <p style="font-size:12px;color:red;">为了确保您的注册信息通过审核，请提供您的真实个人信息</p>
       </div>
       <footer>
-        <a href="http://www.tus-est.com/">启迪环境</a>&nbsp;&nbsp;<a href="https://www.hjxnyqc.com.cn/">合加新能源汽车</a><br>
+        <a href="http://www.tus-est.com/" target="_blank">启迪环境</a>&nbsp;&nbsp;<a href="https://www.hjxnyqc.com.cn/" target="_blank">合加新能源汽车</a><br>
         Copyright © 合加新能源汽车有限公司  京 ICP备 11111111号
       </footer>
     </div>
@@ -121,6 +121,7 @@
     import router from "@/router/routers";
     import request from '@/utils/request'
     import SIdentify from '../../components/identify'
+    import { register } from '@/api/login'
     export default {
         name: "index",
       components: {
@@ -310,28 +311,21 @@
                 window.console.log("注册信息有效性验证成功")
                 this.loading=true
                 let userInfo = {
-                  userName:this.registerForm.userName, //用户名
+                  name:this.registerForm.userName, //用户名
                   password:this.registerForm.password,//密码
                   realName:this.registerForm.realName,//真实姓名
-                  sex:this.registerForm.sex,//性别
-                  company:this.registerForm.company,//公司名称
-                  departmentname:this.registerForm.departmentname,//部门名称
-                  post:this.registerForm.post,//职务
+                  //sex:this.registerForm.sex,//性别,暂未存储到后台数据库
+                  //company:this.registerForm.company,//公司名称
+                  //deptName:this.registerForm.departmentname,//部门名称
+                  job:this.registerForm.company+'/'+this.registerForm.departmentname+'/'+this.registerForm.post,//职务
                   email:this.registerForm.email,//电子邮箱
-                  mobilephone:this.registerForm.mobilephone,//手机
+                  mobile:this.registerForm.mobilephone,//手机
                 }
-                request({
-                  url: '/api/register',
-                  method: 'post',
-                  headers:{
-                    'Content-Type':'application/json'
-                  },
-                  data:userInfo                                    //携带数据发送请求到后台
-                }).then(response =>{
+                register(userInfo).then(response =>{
                   this.loading = false
-                  const data = response.data
+                  const data = response
                   console.log(data)
-                  if(data.info.code === '0') {
+                  if(data.msg === 'ok') {
                     this.$notify({
                       title: '注册提示',
                       message: "注册成功，请耐心等待审核",
@@ -340,11 +334,12 @@
                       duration:3000
                     })
                   }else{
-                      this.$notify({
-                        title: '注册提示',
-                        message: data.info.message,
-                        position: 'bottom-right',
-                        type: 'error'
+                    this.$notify({
+                      title: '注册提示',
+                      message: data.msg,
+                      position: 'bottom-right',
+                      type: 'error',
+                      duration:3000
                     })
                   }
                 }).catch(error =>{
@@ -358,7 +353,6 @@
                 })
               }
             })
-
           },
           onLogin(){
             router.push('/login')
@@ -398,7 +392,9 @@
   }
   #register {
     margin:10px auto;
+    padding-right: 40px;
     text-align:center;
+    background: rgba(0, 0, 0, 0.7);
     width:650px;
     height:550px;
     -moz-border-radius:5px;

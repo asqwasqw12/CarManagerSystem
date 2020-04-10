@@ -31,10 +31,9 @@ router.beforeEach(async(to, from, next) => {
           await store.dispatch('findNavTree',store.getters.name)
           console.log("已经获取了navtree")
           const accessRoutes = await store.dispatch('generateRoutes',store.getters.navTree)
-          await store.dispatch('findPermissions',store.getters.name)
+          //await store.dispatch('findPermissions',store.getters.name)
           console.log('accessRoutes='+accessRoutes)
           router.addRoutes(accessRoutes)
-          //router.addRoutes(asyncRoutes)
           next({ ...to, replace: true })
           }catch (error) {
           // remove token and go to login page to re-login

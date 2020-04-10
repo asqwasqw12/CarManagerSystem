@@ -21,10 +21,20 @@ export function logout() {
   })
 }
 
+//获取用户信息
 export function getInfo(token) {
   return request({
     url: '/api/getInfo',
     method: 'get',
     params: { token }
+  })
+}
+
+//登录
+export function register(data) {
+  return request({
+    url: '/api/register',
+    method: 'post',
+    data
   })
 }

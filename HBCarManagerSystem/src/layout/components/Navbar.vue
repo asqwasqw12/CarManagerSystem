@@ -33,11 +33,10 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex'
+  import { mapGetters,mapState } from 'vuex'
   import NoticePanel from "@/views/core/NoticePanel"
   import MessagePanel from "@/views/core/MessagePanel"
   import PersonalPanel from "@/views/core/PersonalPanel"
-  import {findByName} from "@/api/system/user"
   import Avatar from '@/assets/images/avatar.png'
   import { baseUrl } from '@/utils/global'
   export default {
@@ -50,7 +49,6 @@
     data(){
       return {
         userName:this.$store.getters.name,
-        userInfo:{},
         Avatar:Avatar,
         baseApi:baseUrl,
         messageNumbers:0,
@@ -113,16 +111,6 @@
           }]
       }
     },
-    mounted() {
-      if (this.userName) {
-        let params = {name:this.userName}
-        findByName(params).then((res) => {
-          if(res.code == 200) {
-            this.userInfo = res.data
-          }
-        })
-      }
-    },
     methods:{
       async logout(){
         await this.$store.dispatch('logout')
@@ -133,7 +121,10 @@
     computed:{
       ...mapState({
         themeColor: state=>state.settings.themeColor
-      })
+      }),
+      ...mapGetters([
+        'userInfo'
+      ])
     }
   }
 </script>

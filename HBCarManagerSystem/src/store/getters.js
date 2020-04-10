@@ -4,6 +4,7 @@ const getters = {
   roles:state => state.user.roles,
   token:state => state.user.token,
   name:state => state.user.name,
+  userInfo:state => state.user.userInfo, //用户基本信息
   perms: state => state.user.perms,      //用户权限标识集合
   navTree:state => state.user.navTree,   //导航菜单树
   loadMenus: state => state.user.loadMenus,

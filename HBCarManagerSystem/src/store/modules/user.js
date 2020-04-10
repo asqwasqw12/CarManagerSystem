@@ -8,6 +8,7 @@ const user = {
   state:{
     token:cookies.get('token'),     //使用令牌进行路由，cookies.get()保证刷新页面可以不用重新登录
     name:'',
+    userInfo:{}, //用户信息
     roles:[],   //用户角色,预留
     perms: [],  // 用户权限标识集合
     navTree: [],  // 导航菜单树
@@ -33,7 +34,10 @@ const user = {
     },
     setNavTree(state, navTree){  // 设置导航菜单树
       state.navTree = navTree;
-    }
+    },
+    SET_USER_INFO: (state, userInfo) => {
+      state.userInfo = userInfo
+    },
   },
   actions:{
     resetToken({ commit }) {
@@ -42,6 +46,7 @@ const user = {
         commit('setName','')
         commit('setPerms','')
         commit('setNavTree','')
+        commit('SET_USER_INFO','')
         resolve()
       })
     },
@@ -80,9 +85,9 @@ const user = {
         (resolve, reject) => {
           login(user).then(response => {             //后台响应返回数据
           const data = response
-          if (data.msg === 'ok' ) {                      //验证成功
+          if (data.msg === 'ok' ) {                       //验证成功
             commit('setToken', data.data.token )        //存储token到vuex
-            commit('setName', user.account )       //存储token到vuex
+            commit('setName', user.account )            //存储name到vuex
             cookies.set('token', data.data.token)       //存储token到cookies
             commit('SET_LOAD_MENUS', false)             //要求重新加载菜单
           }else{
@@ -104,6 +109,7 @@ const user = {
             reject('认证失败，请重新登录')
           }
             commit('setName',data.data.username)
+           commit('SET_USER_INFO',data.data)
             resolve(data)
         }).catch(error => {
           reject(error)
@@ -118,6 +124,7 @@ const user = {
           commit('setName','')
           commit('setPerms','')
           commit('setNavTree','')
+          commit('SET_USER_INFO','')
           resetRouter()
           cookies.set('token','')
           dispatch('delAllViews')

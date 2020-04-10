@@ -20,11 +20,11 @@
               </el-upload>
             </div>
             <ul class="user-info">
-              <li><svg-icon icon-class="login" />登录账号<div class="user-right">{{ userInfo.name }}</div></li>
+              <li><svg-icon icon-class="login" />登录账号<div class="user-right">{{ userInfo.username }}</div></li>
               <li><svg-icon icon-class="user1" /> 用户姓名 <div class="user-right">{{ userInfo.realName }}</div></li>
               <li><svg-icon icon-class="phone" /> 手机号码 <div class="user-right">{{ userInfo.mobile }}</div></li>
               <li><svg-icon icon-class="email" /> 用户邮箱 <div class="user-right">{{ userInfo.email }}</div></li>
-              <li><svg-icon icon-class="dept" /> 所属部门 <div class="user-right"> {{ userInfo.deptId }}</div></li>
+              <li><svg-icon icon-class="dept" /> 所属部门 <div class="user-right"> {{ userInfo.deptName }}</div></li>
               <li><svg-icon icon-class="anq" /> 信息修改<div class="user-right"><a @click="$refs.userForm.dialogVisible = true">邮箱/手机</a></div></li>
             </ul>
           </div>
@@ -50,7 +50,7 @@
         </el-card>
       </el-col>
     </el-row>
-    <update-user  v-if="showDialog" ref="userForm"  :user-data="userInfo" />
+    <update-user  ref="userForm"  :user-data="userInfo" />
   </div>
 </template>
 
@@ -59,7 +59,6 @@
   import UpdateUser from './center/UpdateUser'
   import store from '@/store'
   import { parseTime } from '@/utils/index'
-  import {findByName} from '@/api/system/user'
   import Avatar from '@/assets/images/avatar.png'
   import { baseUrl } from '@/utils/global'
   export default {
@@ -74,30 +73,18 @@
         headers: {
           'Authorization': store.getters.token
         },
-        userName:this.$store.getters.name,
-
-        userInfo: {},
         form:{},
-        showDialog:false,
       }
     },
     computed: {
       ...mapGetters([
-        'updateAvatarApi'
+        'updateAvatarApi',
+        'userInfo'
       ])
     },
-    mounted() {
-      this.$nextTick( () => {
-        if (this.userName) {
-          let params = {name:this.userName}
-          findByName(params).then((res) => {
-            if(res.code == 200) {
-              this.userInfo = res.data
-              this.showDialog = true
-            }
-          })
-        }
-      })
+    created() {
+      this.form = { id: this.userInfo.id, nickName: this.userInfo.nickName,  mobile: this.userInfo.mobile }
+      store.dispatch('getInfo').then(() => {})
     },
     methods: {
       parseTime,

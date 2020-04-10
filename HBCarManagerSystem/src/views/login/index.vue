@@ -40,10 +40,17 @@
 
       </div>
       <div class="truck" :style="truckStyle" ></div>
-      <footer>
-       <a href="http://www.tus-est.com/">启迪环境</a>&nbsp;&nbsp;<a href="https://www.hjxnyqc.com.cn/">合加新能源汽车</a><br>
+      <div class="footer">
+       <a href="http://www.tus-est.com/" target="_blank">启迪环境</a>&nbsp;&nbsp;<a href="https://www.hjxnyqc.com.cn/" target="_blank">合加新能源汽车</a><br>
+        <div class="left">装备制造：<a href="http://www.inforeenviro.com/" target="_blank">盈峰环境</a>&nbsp;&nbsp;<a href="http://www.ythuanwei.com/products/" target="_blank">宇通环卫</a>&nbsp;&nbsp;
+          <a href="http://www.xcmg.com/xghj/" target="_blank">徐工环境</a>&nbsp;&nbsp;<a href="http://www.fjlm.c om.cn/" target="_blank">福龙马</a>&nbsp;&nbsp;
+          <a href="http://www.krtzc.com.cn/index.html" target="_blank">凯瑞特种车</a> </div>
+        <div class="left">零部件：<a href="http://www.dfcv.com.cn/Index.aspx" target="_blank">东风商用车</a>&nbsp;&nbsp;<a href="http://www.fawjiefang.com.cn/" target="_blank">一汽解放</a>
+        <a href="http://www.dcec.com.cn/" target="_blank">东风康明斯</a>&nbsp;&nbsp;<a href="https://www.catlbattery.com/" target="_blank">宁德时代</a>&nbsp;&nbsp;<a href="http://www.vortexinfo.cn/h-col-282.html" target="_blank">伏泰科技</a></div>
+        <div class="left">环卫运营：<a href="http://www.besg.com.cn/approach/index.html" target="_blank">北京环卫</a>&nbsp;&nbsp;<a href="http://www.rrjqj.com/intro/1.html">仁仁洁</a></div>
+        <div class="left">行业新闻:<a href="http://www.cn-hw.net/" target="_blank">环卫科技</a>&nbsp;&nbsp;<a href="http://www.hunanhw.com/" target="_blank">湖南环卫</a> </div>
         Copyright © 合加新能源汽车有限公司  京 ICP备 11111111号
-      </footer>
+      </div>
     </div>
   </div>
 </template>
@@ -92,7 +99,8 @@
            height: "800px",
            background:  "url(" + require("../../assets/index_background-9.jpg") + ")",
             backgroundSize: "cover",
-          border: "2px solid #ccc"
+          border: "2px solid #ccc",
+            //position:"relative"
           },
           //车辆动画样式
           truckStyle:{
@@ -210,6 +218,7 @@
     margin-top:10px;
     width:1280px;
     height:800px;
+    border:1px solid red;
   }
   #login {
     margin-top:50px;
@@ -219,7 +228,7 @@
     height:300px;
     -moz-border-radius:5px;
     -webkit-border-radius:5px;
-    /*border:1px solid white;*/
+    /*border:1px solid red;*/
   }
   .verify-box{
     margin-right: 0px;
@@ -244,18 +253,14 @@
       80%{transform:translate(280px);} */
     100%{transform:translate(0px);}
   }
-  footer{
-    margin-top:20px;
+  .footer{
+    float:bottom;
+    margin-top:-100px;
   }
-  body{
-    background-color: #282828;
-    background-image: -webkit-radial-gradient(black 15%, transparent 16%), -webkit-radial-gradient(black 15%, transparent 16%), -webkit-radial-gradient(rgba(255, 255, 255, 0.1) 15%, transparent 20%), -webkit-radial-gradient(rgba(255, 255, 255, 0.1) 15%, transparent 20%);
-    background-image: radial-gradient(black 15%, transparent 16%), radial-gradient(black 15%, transparent 16%), radial-gradient(rgba(255, 255, 255, 0.1) 15%, transparent 20%), radial-gradient(rgba(255, 255, 255, 0.1) 15%, transparent 20%);
-    background-position: 0 0px, 8px 8px, 0 1px, 8px 9px;
-    background-size: 16px 16px;
-    text-aglin:center;
-    height:1200px;
-  }
+  .left{
+      text-align: left;
+      margin: 0px 20px;
+    }
 </style>
 <style>
   /*body{
