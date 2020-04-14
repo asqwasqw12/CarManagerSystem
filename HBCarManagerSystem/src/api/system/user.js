@@ -54,6 +54,18 @@ export function findByName(params) {
     params
   })
 }
+
+//根据用户状态查找
+export function findByStatus(params) {
+  return request({
+    url:'/api/user/findByStatus',
+    method:'get',
+    params
+  })
+}
+
+
+
 // 更新用户密码
 export function updatePassword(params){
   return request({
