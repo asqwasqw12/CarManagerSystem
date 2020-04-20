@@ -154,7 +154,7 @@ const asyncRoutes = [
       }
     ]
   },
-  {
+  /*{
     path:'/upkeep_manager',
     component:layout,
     children:[
@@ -169,6 +169,6 @@ const asyncRoutes = [
         }
       }
     ]
-  }
+  }*/
 ]
 export default asyncRoutes

@@ -1,16 +1,17 @@
 import request from '@/utils/request'
 
-// 获取所有的Role
-export function getAll() {
+
+// 查询全部
+export function findAll() {
   return request({
-    url: 'api/roles/all',
+    url: '/api/role/findAll',
     method: 'get'
   })
 }
 
 export function add(data) {
   return request({
-    url: 'api/roles',
+    url: '/api/roles',
     method: 'post',
     data
   })
@@ -18,21 +19,21 @@ export function add(data) {
 
 export function get(id) {
   return request({
-    url: 'api/roles/' + id,
+    url: '/api/roles/' + id,
     method: 'get'
   })
 }
 
 export function getLevel() {
   return request({
-    url: 'api/roles/level',
+    url: '/api/roles/level',
     method: 'get'
   })
 }
 
 export function del(ids) {
   return request({
-    url: 'api/roles',
+    url: '/api/roles',
     method: 'delete',
     data: ids
   })
@@ -40,7 +41,7 @@ export function del(ids) {
 
 export function edit(data) {
   return request({
-    url: 'api/roles',
+    url: '/api/roles',
     method: 'put',
     data
   })
@@ -48,10 +49,10 @@ export function edit(data) {
 
 export function editMenu(data) {
   return request({
-    url: 'api/roles/menu',
+    url: '/api/roles/menu',
     method: 'put',
     data
   })
 }
 
-export default { add, edit, del, get, editMenu, getLevel }
+export default { findAll,add, edit, del, get, editMenu, getLevel }

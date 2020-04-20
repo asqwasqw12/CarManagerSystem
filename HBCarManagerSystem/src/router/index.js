@@ -29,10 +29,8 @@ router.beforeEach(async(to, from, next) => {
         try{
           await store.dispatch('getInfo')
           await store.dispatch('findNavTree',store.getters.name)
-          console.log("已经获取了navtree")
           const accessRoutes = await store.dispatch('generateRoutes',store.getters.navTree)
-          //await store.dispatch('findPermissions',store.getters.name)
-          console.log('accessRoutes='+accessRoutes)
+          await store.dispatch('findPermissions',store.getters.name)
           router.addRoutes(accessRoutes)
           next({ ...to, replace: true })
           }catch (error) {

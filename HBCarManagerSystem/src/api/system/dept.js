@@ -1,35 +1,11 @@
 import request from '@/utils/request'
 
-export function getDepts(params) {
+// 查询机构树
+export function findTree() {
   return request({
-    url: 'api/dept',
-    method: 'get',
-    params
+    url: '/api/dept/findTree',
+    method: 'get'
   })
 }
 
-export function add(data) {
-  return request({
-    url: 'api/dept',
-    method: 'post',
-    data
-  })
-}
-
-export function del(ids) {
-  return request({
-    url: 'api/dept',
-    method: 'delete',
-    data: ids
-  })
-}
-
-export function edit(data) {
-  return request({
-    url: 'api/dept',
-    method: 'put',
-    data
-  })
-}
-
-export default { add, edit, del, getDepts }
+export default { findTree }
