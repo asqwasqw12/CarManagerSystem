@@ -146,8 +146,6 @@
           this.listLoading = false
           if (response.msg === 'ok') {
             this.list = response.data
-            //this.list.forEach(item => {item.createTime =format(item.createTime)})
-            this.rolesList = response.data.userRoles
             this.findUserRoles()
           } else {
             this.$notify({

@@ -56,21 +56,21 @@
             placeholder="用户状态"
             class="filter-item"
             style="width:120px"
-            @change="queryUser()"
+            @change="findPage()"
             >
             <el-option v-for="item in statusOptions" :key="item.id " :value="item.id" :label="item.name">
             </el-option>
           </el-select>
-          <kt-button icon="el-icon-search"  perms="sys:role:view" type="success" @click="queryUser">搜索</kt-button>
+          <kt-button icon="el-icon-search"  perms="sys:role:view" type="success" @click="findPage">搜索</kt-button>
           <kt-button icon="el-icon-plus"  perms="sys:user:add" type="primary" @click="saveUser" >新增</kt-button>
         </div>
         <!--右工具栏-->
         <div class="head-container" style="float: right">
-          <el-form :inline="true" :size="mini">
+          <el-form :inline="true" size="mini">
             <el-form-item>
               <el-button-group>
                 <el-tooltip content="刷新" placement="top">
-                  <el-button icon="fa fa-refresh" @click="queryUser(null)" size="small"></el-button>
+                  <el-button icon="fa fa-refresh" @click="findPage(null)" size="small"></el-button>
                 </el-tooltip>
                 <el-tooltip content="列显示" placement="top">
                   <el-button icon="fa fa-filter" @click="displayFilterColumnsDialog" size="small"></el-button>
@@ -82,7 +82,12 @@
             </el-form-item>
           </el-form>
         </div>
-
+        <kt-table perms-edit="sys:user:edit" perms-delete="sys:user:delete"
+          :data="pageResult.content" :columns="filterColumns"
+                  :loading="loading"
+          @handleEdit="handleEdit" @handleDelete="handleDelete">
+        </kt-table>
+        <pagination v-show="pageResult.totalSize>0" :total="pageResult.totalSize" :page.sync="pageRequest.pageNum" :limit.sync="pageRequest.pageSize" @pagination="findPage" />
       </el-col>
 
 
@@ -95,9 +100,13 @@
 <script>
     import {findTree} from "@/api/system/dept";
     import KtButton from "@/views/core/KtButton"
+    import KtTable from "@/views/core/KtTable";
+    import {findAll} from "@/api/system/role";
+    import {findPage} from "@/api/system/user";
+    import pagination from  "@/components/Pagination"
     export default {
         name: "user",
-      components:{KtButton},
+      components:{KtTable, KtButton,pagination},
       data(){
           return {
             deptName:'',
@@ -107,11 +116,26 @@
               label:'name'
             },
             queryParams:{
-              name:'',        //用户名
-              realName:'',    //真实姓名
-              status:'',      //用户状态
-              creatTime:'',   //注册日期
+              name:'',        //根据用户名查询
+              realName:'',    //根据真实姓名查询
+              status:'',      //根据用户状态查询
+              creatTime:'',   //根据注册日期查询
+              deptId:0        //根据部门id查询
             },
+            pageRequest:{
+              pageNum:1,
+              pageSize:10,
+              params:[],
+              objectParam:{}
+            },
+            pageResult:{
+              totalSize:0,  //总行数
+              totalPages:0, //总页数
+              content:[]    //查询后的用户信息列表
+            },
+            loading:false,
+            columns:[],       //表格所有列属性
+            filterColumns:[], //过滤后显示列属性
             statusOptions:[
               {
                 id:'0',
@@ -129,7 +153,9 @@
           }
       },
       mounted(){
-          this.findDeptTree()
+        this.findDeptTree()
+        this.initColumns()
+        this.findPage()
       },
       methods:{
         // 获取部门列表
@@ -143,15 +169,110 @@
 
         },
         //查询用户列表
-        queryUser(){
-
+        findPage(){
+            this.listLoading = true
+            this.getPageRequest()
+          this.pageRequest.objectParam = this.queryParams
+            findPage(this.pageRequest).then(response => {
+              this.listLoading = false
+              if (response.msg === 'ok') {
+                this.pageResult = response.data
+                this.findUserRoles()
+              } else {
+                this.$notify({
+                  title: '提示',
+                  type: 'error',
+                  message:response.msg,
+                  duration: 1500
+                })
+              }
+            }).catch(error =>{
+              this.listLoading = false
+              this.$notify({
+                title:'获取数据提示',
+                message:error.message,
+                position:'bottom-right',
+                type:'error'
+              })
+            })
         },
+
+        //获取查询参数
+        getPageRequest(){
+          this.pageRequest.params=[
+            {
+              name:'name',
+              value:this.queryParams.name
+            },
+            {
+              name:'realName',
+              value:this.queryParams.realName
+            },
+            {
+              name:'status',
+              value:this.queryParams.status
+            },
+            {
+              name:'creatTime',
+              value:this.queryParams.creatTime
+            },
+            {
+              name:'deptId',
+              value:this.queryParams.deptId
+            }
+          ]
+        },
+        // 加载所有用户角色信息
+        findUserRoles() {
+          findAll().then((res) => {
+            // 加载角色集合
+            this.rolesList = res.data
+          })
+        },
+
         //新增用户列表
         saveUser(){
 
+        },
+
+        //表格列属性选择对话框
+        displayFilterColumnsDialog(){
+
+        },
+         //导出用户数据
+        exportUserExcelFile(){
+
+        },
+
+        //表格编辑按钮函数
+        handleEdit(){
+
+        },
+
+        //表格删除按钮函数
+        handleDelete(){
+
+        },
+
+        // 处理表格列过滤显示
+        initColumns() {
+          this.columns = [
+            {prop:"id", label:"ID", minWidth:50},
+            {prop:"name", label:"用户名", minWidth:80},
+            {prop:"realName", label:"姓名", minWidth:80},
+            {prop:"deptName", label:"机构", minWidth:120},
+            {prop:"roleNames", label:"角色", minWidth:100},
+            /*{prop:"email", label:"邮箱", minWidth:120},*/
+            {prop:"mobile", label:"手机", minWidth:100},
+            {prop:"status", label:"状态", minWidth:70},
+            {prop:"createTime",label:"注册时间",minWidth:100 }
+            // {prop:"createBy", label:"创建人", minWidth:120},
+            // {prop:"createTime", label:"创建时间", minWidth:120, formatter:this.dateFormat}
+            // {prop:"lastUpdateBy", label:"更新人", minWidth:100},
+            // {prop:"lastUpdateTime", label:"更新时间", minWidth:120, formatter:this.dateFormat}
+          ]
+          this.filterColumns = JSON.parse(JSON.stringify(this.columns));
         }
-
-
       }
     }
 </script>
