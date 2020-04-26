@@ -37,7 +37,7 @@
           />
           <!--注册时间搜索框-->
           <el-date-picker
-            v-model="queryParams.creatTime"
+            v-model="queryParams.createTime"
             :default-time="['00:00:00','23:59:59']"
             type="daterange"
             range-separator=":"
@@ -119,7 +119,7 @@
               name:'',        //根据用户名查询
               realName:'',    //根据真实姓名查询
               status:'',      //根据用户状态查询
-              creatTime:'',   //根据注册日期查询
+              createTime:[],   //根据注册日期查询
               deptId:0        //根据部门id查询
             },
             pageRequest:{
@@ -166,7 +166,8 @@
         },
         //切换部门
         handleNodeClick(data){
-
+              this.queryParams.deptId = data.id
+              this.findPage()
         },
         //查询用户列表
         findPage(){
@@ -212,10 +213,10 @@
               name:'status',
               value:this.queryParams.status
             },
-            {
+            /*{
               name:'creatTime',
               value:this.queryParams.creatTime
-            },
+            },*/
             {
               name:'deptId',
               value:this.queryParams.deptId
