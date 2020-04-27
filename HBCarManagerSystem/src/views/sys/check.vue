@@ -61,7 +61,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog title="审核新用户" :visible.sync="dialogFormVisible" :close-on-click-modal="false">
+    <el-dialog title="审核新用户" width="40%" :visible.sync="dialogFormVisible" :close-on-click-modal="false">
       <el-form ref="dataForm"  :model="temp" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;" size="mini">
         <el-form-item label="用户名" prop="name">
           <el-input v-model="temp.name" :disabled="true" />
@@ -69,15 +69,14 @@
         <el-form-item label="姓名" prop="realName" >
           <el-input v-model="temp.realName" :disabled="true"/>
         </el-form-item>
-        <el-form-item label="部门" prop="departmentname">
-          <treeselect
-            v-model="temp.deptId"
-            :options="deptData"
-            style="width: 178px"
-            placeholder="选择部门"
-            @select="selectFun"
-          />
-        </el-form-item>
+        <el-form-item label="部门" prop="deptId">
+        <treeselect
+          v-model="temp.deptId"
+          :options="deptData"
+          placeholder="选择部门"
+          @select="selectFun"
+        />
+      </el-form-item>
         <el-form-item label="职务" prop="job">
           <el-input v-model="temp.job" />
         </el-form-item>
@@ -96,7 +95,7 @@
           取消
         </el-button>
         <el-button type="primary" @click="updateData()">
-          确定
+          提交
         </el-button>
       </div>
     </el-dialog>
@@ -142,7 +141,7 @@
     methods: {
       getUserInfoByStatus() {
         this.listLoading = true
-        findByStatus({status:'2' }).then(response => {
+        findByStatus({status:2 }).then(response => {
           this.listLoading = false
           if (response.msg === 'ok') {
             this.list = response.data
@@ -214,7 +213,7 @@
           userRoles.push(userRole)
         }
         params.userRoles = userRoles
-        params.status = '1'   //将用户状态修改为正常用户
+        params.status = 1   //将用户状态修改为正常用户
         let arrayJob
         if(params.job.length !== 0){
           arrayJob = params.job.split('/')
