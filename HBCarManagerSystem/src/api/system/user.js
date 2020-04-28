@@ -33,6 +33,7 @@ export function exportUserExcelFile(data) {
   return request({
     url: '/api/user/exportUserExcelFile',
     method: 'post',
+    responseType:'blob',
     data
   })
 }

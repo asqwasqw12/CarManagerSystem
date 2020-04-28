@@ -76,7 +76,7 @@
                   <el-button icon="fa fa-filter" @click="displayFilterColumnsDialog" size="small"></el-button>
                 </el-tooltip>
                 <el-tooltip content="导出" placement="top">
-                  <el-button icon="fa fa-file-excel-o" @click="exportUserExcelFile" size="small"></el-button>
+                  <el-button icon="fa fa-file-excel-o" @click="exportUserExcelFile" size="small" :loading="exportLoading"></el-button>
                 </el-tooltip>
               </el-button-group>
             </el-form-item>
@@ -89,10 +89,10 @@
         </kt-table>
         <pagination v-show="pageResult.totalSize>0" :total="pageResult.totalSize" :page.sync="pageRequest.pageNum" :limit.sync="pageRequest.pageSize" @pagination="findPage" />
       </el-col>
-
-
-
     </el-row>
+    <!--表格显示列界面-->
+    <table-column-filter-dialog ref="tableColumnFilterDialog" :columns="columns" @handleFilterColumns="handleFilterColumns"></table-column-filter-dialog>
+
     <!--新增编辑界面-->
     <el-dialog :title="operation?'新增用户':'编辑用户'" width="40%" :visible.sync="dialogVisible" :close-on-click-modal="false">
 
@@ -186,11 +186,13 @@
     import KtButton from "@/views/core/KtButton"
     import KtTable from "@/views/core/KtTable";
     import {findAll} from "@/api/system/role";
-    import {batchDelete, findPage, save} from "@/api/system/user";
+    import {batchDelete, exportUserExcelFile, findPage, save} from "@/api/system/user";
     import pagination from  "@/components/Pagination"
+    import TableColumnFilterDialog from "@/views/core/TableColumnFilterDialog";
+    import {downloadFile} from "@/utils";
     export default {
         name: "user",
-      components:{KtTable, KtButton,pagination,Treeselect},
+      components:{TableColumnFilterDialog, KtTable, KtButton,pagination,Treeselect},
       data(){
         let validatePassword = (rule, value, callback) => {
           const reg = /^\S{6,100}$/g
@@ -278,6 +280,7 @@
               totalPages:0, //总页数
               content:[]    //查询后的用户信息列表
             },
+            exportLoading:false,  //导出按钮加载状态
             loading:false,
             columns:[],       //表格所有列属性
             filterColumns:[], //过滤后显示列属性
@@ -414,6 +417,7 @@
           this.listLoading = true
           this.getPageRequest()
           this.pageRequest.objectParam = Object.assign({},this.queryParams)
+          //在status未选中状态，传递给后端的status参数改为-1，以此查询所有状态的用户
           if(this.pageRequest.objectParam.status  === "" && this.pageRequest.objectParam.status  !== 0  ){
             this.pageRequest.objectParam.status =-1
           }
@@ -491,11 +495,32 @@
 
         //表格列属性选择对话框
         displayFilterColumnsDialog(){
-
+          this.$refs.tableColumnFilterDialog.setDialogVisible(true)
         },
          //导出用户数据
         exportUserExcelFile(){
-
+          this.exportLoading =true
+          this.getPageRequest()
+          let temp = Object.assign({},this.pageRequest)
+          temp.objectParam = Object.assign({},this.queryParams)
+          temp.pageSize = 0   //不分页
+          //在status未选中状态，传递给后端的status参数改为-1，以此查询所有状态的用户
+          if(temp.objectParam.status  === "" && temp.objectParam.status  !== 0  ){
+            temp.objectParam.status =-1
+          }
+          exportUserExcelFile(temp).then( (response) => {
+            this.exportLoading = false
+            let a =  Math.floor(Math.random()*100)+"用户数据"
+            downloadFile(response,a,'xlsx')
+          }).catch( () => {
+            this.exportLoading = false
+            this.$notify({
+              title:'操作提示',
+              message:error.message,
+              duration: 2000,
+              type:'error'
+            })
+          })
         },
 
         // 点击部门搜索对应的岗位
@@ -504,6 +529,11 @@
           //this.form.job.id = null
         },
 
+        //处理表格列过滤显示
+        handleFilterColumns(data){
+          this.filterColumns = data.filterColumns
+          this.$refs.tableColumnFilterDialog.setDialogVisible(false)
+        },
         //表格编辑按钮函数
         handleEdit(params){
           this.dialogVisible = true
@@ -594,7 +624,6 @@
               })
             }
           })
-
         },
 
         // 处理表格列过滤显示
