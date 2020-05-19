@@ -25,7 +25,7 @@
       <!--用户数据栏-->
       <el-col :xs="15" :sm="18"  :md="20" :lg="20" :xl="20">
         <!--左工具栏-->
-        <div class="head-container" style="float:left;">
+        <div class="head-container left" style="float:left;">
           <!--用户名搜索框-->
           <el-input
             v-model="queryParams.realName"
@@ -65,7 +65,7 @@
           <kt-button icon="el-icon-plus"  perms="sys:user:add" type="primary" @click="addUser" >新增</kt-button>
         </div>
         <!--右工具栏-->
-        <div class="head-container" style="float: right">
+        <div class="head-container right" style="float: right">
           <el-form :inline="true" size="mini">
             <el-form-item>
               <el-button-group>
@@ -378,16 +378,17 @@
           }
       },
       created(){
-        this.findDeptTree()
+
       },
       mounted(){
         this.initColumns()
+        this.findDeptTree()
         this.findPage()
       },
       methods:{
         // 获取部门列表
         findDeptTree() {
-          findTree().then( res => {
+          findTree({'name':''}).then( res => {
             this.deptData = res.data
             this.treeSelectData = this.filterDeptTree(res.data)
           })
@@ -493,10 +494,6 @@
 
         },
 
-        //表格列属性选择对话框
-        displayFilterColumnsDialog(){
-          this.$refs.tableColumnFilterDialog.setDialogVisible(true)
-        },
          //导出用户数据
         exportUserExcelFile(){
           this.exportLoading =true
@@ -512,7 +509,7 @@
             this.exportLoading = false
             let a =  Math.floor(Math.random()*100)+"用户数据"
             downloadFile(response,a,'xlsx')
-          }).catch( () => {
+          }).catch( (error) => {
             this.exportLoading = false
             this.$notify({
               title:'操作提示',
@@ -527,6 +524,14 @@
         selectFun(node, instanceId) {
           //this.getJobs(node.id)
           //this.form.job.id = null
+        },
+
+        //表格列属性选择对话框
+        displayFilterColumnsDialog(){
+          this.$refs.tableColumnFilterDialog.setDialogVisible(true)
+          this.$nextTick(() => {
+            this.$refs.tableColumnFilterDialog.addRow()
+          })
         },
 
         //处理表格列过滤显示

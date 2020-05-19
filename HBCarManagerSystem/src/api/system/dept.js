@@ -1,11 +1,38 @@
 import request from '@/utils/request'
 
-// 查询机构树
-export function findTree() {
+// 查询部门数据树
+export function findTree(params) {
   return request({
     url: '/api/dept/findTree',
-    method: 'get'
+    method: 'get',
+    params
+  })
+}
+// 保存
+export function save(data) {
+  return request({
+    url: '/api/dept/save',
+    method: 'post',
+    data
+  })
+}
+// 删除
+export  function batchDelete(data){
+  return request({
+    url: '/api/dept/delete',
+    method: 'post',
+    data
   })
 }
 
-export default { findTree }
+//导出数据
+export function exportDeptExcelFile(data){
+  return request({
+    url: '/api/dept/exportDeptExcelFile',
+    method: 'post',
+    responseType:'blob',
+    data
+  })
+}
+
+export default { findTree,save,batchDelete }

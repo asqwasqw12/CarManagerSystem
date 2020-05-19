@@ -4,10 +4,10 @@
       v-loading="listLoading"
       :data="list"
       height="530"
-      border
       fit
       highlight-current-row
       style="width: 100%;"
+      :size="size"
       @sort-change="sortChange"
     >
       <el-table-column type="index"  header-align="center" align="center" width="60" label="序号">
@@ -115,6 +115,7 @@
         components:{  Treeselect },
     data() {
       return {
+        size:"small",   //显示框、按钮等尺寸等级
         list: [],           //新用户数据源
         rolesList:[],       //角色数据源
         listLoading: true,  //加载状态
@@ -173,7 +174,7 @@
       },
       // 获取部门列表
       findDeptTree() {
-        findTree().then( res => {
+        findTree({'name':''}).then( res => {
           this.deptData = this.filterDeptTree(res.data)
         })
       },

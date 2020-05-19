@@ -1,7 +1,7 @@
 <template>
   <!--表格显示列界面-->
   <el-dialog title="表格显示列" width="40%" :visible.sync="dialogVisible" :close-on-click-modal="false">
-    <el-table ref="fitlerTable" :data="columns"  height="330px" tooltip-effect="dark" header-align="left" align="left"
+    <el-table ref="multipleTable" :data="columns"  height="330px" tooltip-effect="dark" header-align="left" align="left"
               :size="size" style="width: 100%" @selection-change="selectionChange">
       <el-table-column type="selection" width="40">
       </el-table-column>
@@ -34,7 +34,7 @@
     props: {
       columns: {
         type: Array,
-        default: []
+        default: [{prop:"id", label:"ID", minWidth:50}]
       },
       size: {
         type: String,
@@ -44,7 +44,8 @@
     data() {
       return {
         selections: [],  // 列表选中列
-        dialogVisible: false
+        dialogVisible: false,
+        selected:false  //
       }
     },
     methods: {
@@ -76,10 +77,19 @@
           }
         }
         return false
+      },
+      addRow(){
+        if(!this.selected){
+          this.selected = true
+          this.columns.forEach( item => {
+            this.$refs.multipleTable.toggleRowSelection(item,true)
+          })
+        }
+
       }
     },
-    mounted() {
-    }
+   mounted() {
+   }
   }
 </script>
 
