@@ -6,13 +6,13 @@
       <el-input
         v-model="queryParams.name"
         clearable
-        size="small"
+        :size="size"
         style="width: 200px;"
         placeHolder="输入部门名称搜索"
         prefix-icon="filter-item"
       />
-      <kt-button icon="el-icon-search"  perms="sys:role:view" type="success" @click="search()">搜索</kt-button>
-      <kt-button icon="el-icon-plus"  perms="sys:user:add" type="primary" @click="addDept" >新增</kt-button>
+      <kt-button icon="el-icon-search"  perms="sys:dept:view" type="success" @click="search()">搜索</kt-button>
+      <kt-button icon="el-icon-plus"  perms="sys:dept:add" type="primary" @click="addDept" >新增</kt-button>
     </div>
     <div class="head-container right" style="float:right;">
       <el-form :inline="true" size="mini">
@@ -37,9 +37,6 @@
       <el-table-column
         prop="id" header-align="center" align="center" :width="setWidth('id')" :label="setLabel('id')" v-if="includeColumn('id')">
       </el-table-column>
-     <!-- <table-tree-columns
-        prop="name" header-align="center" treeKey="id" :width="setWidth('name')" :label="setLabel('name')" v-if="includeColumn('name')" >
-      </table-tree-columns>-->
       <el-table-column
        prop="name" header-align="center" align="center" treeKey="id" :width="setWidth('name')" :label="setLabel('name')" v-if="includeColumn('name')" >
       </el-table-column>
@@ -281,11 +278,6 @@
           return label
         },
 
-        //设置表格RowKey
-        getRowKey(row){
-          return row.id
-        },
-
         //表格编辑按钮
         handleEdit(index, row) {
           this.dialogVisible = true
@@ -339,15 +331,36 @@
 
         //查找部门树
         findTreeData(name) {
+          this.tableLoading = true
           findTree({'name':name}).then(res => {
+            this.tableLoading = false
             this.tableTreeData = res.data
+          }).catch( error =>{
+            this.tableLoading =false
+            this.$notify({
+              title:'操作提示',
+              message:error.message,
+              duration: 2000,
+              type:'error'
+            })
           })
         },
         refreshTreeData(){
           let name=''
+          this.tableLoading = true
           findTree({'name':name}).then(res => {
+            this.tableLoading = false
             this.tableTreeData = res.data
             this.treeSelectData = this.filterDeptTree(res.data)
+
+          }).catch( error =>{
+            this.tableLoading = false
+            this.$notify({
+              title:'操作提示',
+              message:error.message,
+              duration: 2000,
+              type:'error'
+            })
           })
         },
 

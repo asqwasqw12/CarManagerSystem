@@ -25,10 +25,11 @@ export function findNavTree(params) {
   })
 }
 // 查找导航菜单树
-export function findMenuTree() {
+export function findMenuTree(params) {
   return request({
     url: '/api/menu/findMenuTree',
-    method: 'get'
+    method: 'get',
+    params
   })
 }
 
