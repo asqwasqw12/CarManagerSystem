@@ -3,7 +3,7 @@
     <!--左工具栏-->
     <div class="head-container left" style="float:left;">
       <el-input
-        v-model="queryParams.name"
+        v-model="queryParams.label"
         clearable
         :size="size"
         style="width: 200px;"
@@ -73,12 +73,15 @@
   import KtButton  from '@/views/core/KtButton'
   import KtTable from "@/views/core/KtTable"
   import pagination from  "@/components/Pagination"
+  import {batchDelete, findPage} from "@/api/system/dict";
+  import TableColumnFilterDialog from "@/views/core/TableColumnFilterDialog";
     export default {
         name: "dict",
       components:{
         KtButton,
         KtTable,
-        pagination
+        pagination,
+        TableColumnFilterDialog
       },
       data(){
           return{
@@ -91,12 +94,11 @@
             columns:[],       //表格所有列属性
             filterColumns:[], //过滤后显示列属性
             queryParams:{
-              name:''     //根据名称查询
+              label:''     //根据名称查询
             },
             pageRequest:{
               pageNum:1,
               pageSize:10,
-              params:[],
               objectParam:{}
             },
             pageResult:{
@@ -118,7 +120,7 @@
       methods:{
           //搜索按钮函数
           search(){
-
+              this.findPage()
           },
 
         //新增按钮函数
@@ -129,17 +131,11 @@
         //查询用户列表
         findPage(){
           this.tableLoading = true
-          this.getPageRequest()
           this.pageRequest.objectParam = Object.assign({},this.queryParams)
-          //在status未选中状态，传递给后端的status参数改为-1，以此查询所有状态的用户
-          if(this.pageRequest.objectParam.status  === "" && this.pageRequest.objectParam.status  !== 0  ){
-            this.pageRequest.objectParam.status =-1
-          }
           findPage(this.pageRequest).then(response => {
-            this.listLoading = false
+            this.tableLoading = false
             if (response.msg === 'ok') {
               this.pageResult = response.data
-              this.findUserRoles()
             } else {
               this.$notify({
                 title: '提示',
@@ -149,7 +145,7 @@
               })
             }
           }).catch(error =>{
-            this.listLoading = false
+            this.tableLoading = false
             this.$notify({
               title:'获取数据提示',
               message:error.message,
@@ -161,7 +157,7 @@
 
         //刷新函数
         refreshTreeData(){
-
+              this.findPage()
         },
 
         //表格列属性选择对话框
@@ -188,9 +184,35 @@
 
         },
 
-        //表格行删除按钮函数
-        handleDelete(){
-
+        //表格删除按钮函数
+        handleDelete(data){
+          batchDelete(data.params).then( response => {
+            if(response.msg === 'ok'){
+              this.$message(
+                {
+                  message:'删除成功',
+                  type:'success'
+                }
+              )
+              this.findPage()
+            }else{
+              this.$message(
+                {
+                  message:'操作失败',
+                  type:'error'
+                }
+              )
+            }
+            this.loading =false
+          }).catch( error =>{
+            this.loading =false
+            this.$notify({
+              title:'操作提示',
+              message:error.message,
+              duration: 2000,
+              type:'error'
+            })
+          })
         },
 
         // 处理表格列过滤显示
@@ -200,7 +222,7 @@
             {prop:"label", label:"名称", minWidth:50},
             {prop:"value", label:"值", minWidth:50},
             {prop:"type", label:"类型", minWidth:50},
-           // {prop:"sort", label:"排序", minWidth:80},
+            {prop:"sort", label:"排序", minWidth:80},
             {prop:"description", label:"描述", minWidth:80},
            // {prop:"remarks", label:"备注", minWidth:120},
            // {prop:"createBy", label:"创建人", minWidth:100},

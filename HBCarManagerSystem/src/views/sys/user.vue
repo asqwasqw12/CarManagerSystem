@@ -84,7 +84,7 @@
         </div>
         <kt-table perms-edit="sys:user:edit" perms-delete="sys:user:delete"
           :data="pageResult.content" :columns="filterColumns"
-                  :loading="loading"
+                  :loading="tableLoading"
           @handleEdit="handleEdit" @handleDelete="handleDelete" >
         </kt-table>
         <pagination v-show="pageResult.totalSize>0" :total="pageResult.totalSize" :page.sync="pageRequest.pageNum" :limit.sync="pageRequest.pageSize" @pagination="findPage" />
@@ -272,7 +272,6 @@
             pageRequest:{
               pageNum:1,
               pageSize:10,
-              params:[],
               objectParam:{}
             },
             pageResult:{
@@ -281,7 +280,7 @@
               content:[]    //查询后的用户信息列表
             },
             exportLoading:false,  //导出按钮加载状态
-            loading:false,
+            tableLoading:false,   //表格加载状态
             columns:[],       //表格所有列属性
             filterColumns:[], //过滤后显示列属性
             statusOptions:[
@@ -424,15 +423,14 @@
         },
         //查询用户列表
         findPage(){
-          this.listLoading = true
-          this.getPageRequest()
+          this.tableLoading = true
           this.pageRequest.objectParam = Object.assign({},this.queryParams)
           //在status未选中状态，传递给后端的status参数改为-1，以此查询所有状态的用户
           if(this.pageRequest.objectParam.status  === "" && this.pageRequest.objectParam.status  !== 0  ){
             this.pageRequest.objectParam.status =-1
           }
             findPage(this.pageRequest).then(response => {
-              this.listLoading = false
+              this.tableLoading = false
               if (response.msg === 'ok') {
                 this.pageResult = response.data
                 this.findUserRoles()
@@ -445,7 +443,7 @@
                 })
               }
             }).catch(error =>{
-              this.listLoading = false
+              this.tableLoading = false
               this.$notify({
                 title:'获取数据提示',
                 message:error.message,
@@ -453,28 +451,6 @@
                 type:'error'
               })
             })
-        },
-
-        //获取查询参数
-        getPageRequest(){
-          this.pageRequest.params=[
-            {
-              name:'name',
-              value:this.queryParams.name
-            },
-            {
-              name:'realName',
-              value:this.queryParams.realName
-            },
-            {
-              name:'status',
-              value:this.queryParams.status
-            },
-            {
-              name:'deptId',
-              value:this.queryParams.deptId
-            }
-          ]
         },
         // 加载所有用户角色信息
         findUserRoles() {

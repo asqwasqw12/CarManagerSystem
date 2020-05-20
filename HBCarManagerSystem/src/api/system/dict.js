@@ -15,10 +15,12 @@ export function add(data) {
   })
 }
 
-export function del(id) {
+// 删除
+export function batchDelete(data){
   return request({
-    url: '/api/dict/' + id,
-    method: 'delete'
+    url: '/api/dict/delete',
+    method: 'post',
+    data
   })
 }
 
@@ -30,4 +32,13 @@ export function edit(data) {
   })
 }
 
-export default { add, edit, del }
+//分页查询
+export function findPage(data) {
+  return request({
+    url: '/api/dict/findPage',
+    method: 'post',
+    data
+  })
+}
+
+export default { add, edit, batchDelete ,findPage }
