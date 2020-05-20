@@ -33,7 +33,16 @@ export function findMenuTree(params) {
   })
 }
 
+//导出数据
+export function exportMenuExcelFile(data){
+  return request({
+    url: '/api/menu/exportMenuExcelFile',
+    method: 'post',
+    responseType:'blob',
+    data
+  })
+}
 
-export default { save, batchDelete, findMenuTree, findNavTree }
+export default { save, batchDelete, findMenuTree, findNavTree,exportMenuExcelFile }
 
 

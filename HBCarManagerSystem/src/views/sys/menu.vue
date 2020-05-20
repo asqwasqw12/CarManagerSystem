@@ -69,15 +69,69 @@
         </template>
       </el-table-column>
     </el-table>
+    <!--表格显示列界面-->
+    <table-column-filter-dialog ref="tableColumnFilterDialog" :columns="columns"  @handleFilterColumns="handleFilterColumns"></table-column-filter-dialog>
+    <!--新增编辑界面-->
+    <el-dialog :title="operation ? '新增菜单':'编辑菜单'" width="40%" :visible.sync="dialogVisible" :close-on-click-modal="false">
+      <el-form :model="temp" label-width="80px"   ref="temp"  :rules="rules" :size="size"
+               style="text-align: left;">
+        <el-form-item label="菜单类型" prop="type">
+          <el-radio-group v-model="temp.type">
+            <el-radio v-for="(type,index) in menuTypeList" :label="index" :key="index">
+              {{ type }}
+            </el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item :label="menuTypeList[temp.type] + '名称'" prop="name">
+          <el-input v-model="temp.name" :placeholder="menuTypeList[temp.type] + '名称'"></el-input>
+        </el-form-item>
+        <el-form-item prop="parentId"  label="上级菜单">
+          <treeselect
+            v-model="temp.parentId"
+            :options="treeSelectData"
+            placeholder="选择菜单"
+            @select="selectFun"
+          />
+        </el-form-item>
+        <el-form-item v-if="temp.type!== 0" label="授权标识" prop="perms">
+          <el-input v-model="temp.perms" placeholder="如： sys:user:add,sys:user:edit,sys:user:delete"></el-input>
+        </el-form-item>
+        <el-form-item v-if="temp.type !== 2" label="菜单路由" prop="url">
+          <el-input v-model="temp.url" placeholder="/sys/user"></el-input>
+        </el-form-item>
+        <el-form-item v-if="temp.type !==2 " prop="orderNum" label="顺序编号">
+          <el-input-number v-model="temp.orderNum" controls-position="right" :min="0" label="排序编号"></el-input-number>
+        </el-form-item>
+        <el-form-item v-if="temp.type !== 2" label="菜单图标" prop="icon">
+          <el-row>
+            <el-col :span="22">
+              <el-input v-model="temp.icon" v-popover:iconListPopover :readonly="false" placeholder="菜单图标名称（如：fa fa-home fa-lg）" class="icon-list__input"></el-input>
+            </el-col>
+            <el-col :span="2">
+              <fa-icon-tooltip />
+            </el-col>
+          </el-row>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button :size="size" @click.native="dialogVisible = false">取消</el-button>
+        <el-button :size="size" type="primary" @click.native="submitForm" :loading="editLoading">提交</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+  import Treeselect from '@riophae/vue-treeselect'
+  import '@riophae/vue-treeselect/dist/vue-treeselect.css'
   import KtButton from '@/views/core/KtButton'
-  import {findMenuTree} from "@/api/system/menu";
+  import {batchDelete, exportMenuExcelFile, findMenuTree, save} from "@/api/system/menu";
+  import TableColumnFilterDialog  from '@/views/core/TableColumnFilterDialog'
+  import FaIconTooltip from "@/components/FaIconTooltip";
+  import {downloadFile} from "@/utils";
     export default {
         name: "menu",
-      components:{ KtButton },
+      components:{ KtButton,TableColumnFilterDialog,Treeselect,FaIconTooltip },
       data(){
           return {
             queryParams:{   //查询参数
@@ -86,9 +140,34 @@
             size:"small",
             exportLoading:false,  //导出按钮加载状态
             tableLoading:false,   //表格数据加载状态
+            editLoading:false,    //对话框提交按钮加载状态
+            dialogVisible:false,  //对话框显示状态
             tableData:[],     //菜单表格数据
+            treeSelectData:[],//菜单树数据
             columns:[],       //表格所有列属性
             filterColumns:[], //过滤后显示列属性
+            operation:true,   //选择编辑或者新增对话框
+            temp:{            //行数据
+              id: 0,
+              name: '',
+              icon:'',
+              type:0,
+              parentId:0,
+              parentName: '',
+              url:'',
+              perms:'',
+              orderNum: 0
+            },
+            rules:{   //输入校验
+              name: [
+                {
+                  required: true,
+                  trigger: 'blur',
+                  message:'请输入部门或公司名称'
+                }
+              ]
+            },
+            menuTypeList:["目录","菜单","按钮"],
           }
       },
       methods: {
@@ -99,17 +178,99 @@
         },
         //新增按钮函数
         addDept() {
+          this.dialogVisible=true
+          this.operation = true
+          this.temp= {            //行数据
+            id: 0,
+              name: '',
+              icon:'',
+              type:0,
+              parentId:0,
+              parentName: '',
+              url:'',
+              perms:'',
+              orderNum: 0
+          }
+        },
 
+        //获取vue-treeselect对象
+        filterDeptTree(menuList) {
+          const res = []
+          menuList.forEach( menu => {
+            const tmp = {
+              id: menu.id,
+              label: menu.name
+            }
+            if (menu.children.length > 0) {
+              tmp.children = this.filterDeptTree(menu.children)
+            }
+            res.push(tmp)
+          })
+          return res
         },
 
         //获取数据
         findTreeData(name){
           this.tableLoading = true
-          findMenuTree({'name':name}).then(res =>{
-            this.tableData = res.data
-            this.tableLoading = false
-          }).catch( error =>{
-            this.tableLoading =false
+          return new Promise((resolve,reject) => {
+            findMenuTree({'name':name}).then(res =>{
+              this.tableData = res.data
+              this.tableLoading = false
+              resolve(res.data)
+            }).catch( error =>{
+              this.tableLoading =false
+              reject(error)
+              this.$notify({
+                title:'操作提示',
+                message:error.message,
+                duration: 2000,
+                type:'error'
+              })
+            })
+          })
+        },
+
+        //刷新操作
+        refreshTreeData() {
+          this.findTreeData('').then( (result)=>{
+            let parent=[
+              {
+                id: 0,
+                name: "顶级目录",
+                children: result
+              }
+            ]
+            this.treeSelectData = this.filterDeptTree(parent)
+          })
+        },
+
+        //列显示对话框
+        displayFilterColumnsDialog() {
+          this.$refs.tableColumnFilterDialog.setDialogVisible(true)
+          this.$nextTick(() => {
+            this.$refs.tableColumnFilterDialog.addRow()
+          })
+        },
+
+        //处理表格列过滤显示
+        handleFilterColumns(data) {
+          this.filterColumns = data.filterColumns
+          this.$refs.tableColumnFilterDialog.setDialogVisible(false)
+        },
+
+        //导出
+        exportMenuExcelFile() {
+          this.exportLoading =true
+          //let name =this.queryParams.name
+          let data = {
+            name:''
+          }
+          exportMenuExcelFile(data).then( (response) => {
+            this.exportLoading = false
+            let a =  Math.floor(Math.random()*100)+"菜单数据"
+            downloadFile(response,a,'xlsx')
+          }).catch( (error) => {
+            this.exportLoading = false
             this.$notify({
               title:'操作提示',
               message:error.message,
@@ -117,22 +278,6 @@
               type:'error'
             })
           })
-        },
-
-
-        //刷新操作
-        refreshTreeData() {
-          this.findTreeData('')
-        },
-
-        //列显示对话框
-        displayFilterColumnsDialog() {
-
-        },
-
-        //导出
-        exportMenuExcelFile() {
-
         },
 
         // 处理表格列过滤显示
@@ -183,6 +328,84 @@
           this.dialogVisible = true
           this.operation = false
           Object.assign(this.temp, row)
+        },
+
+        //提交部门数据表单
+        submitForm() {
+          this.$refs.temp.validate((valid) => {
+            if (valid) {
+              this.$confirm('确认提交吗?', '提示', {}).then(() => {
+                this.editLoading = true
+                let params = Object.assign({}, this.temp)
+                save(params).then((response) => {
+                  this.editLoading = false
+                  if(response.msg === 'ok') {
+                    this.$message({ message: '操作成功', type: 'success' })
+                    this.dialogVisible = false
+                    this.refreshTreeData()
+                  } else {
+                    this.$message({message: '操作失败, ' + response.msg, type: 'error'})
+                  }
+                }).catch( error =>{
+                  this.editLoading =false
+                  this.$notify({
+                    title:'操作提示',
+                    message:error.message,
+                    duration: 2000,
+                    type:'error'
+                  })
+                })
+              })
+            }
+          })
+        },
+
+        //表格删除按钮
+        handleDelete(index, row) {
+          this.$confirm('确认删除选中记录吗？', '提示', {
+            type: 'warning'
+          }).then(() => {
+            let params = this.getDeleteIds([], row)
+            batchDelete(params).then( response => {
+              if(response.msg === 'ok'){
+                this.$message(
+                  {
+                    message:'删除成功',
+                    type:'success'
+                  })
+                this.refreshTreeData()
+              }else {
+                this.$message(
+                  {
+                    message:'操作失败',
+                    type:'error'
+                  })
+              }
+            }).catch( error =>{
+              this.loading =false
+              this.$notify({
+                title:'操作提示',
+                message:error.message,
+                duration: 2000,
+                type:'error'
+              })
+            })
+          })
+        },
+
+        // 获取删除的包含子机构的id列表
+        getDeleteIds (ids, row) {
+          ids.push({id:row.id})
+          if(row.children != null) {
+            for(let i=0, len=row.children.length; i<len; i++) {
+              this.getDeleteIds(ids, row.children[i])
+            }
+          }
+          return ids
+        },
+
+        selectFun(){
+
         },
       },
       mounted() {

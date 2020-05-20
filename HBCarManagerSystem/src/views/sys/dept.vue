@@ -64,28 +64,28 @@
     <table-column-filter-dialog ref="tableColumnFilterDialog" :columns="columns"  @handleFilterColumns="handleFilterColumns"></table-column-filter-dialog>
     <!--新增编辑界面-->
     <el-dialog :title="operation ? '新增部门':'编辑部门'" width="40%" :visible.sync="dialogVisible" :close-on-click-modal="false">
-      <el-form :model="temp" label-width="80px"   ref="temp"  :rules="rules" :size="size"
-               label-position="right">
-        <el-form-item prop="name"  label="名称" >
-          <el-input v-model="temp.name" placeholder="请输入部门或公司名称"></el-input>
-        </el-form-item>
-        <el-form-item prop="parentId"  label="上级部门">
-          <treeselect
-            v-model="temp.parentId"
-            :options="treeSelectData"
-            placeholder="选择部门"
-            @select="selectFun"
-          />
-        </el-form-item>
-       <el-form-item prop="orderNum" label="顺序编号">
-          <el-input-number v-model="temp.orderNum" controls-position="right" :min="0" label="排序编号"></el-input-number>
-        </el-form-item>
-      </el-form>
-       <div slot="footer" class="dialog-footer">
-          <el-button :size="size" @click.native="dialogVisible = false">取消</el-button>
-          <el-button :size="size" type="primary" @click.native="submitForm" :loading="editLoading">提交</el-button>
-        </div>
-    </el-dialog>
+    <el-form :model="temp" label-width="80px"   ref="temp"  :rules="rules" :size="size"
+             label-position="right">
+      <el-form-item prop="name"  label="名称" >
+        <el-input v-model="temp.name" placeholder="请输入部门或公司名称"></el-input>
+      </el-form-item>
+      <el-form-item prop="parentId"  label="上级部门">
+        <treeselect
+          v-model="temp.parentId"
+          :options="treeSelectData"
+          placeholder="选择部门"
+          @select="selectFun"
+        />
+      </el-form-item>
+      <el-form-item prop="orderNum" label="顺序编号">
+        <el-input-number v-model="temp.orderNum" controls-position="right" :min="0" label="排序编号"></el-input-number>
+      </el-form-item>
+    </el-form>
+    <div slot="footer" class="dialog-footer">
+      <el-button :size="size" @click.native="dialogVisible = false">取消</el-button>
+      <el-button :size="size" type="primary" @click.native="submitForm" :loading="editLoading">提交</el-button>
+    </div>
+  </el-dialog>
   </div>
 </template>
 
@@ -117,13 +117,13 @@
             filterColumns2:[],  //过滤好
             dialogVisible:false,  //编辑新增对话框显示属性
             operation:true,   //选择编辑或者新增对话框
-            temp:{
+            temp:{            //行数据
               id: 0,
               name: '',
               parentId: 1,
               parentName: '',
               orderNum: 0
-            },        //行数据
+            },
             dataForm:{},
             treeSelectData:[] , //部门数据树
             tableTreeData:[],   //表格部门数据
@@ -332,36 +332,27 @@
         //查找部门树
         findTreeData(name) {
           this.tableLoading = true
-          findTree({'name':name}).then(res => {
-            this.tableLoading = false
-            this.tableTreeData = res.data
-          }).catch( error =>{
-            this.tableLoading =false
-            this.$notify({
-              title:'操作提示',
-              message:error.message,
-              duration: 2000,
-              type:'error'
+          return new Promise((resolve,reject) => {
+            findTree({'name':name}).then(res => {
+              this.tableLoading = false
+              this.tableTreeData = res.data
+              resolve(res.data)
+            }).catch( error =>{
+              this.tableLoading =false
+              reject(error)
+              this.$notify({
+                title:'操作提示',
+                message:error.message,
+                duration: 2000,
+                type:'error'
+              })
             })
           })
         },
         refreshTreeData(){
-          let name=''
-          this.tableLoading = true
-          findTree({'name':name}).then(res => {
-            this.tableLoading = false
-            this.tableTreeData = res.data
-            this.treeSelectData = this.filterDeptTree(res.data)
-
-          }).catch( error =>{
-            this.tableLoading = false
-            this.$notify({
-              title:'操作提示',
-              message:error.message,
-              duration: 2000,
-              type:'error'
-            })
-          })
+           this.findTreeData('').then( result =>{
+             this.treeSelectData = this.filterDeptTree(result)
+           })
         },
 
         //搜索
