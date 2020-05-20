@@ -181,7 +181,7 @@
           this.dialogVisible=true
           this.operation = true
           this.temp= {            //行数据
-            id: 0,
+              id: 0,
               name: '',
               icon:'',
               type:0,

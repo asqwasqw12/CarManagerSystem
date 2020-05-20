@@ -302,9 +302,18 @@
             dialogVisible:false,  //新增或编辑界面是否显示
             editLoading:false,    //按钮加载状态
             rolesList:[],        //角色数据源
-            temp:{
-              status:1,
-            },           //行临时存储数据
+            temp:{              //行临时存储数据
+              id: 0,
+              name: '',
+              realName:'',
+              password: '',
+              deptId: 12,
+              job: '结构工程师',
+              email: '',
+              mobile: '',
+              status: 1,
+              userRoles: []
+            },
             rules: {
               name: [
                 {
