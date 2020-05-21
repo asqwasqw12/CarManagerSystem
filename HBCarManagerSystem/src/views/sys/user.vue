@@ -482,7 +482,6 @@
          //导出用户数据
         exportUserExcelFile(){
           this.exportLoading =true
-          this.getPageRequest()
           let temp = Object.assign({},this.pageRequest)
           temp.objectParam = Object.assign({},this.queryParams)
           temp.pageSize = 0   //不分页
@@ -555,9 +554,9 @@
                 }
               )
             }
-            this.loading =false
+            this.tableLoading =false
           }).catch( error =>{
-            this.loading =false
+            this.tableLoading =false
             this.$notify({
               title:'操作提示',
               message:error.message,

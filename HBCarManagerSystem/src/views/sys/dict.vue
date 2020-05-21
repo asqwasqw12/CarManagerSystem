@@ -11,7 +11,7 @@
         prefix-icon="filter-item"
       />
       <kt-button icon="el-icon-search"  perms="sys:dict:view" type="success" @click="search()">搜索</kt-button>
-      <kt-button icon="el-icon-plus"  perms="sys:dict:add" type="primary" @click="addDept" >新增</kt-button>
+      <kt-button icon="el-icon-plus"  perms="sys:dict:add" type="primary" @click="addDict" >新增</kt-button>
     </div>
     <!--右工具栏-->
     <div class="head-container right" style="float:right;">
@@ -31,33 +31,6 @@
         </el-form-item>
       </el-form>
     </div>
-    <!--表格树内容栏-->
-    <!--<el-table :data="tableData" stripe size="mini" style="width: 100%;" row-key="id"
-              v-loading="tableLoading" rowKey="id" element-loading-text="加载中。。。">
-      <el-table-column
-      prop="id" header-align="center" align="center" :width="setWidth('id')" :label="setLabel('id')" v-if="includeColumn('id')">
-      </el-table-column>
-      <el-table-column
-        prop="label" header-align="center" align="center" :width="setWidth('label')" :label="setLabel('label')" v-if="includeColumn('label')" >
-      </el-table-column>
-      <el-table-column prop="value" header-align="center" align="center" :width="setWidth('value')" :label="setLabel('value')" v-if="includeColumn('value')">
-      </el-table-column>
-      <el-table-column prop="type" header-align="center" align="center"  :width="setWidth('type')" :label="setLabel('type')" v-if="includeColumn('type')">
-      </el-table-column>
-      <el-table-column prop="sort" header-align="center" align="center" :show-overflow-tooltip="true" :width="setWidth('sort')" :label="setLabel('sort')" v-if="includeColumn('sort')">
-      </el-table-column>
-      <el-table-column prop="description" header-align="center" align="center"  :width="setWidth('description')" :label="setLabel('description')" v-if="includeColumn('description')">
-      </el-table-column>
-      <el-table-column prop="remarks" header-align="center" align="center"  :width="setWidth('remarks')" :label="setLabel('remarks')" v-if="includeColumn('remarks')">
-      </el-table-column>
-      <el-table-column
-        fixed="right" header-align="center" align="center" width="185" label="操作">
-        <template slot-scope="scope">
-          <kt-button icon="fa fa-edit" perms="sys:dept:edit" :size="size" @click="handleEdit(scope.$index, scope.row)" style="margin:auto 0;"></kt-button>
-          <kt-button icon="fa fa-trash" perms="sys:dept:delete" :size="size" type="danger" @click="handleDelete(scope.$index, scope.row)" style="margin:auto 0;" ></kt-button>
-        </template>
-      </el-table-column>
-    </el-table>-->
     <kt-table perms-edit="sys:user:edit" perms-delete="sys:user:delete"
               :data="pageResult.content" :columns="filterColumns"
               :loading="tableLoading"
@@ -66,6 +39,36 @@
     <pagination v-show="pageResult.totalSize>0" :total="pageResult.totalSize" :page.sync="pageRequest.pageNum" :limit.sync="pageRequest.pageSize" @pagination="findPage" />
     <!--表格显示列界面-->
     <table-column-filter-dialog ref="tableColumnFilterDialog" :columns="columns"  @handleFilterColumns="handleFilterColumns"></table-column-filter-dialog>
+    <el-dialog :title="operation ? '新增菜单':'编辑菜单'" width="40%" :visible.sync="dialogVisible" :close-on-click-modal="false">
+      <el-form :model="temp" label-width="80px"   ref="temp"  :rules="rules" :size="size"
+               style="text-align: left;">
+        <el-form-item label="ID" prop="id"  v-if="false">
+          <el-input v-model="temp.id" :disabled="true" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="名称" prop="label">
+          <el-input v-model="temp.label" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="值" prop="value">
+          <el-input v-model="temp.value" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="类型" prop="type">
+          <el-input v-model="temp.type" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="排序" prop="sort">
+          <el-input v-model="temp.sort" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="描述 " prop="description">
+          <el-input v-model="temp.description" auto-complete="off" type="textarea"></el-input>
+        </el-form-item>
+        <el-form-item label="备注" prop="remarks">
+          <el-input v-model="temp.remarks" auto-complete="off" type="textarea"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button :size="size" @click.native="dialogVisible = false">取消</el-button>
+        <el-button :size="size" type="primary" @click.native="submitForm" :loading="editLoading">提交</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -73,8 +76,9 @@
   import KtButton  from '@/views/core/KtButton'
   import KtTable from "@/views/core/KtTable"
   import pagination from  "@/components/Pagination"
-  import {batchDelete, findPage} from "@/api/system/dict";
+  import {batchDelete, exportDictExcelFile, findPage, save} from "@/api/system/dict";
   import TableColumnFilterDialog from "@/views/core/TableColumnFilterDialog";
+  import {downloadFile} from "@/utils";
     export default {
         name: "dict",
       components:{
@@ -93,6 +97,7 @@
             tableData:[],     //菜单表格数据
             columns:[],       //表格所有列属性
             filterColumns:[], //过滤后显示列属性
+            operation:true,   //选择编辑或者新增对话框
             queryParams:{
               label:''     //根据名称查询
             },
@@ -115,6 +120,15 @@
               description: '',
               remarks: ''
             },
+            rules:{   //输入校验
+              label: [
+                {
+                  required: true,
+                  trigger: 'blur',
+                  message:'请输入名称'
+                }
+              ]
+            },
           }
       },
       methods:{
@@ -124,11 +138,21 @@
           },
 
         //新增按钮函数
-        addDept(){
-
+        addDict(){
+          this.dialogVisible=true
+          this.operation = true
+          this.temp= {            //行数据
+            id: 0,
+            label: '',
+            value: '',
+            type: '',
+            sort: 0,
+            description: '',
+            remarks: ''
+          }
         },
 
-        //查询用户列表
+        //查询字典列表
         findPage(){
           this.tableLoading = true
           this.pageRequest.objectParam = Object.assign({},this.queryParams)
@@ -176,12 +200,60 @@
 
         //导出
         exportDictExcelFile(){
-
+          this.exportLoading =true
+          let temp = Object.assign({},this.pageRequest)
+          temp.objectParam = Object.assign({},this.queryParams)
+          temp.pageSize = 0   //不分页
+          exportDictExcelFile(temp).then( (response) => {
+            this.exportLoading = false
+            let a =  Math.floor(Math.random()*100)+"字典数据"
+            downloadFile(response,a,'xlsx')
+          }).catch( (error) => {
+            this.exportLoading = false
+            this.$notify({
+              title:'操作提示',
+              message:error.message,
+              duration: 2000,
+              type:'error'
+            })
+          })
         },
 
         //表格行编辑按钮函数
-        handleEdit(){
+        handleEdit(params){
+          this.dialogVisible = true
+          this.operation = false
+          Object.assign(this.temp, params.row)
+        },
 
+        //提交部门数据表单
+        submitForm() {
+          this.$refs.temp.validate((valid) => {
+            if (valid) {
+              this.$confirm('确认提交吗?', '提示', {}).then(() => {
+                this.editLoading = true
+                let params = Object.assign({}, this.temp)
+                save(params).then((response) => {
+                  this.editLoading = false
+                  if(response.msg === 'ok') {
+                    this.$message({ message: '操作成功', type: 'success' })
+                    this.dialogVisible = false
+                    this.findPage()
+                  } else {
+                    this.$message({message: '操作失败, ' + response.msg, type: 'error'})
+                  }
+                }).catch( error =>{
+                  this.editLoading =false
+                  this.$notify({
+                    title:'操作提示',
+                    message:error.message,
+                    duration: 2000,
+                    type:'error'
+                  })
+                })
+              })
+            }
+          })
         },
 
         //表格删除按钮函数
@@ -203,9 +275,9 @@
                 }
               )
             }
-            this.loading =false
+            this.tableLoading =false
           }).catch( error =>{
-            this.loading =false
+            this.tableLoading =false
             this.$notify({
               title:'操作提示',
               message:error.message,
@@ -224,7 +296,7 @@
             {prop:"type", label:"类型", minWidth:50},
             {prop:"sort", label:"排序", minWidth:80},
             {prop:"description", label:"描述", minWidth:80},
-           // {prop:"remarks", label:"备注", minWidth:120},
+            {prop:"remarks", label:"备注", minWidth:80},
            // {prop:"createBy", label:"创建人", minWidth:100},
             {prop:"createTime", label:"创建时间", minWidth:120}
           ]

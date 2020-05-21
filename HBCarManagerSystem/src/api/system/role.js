@@ -31,13 +31,6 @@ export function getLevel() {
   })
 }
 
-export function del(ids) {
-  return request({
-    url: '/api/roles',
-    method: 'delete',
-    data: ids
-  })
-}
 
 export function edit(data) {
   return request({
@@ -55,4 +48,30 @@ export function editMenu(data) {
   })
 }
 
-export default { findAll,add, edit, del, get, editMenu, getLevel }
+//分页查询
+export function findPage(data) {
+  return request({
+    url: '/api/role/findPage',
+    method: 'post',
+    data
+  })
+}
+
+// 删除
+export function batchDelete(data){
+  return request({
+    url: '/api/role/delete',
+    method: 'post',
+    data
+  })
+}
+
+// 保存
+export function save(data) {
+  return request({
+    url: '/api/role/save',
+    method: 'post',
+    data
+  })
+}
+export default { findAll,add, edit, batchDelete, get, editMenu, getLevel,findPage,save }

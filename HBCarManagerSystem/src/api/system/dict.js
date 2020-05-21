@@ -1,15 +1,10 @@
 import request from '@/utils/request'
 
-export function getDicts() {
-  return request({
-    url: '/api/dict/all',
-    method: 'get'
-  })
-}
 
-export function add(data) {
+// 保存
+export function save(data) {
   return request({
-    url: '/api/dict',
+    url: '/api/dict/save',
     method: 'post',
     data
   })
@@ -24,14 +19,6 @@ export function batchDelete(data){
   })
 }
 
-export function edit(data) {
-  return request({
-    url: '/api/dict',
-    method: 'put',
-    data
-  })
-}
-
 //分页查询
 export function findPage(data) {
   return request({
@@ -41,4 +28,14 @@ export function findPage(data) {
   })
 }
 
-export default { add, edit, batchDelete ,findPage }
+//导出数据
+export function exportDictExcelFile(data){
+  return request({
+    url: '/api/dict/exportDictExcelFile',
+    method: 'post',
+    responseType:'blob',
+    data
+  })
+}
+
+export default { save, batchDelete ,findPage,exportDictExcelFile }

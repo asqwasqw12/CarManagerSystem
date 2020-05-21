@@ -11,7 +11,7 @@
         prefix-icon="filter-item"
       />
       <kt-button icon="el-icon-search"  perms="sys:menu:view" type="success" @click="search()">搜索</kt-button>
-      <kt-button icon="el-icon-plus"  perms="sys:menu:add" type="primary" @click="addDept" >新增</kt-button>
+      <kt-button icon="el-icon-plus"  perms="sys:menu:add" type="primary" @click="addMenu" >新增</kt-button>
     </div>
     <!--右工具栏-->
     <div class="head-container right" style="float:right;">
@@ -177,7 +177,7 @@
           this.findTreeData(name)
         },
         //新增按钮函数
-        addDept() {
+        addMenu() {
           this.dialogVisible=true
           this.operation = true
           this.temp= {            //行数据
