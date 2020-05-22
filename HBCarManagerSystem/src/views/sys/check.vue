@@ -52,12 +52,14 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
-          <el-button type="primary" size="mini" @click="passApplication(row)">
+          <!--<el-button type="primary" size="mini" @click="passApplication(row)">
             通过
           </el-button>
           <el-button  size="mini" type="success" @click="rejectApplication(row)">
             拒绝
-          </el-button>
+          </el-button>-->
+          <kt-button perms="sys:user:edit" :size="size" @click="passApplication(row)" style="margin:auto 0;">通过</kt-button>
+          <kt-button iperms="sys:user:delete" :size="size" type="danger" @click="rejectApplication(row)" style="margin:auto 0;" >拒绝</kt-button>
         </template>
       </el-table-column>
     </el-table>
@@ -110,9 +112,10 @@
     import { findTree } from "@/api/system/dept";
     import request from "@/utils/request";
     import {findAll} from "@/api/system/role";
+    import KtButton from '@/views/core/KtButton'
     export default {
         name: "check",
-        components:{  Treeselect },
+        components:{  Treeselect,KtButton },
     data() {
       return {
         size:"small",   //显示框、按钮等尺寸等级

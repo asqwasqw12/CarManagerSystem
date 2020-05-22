@@ -61,7 +61,7 @@
             <el-option v-for="item in statusOptions" :key="item.id " :value="item.id" :label="item.name">
             </el-option>
           </el-select>
-          <kt-button icon="el-icon-search"  perms="sys:role:view" type="success" @click="findPage">搜索</kt-button>
+          <kt-button icon="el-icon-search"  perms="sys:user:view" type="success" @click="findPage">搜索</kt-button>
           <kt-button icon="el-icon-plus"  perms="sys:user:add" type="primary" @click="addUser" >新增</kt-button>
         </div>
         <!--右工具栏-->

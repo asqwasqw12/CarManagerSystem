@@ -12,6 +12,14 @@
         placeHolder="输入角色名称搜索"
         prefix-icon="filter-item"
         />
+        <el-input
+          v-model="queryParams.remark"
+          clearable
+          :size="size"
+          style="width: 200px;"
+          placeHolder="输入备注搜索"
+          prefix-icon="filter-item"
+        />
         <kt-button icon="el-icon-search"  perms="sys:dict:view" type="success" @click="search()">搜索</kt-button>
         <kt-button icon="el-icon-plus"  perms="sys:dict:add" type="primary" @click="addRole" >新增</kt-button>
       </div>
@@ -44,7 +52,8 @@
                 <kt-table perms-edit="sys:role:edit" perms-delete="sys:role:delete"
                         :data="pageResult.content" :columns="filterColumns" :stripe="false"
                         :loading="tableLoading" :show-batch-delete="false"
-                        @handleEdit="handleEdit" @handleDelete="handleDelete" >
+                        @handleEdit="handleEdit" @handleDelete="handleDelete"
+                        @handleCurrentChange="handleRoleSelectChange">
                 </kt-table>
                 <pagination v-show="pageResult.totalSize>0" :total="pageResult.totalSize" :page.sync="pageRequest.pageNum" :limit.sync="pageRequest.pageSize" @pagination="findPage" />
             </el-card>
@@ -57,7 +66,7 @@
                 <span class="role-span">菜单分配</span>
               </el-tooltip>
               <el-button
-                :disabled="!showButton"
+                :disabled="this.selectRole.id == null"
                 :loading="menuSaveLoading"
                 icon="el-icon-check"
                 size="mini"
@@ -79,12 +88,15 @@
               element-loading-text="加载中..."
               @check-change="handleMenuCheckChange"
             />
+            <div style="float:left;padding-left:24px;padding-top:12px;padding-bottome:4px;">
+              <el-checkbox v-model="checkAll" @change="handleCheckAll" :disabled="this.selectRole.id == null"><b>全选</b></el-checkbox>
+            </div>
           </el-card>
         </el-col>
     </el-row>
     <!--表格显示列界面-->
     <table-column-filter-dialog ref="tableColumnFilterDialog" :columns="columns"  @handleFilterColumns="handleFilterColumns"></table-column-filter-dialog>
-    <el-dialog :title="operation ? '新增角色':'编辑角色'" width="40%" :visible.sync="dialogVisible" :close-on-click-modal="false">
+    <el-dialog v-dialogDrag :title="operation ? '新增角色':'编辑角色'" width="40%" :visible.sync="dialogVisible" :close-on-click-modal="false">
       <el-form :model="temp" label-width="80px"   ref="temp"  :rules="rules" :size="size"
                style="text-align: left;">
         <el-form-item label="角色名" prop="name">
@@ -107,7 +119,7 @@
   import KtTable from "@/views/core/KtTable"
   import pagination from  "@/components/Pagination"
   import TableColumnFilterDialog from "@/views/core/TableColumnFilterDialog";
-  import {batchDelete, findPage, save} from "@/api/system/role";
+  import {batchDelete, findPage, findRoleMenus, save, saveRoleMenus} from "@/api/system/role";
   import {findMenuTree} from "@/api/system/menu";
     export default {
         name: "role",
@@ -129,15 +141,18 @@
             columns:[],       //表格所有列属性
             filterColumns:[], //过滤后显示列属性
             operation:true,   //选择编辑或者新增对话框
-            showButton:false,  //保存按钮不可用
             menuSaveLoading:false,  //菜单设置保存加载
             menuLoading:false,  //菜单加载
+            selectRole:{},      //点击角色表行选择的角色
+            currentRoleMenus:[],//当前角色菜单
+            checkAll:false,    //
             defaultProps:{
               children:'children',
               label:'name'
             },
             queryParams:{
-              name:''     //根据名称查询
+              name:'',     //根据名称查询
+              remark:''     //根据备注查询
             },
             pageRequest:{
               pageNum:1,
@@ -321,12 +336,86 @@
 
         //保存按钮函数
         saveMenu(){
+          let roleId = this.selectRole.id
+          if('admin' == this.selectRole.name){
+            this.$message({
+              message:'超级管理员拥有所有菜单权限，不允许修改！',
+              type:'error'
+            })
+            return
+          }
+          this.menuSaveLoading = true
+          let checkedNodes = this.$refs.menuTree.getCheckedNodes(false,true)
+          let roleMenus = []
+          for(let i=0,len=checkedNodes.length;i<len;i++){
+            let roleMenu = { roleId:roleId,menuId:checkedNodes[i].id }
+            roleMenus.push(roleMenu)
+          }
+          saveRoleMenus(roleMenus).then( response => {
+            this.menuSaveLoading = false
+            if(response.msg === 'ok') {
+              this.$message({ message: '操作成功', type: 'success' })
+            } else {
+              this.$message({message: '操作失败, ' + response.msg, type: 'error'})
+            }
+          }).catch( error =>{
+            this.menuSaveLoading =false
+            this.$notify({
+              title:'操作提示',
+              message:error.message,
+              duration: 2000,
+              type:'error'
+            })
+          })
+        },
+
+        //角色选择改变监听
+        handleRoleSelectChange(val){
+          if(val== null || val.val == null){
+            return
+          }
+          this.selectRole = val.val
+          findRoleMenus({'roleId':val.val.id}).then( res =>{
+            this.currentRoleMenus = res.data
+            this.$refs.menuTree.setCheckedNodes(res.data)
+          })
 
         },
 
         //树节点监听
-        handleMenuCheckChange(){
+        handleMenuCheckChange(data,check,subCheck){
+          if(check) {
+            //节点选中同步选中父节点
+            let parentId = data.parentId
+            this.$refs.menuTree.setChecked(parentId,true,false)
+          }else{
+            //节点取消选中时同步取消选中子节点
+            if(data.children != null){
+              data.children.forEach( element => {
+                this.$refs.menuTree.setChecked(element.id,false,false)
+              })
+            }
+          }
+        },
 
+        // 全选操作
+        handleCheckAll() {
+          if(this.checkAll) {
+            let allMenus = []
+            this.checkAllMenu(this.menuData, allMenus)
+            this.$refs.menuTree.setCheckedNodes(allMenus)
+          } else {
+            this.$refs.menuTree.setCheckedNodes([])
+          }
+        },
+        // 递归全选
+        checkAllMenu(menuData, allMenus) {
+          menuData.forEach(menu => {
+            allMenus.push(menu)
+            if(menu.children) {
+              this.checkAllMenu(menu.children, allMenus)
+            }
+          });
         },
 
         // 处理表格列过滤显示

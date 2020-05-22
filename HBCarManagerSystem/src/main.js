@@ -8,6 +8,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import 'font-awesome/css/font-awesome.min.css'
 import './assets/icons'
 
+import '@/utils/directives.js';
 import store from './store'
 import '@/router/index' // permission control
 import BaiduMap from 'vue-baidu-map'

@@ -9,44 +9,6 @@ export function findAll() {
   })
 }
 
-export function add(data) {
-  return request({
-    url: '/api/roles',
-    method: 'post',
-    data
-  })
-}
-
-export function get(id) {
-  return request({
-    url: '/api/roles/' + id,
-    method: 'get'
-  })
-}
-
-export function getLevel() {
-  return request({
-    url: '/api/roles/level',
-    method: 'get'
-  })
-}
-
-
-export function edit(data) {
-  return request({
-    url: '/api/roles',
-    method: 'put',
-    data
-  })
-}
-
-export function editMenu(data) {
-  return request({
-    url: '/api/roles/menu',
-    method: 'put',
-    data
-  })
-}
 
 //分页查询
 export function findPage(data) {
@@ -74,4 +36,21 @@ export function save(data) {
     data
   })
 }
-export default { findAll,add, edit, batchDelete, get, editMenu, getLevel,findPage,save }
+
+// 查询角色菜单集合
+export function findRoleMenus(params)  {
+  return request({
+    url: '/api/role/findRoleMenus',
+    method: 'get',
+    params
+  })
+}
+// 保存角色菜单集合
+export function  saveRoleMenus(data) {
+  return request({
+    url: '/api/role/saveRoleMenus',
+    method: 'post',
+    data
+  })
+}
+export default { findAll, batchDelete,findPage,save,findRoleMenus,saveRoleMenus }
