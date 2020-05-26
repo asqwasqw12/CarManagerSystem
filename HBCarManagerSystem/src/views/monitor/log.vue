@@ -3,7 +3,7 @@
     <!--左工具栏-->
     <div class="head-container left" style="float:left;">
       <el-input
-        v-model="queryParams.name"
+        v-model="queryParams.userName"
         clearable
         :size="size"
         style="width: 200px;"
@@ -37,7 +37,7 @@
               <el-button icon="fa fa-filter" @click="displayFilterColumnsDialog" :size="size"></el-button>
             </el-tooltip>
             <el-tooltip content="导出" placement="top">
-              <el-button icon="fa fa-file-excel-o" @click="exportDictExcelFile" :size="size" :loading="exportLoading"></el-button>
+              <el-button icon="fa fa-file-excel-o" @click="exportLogExcelFile" :size="size" :loading="exportLoading"></el-button>
             </el-tooltip>
           </el-button-group>
         </el-form-item>
@@ -60,6 +60,7 @@
   import pagination from  "@/components/Pagination"
   import TableColumnFilterDialog from "@/views/core/TableColumnFilterDialog";
   import {downloadFile} from "@/utils";
+  import {findPage} from "@/api/system/log";
   export default {
     name: "log",
     components:{
@@ -78,8 +79,9 @@
         filterColumns:[], //过滤后显示列属性
         showOperation:false, //不显示操作列
         queryParams:{
-          name:'',     //根据名称查询
+          userName:'',     //根据名称查询
           createTime:[],   //根据日期查询
+          createTimeSort:true ? 'DESC':'ASC'   //默认注册时间降序
         },
         pageRequest:{
           pageNum:1,
@@ -173,23 +175,21 @@
       initColumns() {
         this.columns = [
           {prop:"id", label:"ID", minWidth:50},
-          {prop:"name", label:"用户名", minWidth:80},
-          {prop:"realName", label:"姓名", minWidth:80},
-          {prop:"deptName", label:"机构", minWidth:120},
-          {prop:"roleNames", label:"角色", minWidth:100},
-          /*{prop:"email", label:"邮箱", minWidth:120},*/
-          {prop:"mobile", label:"手机", minWidth:100},
-          {prop:"status", label:"状态", minWidth:70},
-          {prop:"createTime",label:"注册时间",minWidth:100 }
-          // {prop:"createBy", label:"创建人", minWidth:120},
-          // {prop:"createTime", label:"创建时间", minWidth:120, formatter:this.dateFormat}
-          // {prop:"lastUpdateBy", label:"更新人", minWidth:100},
-          // {prop:"lastUpdateTime", label:"更新时间", minWidth:120, formatter:this.dateFormat}
+          {prop:"userName", label:"用户名", minWidth:80},
+          {prop:"method", label:"方法", minWidth:80},
+          {prop:"operation",label:"操作描述",minWidth:100},
+          {prop:"ip", label:"IP", minWidth:100},
+          {prop:"address", label:"IP来源", minWidth:120},
+          {prop:"browser",label:"浏览器",minWidth:100},
+          {prop:"time", label:"耗时", minWidth:100},
+          {prop:"createTime",label:"创建时间",minWidth:100 }
         ]
         this.filterColumns = JSON.parse(JSON.stringify(this.columns));
       }
     },
     mounted() {
+      this.initColumns()
+      this.findPage()
     }
   }
 </script>
