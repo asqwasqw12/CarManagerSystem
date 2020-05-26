@@ -30,7 +30,7 @@ router.beforeEach(async(to, from, next) => {
           await store.dispatch('getInfo')
           await store.dispatch('findNavTree',store.getters.name)
           const accessRoutes = await store.dispatch('generateRoutes',store.getters.navTree)
-          await store.dispatch('findPermissions',store.getters.name)
+          store.dispatch('findPermissions',store.getters.name)
           router.addRoutes(accessRoutes)
           next({ ...to, replace: true })
           }catch (error) {

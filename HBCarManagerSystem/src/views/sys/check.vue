@@ -59,11 +59,11 @@
             拒绝
           </el-button>-->
           <kt-button perms="sys:user:edit" :size="size" @click="passApplication(row)" style="margin:auto 0;">通过</kt-button>
-          <kt-button iperms="sys:user:delete" :size="size" type="danger" @click="rejectApplication(row)" style="margin:auto 0;" >拒绝</kt-button>
+          <kt-button perms="sys:user:delete" :size="size" type="danger" @click="rejectApplication(row)" style="margin:auto 0;" >拒绝</kt-button>
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog title="审核新用户" width="40%" :visible.sync="dialogFormVisible" :close-on-click-modal="false">
+    <el-dialog v-dialogDrag title="审核新用户" width="40%" :visible.sync="dialogFormVisible" :close-on-click-modal="false">
       <el-form ref="dataForm"  :model="temp" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;" size="mini">
         <el-form-item label="用户名" prop="name">
           <el-input v-model="temp.name" :disabled="true" />

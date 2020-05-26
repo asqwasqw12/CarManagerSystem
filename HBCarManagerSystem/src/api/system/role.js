@@ -53,4 +53,14 @@ export function  saveRoleMenus(data) {
     data
   })
 }
-export default { findAll, batchDelete,findPage,save,findRoleMenus,saveRoleMenus }
+//导出数据
+export function exportRoleExcelFile(data){
+  return request({
+    url: '/api/role/exportRoleExcelFile',
+    method: 'post',
+    responseType:'blob',
+    data
+  })
+}
+
+export default { findAll, batchDelete,findPage,save,findRoleMenus,saveRoleMenus,exportRoleExcelFile }

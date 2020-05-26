@@ -20,8 +20,8 @@
           placeHolder="输入备注搜索"
           prefix-icon="filter-item"
         />
-        <kt-button icon="el-icon-search"  perms="sys:dict:view" type="success" @click="search()">搜索</kt-button>
-        <kt-button icon="el-icon-plus"  perms="sys:dict:add" type="primary" @click="addRole" >新增</kt-button>
+        <kt-button icon="el-icon-search"  perms="sys:role:view" type="success" @click="search()">搜索</kt-button>
+        <kt-button icon="el-icon-plus"  perms="sys:role:add" type="primary" @click="addRole" >新增</kt-button>
       </div>
       <!--右工具栏-->
       <div class="head-container right" style="float:right;">
@@ -65,15 +65,16 @@
               <el-tooltip class="item" effect="dark" content="选择指定角色分配菜单" placement="top" >
                 <span class="role-span">菜单分配</span>
               </el-tooltip>
-              <el-button
+              <Kt-button
                 :disabled="this.selectRole.id == null"
                 :loading="menuSaveLoading"
                 icon="el-icon-check"
+                perms="sys:role:edit"
                 size="mini"
                 style="float: right; padding: 6px 9px"
                 type="primary"
                 @click="saveMenu"
-              >保存</el-button>
+              >保存</Kt-button>
             </div>
             <el-tree
               size="mini"
@@ -119,8 +120,9 @@
   import KtTable from "@/views/core/KtTable"
   import pagination from  "@/components/Pagination"
   import TableColumnFilterDialog from "@/views/core/TableColumnFilterDialog";
-  import {batchDelete, findPage, findRoleMenus, save, saveRoleMenus} from "@/api/system/role";
+  import {batchDelete, exportRoleExcelFile, findPage, findRoleMenus, save, saveRoleMenus} from "@/api/system/role";
   import {findMenuTree} from "@/api/system/menu";
+  import {downloadFile} from "@/utils";
     export default {
         name: "role",
       components:{
@@ -249,7 +251,23 @@
 
         //角色导出
         exportRoleExcelFile(){
-
+          this.exportLoading =true
+          let temp = Object.assign({},this.pageRequest)
+          temp.objectParam = Object.assign({},this.queryParams)
+          temp.pageSize = 0   //不分页
+          exportRoleExcelFile(temp).then( (response) => {
+            this.exportLoading = false
+            let a =  Math.floor(Math.random()*100)+"角色数据"
+            downloadFile(response,a,'xlsx')
+          }).catch( (error) => {
+            this.exportLoading = false
+            this.$notify({
+              title:'操作提示',
+              message:error.message,
+              duration: 2000,
+              type:'error'
+            })
+          })
         },
 
         //表格行编辑按钮函数

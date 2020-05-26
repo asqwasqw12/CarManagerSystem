@@ -94,7 +94,7 @@
     <table-column-filter-dialog ref="tableColumnFilterDialog" :columns="columns" @handleFilterColumns="handleFilterColumns"></table-column-filter-dialog>
 
     <!--新增编辑界面-->
-    <el-dialog :title="operation?'新增用户':'编辑用户'" width="40%" :visible.sync="dialogVisible" :close-on-click-modal="false">
+    <el-dialog v-dialogDrag :title="operation?'新增用户':'编辑用户'" width="40%" :visible.sync="dialogVisible" :close-on-click-modal="false">
 
       <el-form :model="temp" label-width="80px"   ref="dataForm"  :rules="rules" :size="size"
                label-position="right">

@@ -7,7 +7,7 @@
         clearable
         :size="size"
         style="width: 200px;"
-        placeHolder="输入用户名搜索"
+        placeHolder="输入字典名称搜索"
         prefix-icon="filter-item"
       />
       <!--注册时间搜索框-->
@@ -61,7 +61,7 @@
   import TableColumnFilterDialog from "@/views/core/TableColumnFilterDialog";
   import {downloadFile} from "@/utils";
   export default {
-    name: "log",
+    name: "SysLog",
     components:{
       KtButton,
       KtTable,

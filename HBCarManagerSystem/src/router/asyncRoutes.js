@@ -113,7 +113,7 @@ const asyncRoutes = [
       {
         path:'index',
         name:'sys_log',
-        component:() => import('@/views/log/sys_log.vue'),
+        component:() => import('@/views/log/SysLog.vue'),
         meta:{
           icon:'fa fa-file-text-o',
           title:'系统日志',

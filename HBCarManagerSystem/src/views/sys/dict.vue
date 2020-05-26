@@ -1,75 +1,75 @@
 <template>
   <div class="app-container">
-    <!--左工具栏-->
-    <div class="head-container left" style="float:left;">
-      <el-input
-        v-model="queryParams.label"
-        clearable
-        :size="size"
-        style="width: 200px;"
-        placeHolder="输入字典名称搜索"
-        prefix-icon="filter-item"
-      />
-      <kt-button icon="el-icon-search"  perms="sys:dict:view" type="success" @click="search()">搜索</kt-button>
-      <kt-button icon="el-icon-plus"  perms="sys:dict:add" type="primary" @click="addDict" >新增</kt-button>
-    </div>
-    <!--右工具栏-->
-    <div class="head-container right" style="float:right;">
-      <el-form :inline="true" size="mini">
-        <el-form-item>
-          <el-button-group>
-            <el-tooltip content="刷新" placement="top">
-              <el-button icon="fa fa-refresh" @click="refreshTreeData()" :size="size"></el-button>
-            </el-tooltip>
-            <el-tooltip content="列显示" placement="top">
-              <el-button icon="fa fa-filter" @click="displayFilterColumnsDialog" :size="size"></el-button>
-            </el-tooltip>
-            <el-tooltip content="导出" placement="top">
-              <el-button icon="fa fa-file-excel-o" @click="exportDictExcelFile" :size="size" :loading="exportLoading"></el-button>
-            </el-tooltip>
-          </el-button-group>
-        </el-form-item>
-      </el-form>
-    </div>
-    <kt-table perms-edit="sys:user:edit" perms-delete="sys:user:delete"
-              :data="pageResult.content" :columns="filterColumns"
-              :loading="tableLoading"
-              @handleEdit="handleEdit" @handleDelete="handleDelete" >
-    </kt-table>
-    <pagination v-show="pageResult.totalSize>0" :total="pageResult.totalSize" :page.sync="pageRequest.pageNum" :limit.sync="pageRequest.pageSize" @pagination="findPage" />
-    <!--表格显示列界面-->
-    <table-column-filter-dialog ref="tableColumnFilterDialog" :columns="columns"  @handleFilterColumns="handleFilterColumns"></table-column-filter-dialog>
-    <el-dialog :title="operation ? '新增菜单':'编辑菜单'" width="40%" :visible.sync="dialogVisible" :close-on-click-modal="false">
-      <el-form :model="temp" label-width="80px"   ref="temp"  :rules="rules" :size="size"
-               style="text-align: left;">
-        <el-form-item label="ID" prop="id"  v-if="false">
-          <el-input v-model="temp.id" :disabled="true" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="名称" prop="label">
-          <el-input v-model="temp.label" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="值" prop="value">
-          <el-input v-model="temp.value" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="类型" prop="type">
-          <el-input v-model="temp.type" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="排序" prop="sort">
-          <el-input v-model="temp.sort" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="描述 " prop="description">
-          <el-input v-model="temp.description" auto-complete="off" type="textarea"></el-input>
-        </el-form-item>
-        <el-form-item label="备注" prop="remarks">
-          <el-input v-model="temp.remarks" auto-complete="off" type="textarea"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button :size="size" @click.native="dialogVisible = false">取消</el-button>
-        <el-button :size="size" type="primary" @click.native="submitForm" :loading="editLoading">提交</el-button>
-      </div>
-    </el-dialog>
+  <!--左工具栏-->
+  <div class="head-container left" style="float:left;">
+    <el-input
+      v-model="queryParams.label"
+      clearable
+      :size="size"
+      style="width: 200px;"
+      placeHolder="输入字典名称搜索"
+      prefix-icon="filter-item"
+    />
+    <kt-button icon="el-icon-search"  perms="sys:dict:view" type="success" @click="search()">搜索</kt-button>
+    <kt-button icon="el-icon-plus"  perms="sys:dict:add" type="primary" @click="addDict" >新增</kt-button>
   </div>
+  <!--右工具栏-->
+  <div class="head-container right" style="float:right;">
+    <el-form :inline="true" size="mini">
+      <el-form-item>
+        <el-button-group>
+          <el-tooltip content="刷新" placement="top">
+            <el-button icon="fa fa-refresh" @click="refreshTreeData()" :size="size"></el-button>
+          </el-tooltip>
+          <el-tooltip content="列显示" placement="top">
+            <el-button icon="fa fa-filter" @click="displayFilterColumnsDialog" :size="size"></el-button>
+          </el-tooltip>
+          <el-tooltip content="导出" placement="top">
+            <el-button icon="fa fa-file-excel-o" @click="exportDictExcelFile" :size="size" :loading="exportLoading"></el-button>
+          </el-tooltip>
+        </el-button-group>
+      </el-form-item>
+    </el-form>
+  </div>
+  <kt-table perms-edit="sys:user:edit" perms-delete="sys:user:delete"
+            :data="pageResult.content" :columns="filterColumns"
+            :loading="tableLoading"
+            @handleEdit="handleEdit" @handleDelete="handleDelete" >
+  </kt-table>
+  <pagination v-show="pageResult.totalSize>0" :total="pageResult.totalSize" :page.sync="pageRequest.pageNum" :limit.sync="pageRequest.pageSize" @pagination="findPage" />
+  <!--表格显示列界面-->
+  <table-column-filter-dialog ref="tableColumnFilterDialog" :columns="columns"  @handleFilterColumns="handleFilterColumns"></table-column-filter-dialog>
+  <el-dialog  v-dialogDrag :title="operation ? '新增字典':'编辑字典'" width="40%" :visible.sync="dialogVisible" :close-on-click-modal="false">
+    <el-form :model="temp" label-width="80px"   ref="temp"  :rules="rules" :size="size"
+             style="text-align: left;">
+      <el-form-item label="ID" prop="id"  v-if="false">
+        <el-input v-model="temp.id" :disabled="true" auto-complete="off"></el-input>
+      </el-form-item>
+      <el-form-item label="名称" prop="label">
+        <el-input v-model="temp.label" auto-complete="off"></el-input>
+      </el-form-item>
+      <el-form-item label="值" prop="value">
+        <el-input v-model="temp.value" auto-complete="off"></el-input>
+      </el-form-item>
+      <el-form-item label="类型" prop="type">
+        <el-input v-model="temp.type" auto-complete="off"></el-input>
+      </el-form-item>
+      <el-form-item label="排序" prop="sort">
+        <el-input v-model="temp.sort" auto-complete="off"></el-input>
+      </el-form-item>
+      <el-form-item label="描述 " prop="description">
+        <el-input v-model="temp.description" auto-complete="off" type="textarea"></el-input>
+      </el-form-item>
+      <el-form-item label="备注" prop="remarks">
+        <el-input v-model="temp.remarks" auto-complete="off" type="textarea"></el-input>
+      </el-form-item>
+    </el-form>
+    <div slot="footer" class="dialog-footer">
+      <el-button :size="size" @click.native="dialogVisible = false">取消</el-button>
+      <el-button :size="size" type="primary" @click.native="submitForm" :loading="editLoading">提交</el-button>
+    </div>
+  </el-dialog>
+</div>
 </template>
 
 <script>
