@@ -53,7 +53,7 @@ service.interceptors.response.use(response =>{
       error.message = '未授权，请重新登录'
       break;
     case 403:
-      error.message = '拒绝访问'
+      error.message = '拒绝访问,令牌可能过期'
       break;
     case 404:
       error.message = '请求错误，未找到该资源'
