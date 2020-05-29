@@ -18,4 +18,14 @@ export function findPage(data) {
   })
 }
 
-export default { findPage,batchDelete }
+//导出数据
+export function exportLogExcelFile(data){
+  return request({
+    url: '/api/log/exportLogExcelFile',
+    method: 'post',
+    responseType:'blob',
+    data
+  })
+}
+
+export default { findPage,batchDelete,exportLogExcelFile }

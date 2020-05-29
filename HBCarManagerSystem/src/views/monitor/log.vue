@@ -24,6 +24,7 @@
         end-placeholder="结束日期"
       />
       <kt-button icon="el-icon-search"  perms="sys:log:view" type="success" @click="search()">搜索</kt-button>
+      <kt-button icon="fa fa-trash"  perms="sys:log:delete" type="danger" @click="handlelDelete()">清除日志</kt-button>
     </div>
     <!--右工具栏-->
     <div class="head-container right" style="float:right;">
@@ -49,7 +50,7 @@
     </kt-table>
     <pagination v-show="pageResult.totalSize>0" :total="pageResult.totalSize" :page.sync="pageRequest.pageNum" :limit.sync="pageRequest.pageSize" @pagination="findPage" />
     <!--表格显示列界面-->
-    <table-column-filter-dialog ref="tableColumnFilterDialog" :columns="columns"  @handleFilterColumns="handleFilterColumns"></table-column-filter-dialog>
+    <table-column-filter-dialog ref="tableColumnFilterDialog" :columns="columns" :init-columns="defaultColumns" @handleFilterColumns="handleFilterColumns"></table-column-filter-dialog>
   </div>
 
 </template>
@@ -60,7 +61,7 @@
   import pagination from  "@/components/Pagination"
   import TableColumnFilterDialog from "@/views/core/TableColumnFilterDialog";
   import {downloadFile} from "@/utils";
-  import {findPage} from "@/api/system/log";
+  import {batchDelete, exportLogExcelFile, findPage} from "@/api/system/log";
   export default {
     name: "log",
     components:{
@@ -77,6 +78,7 @@
         tableData:[],     //菜单表格数据
         columns:[],       //表格所有列属性
         filterColumns:[], //过滤后显示列属性
+        defaultColumns:[], //初始列选择属性
         showOperation:false, //不显示操作列
         queryParams:{
           userName:'',     //根据名称查询
@@ -99,6 +101,38 @@
       //搜索按钮函数
       search(){
         this.findPage()
+      },
+
+      handlelDelete(){
+        this.$confirm('确认删除所有记录吗？', '提示', {
+          type: 'warning'
+        }).then(() => {
+          let params = Object.assign({},this.queryParams)
+          batchDelete(params).then( response => {
+            if(response.msg === 'ok'){
+              this.$message(
+                {
+                  message:'删除成功',
+                  type:'success'
+                })
+              this.refreshTreeData()
+            }else {
+              this.$message(
+                {
+                  message:'操作失败',
+                  type:'error'
+                })
+            }
+          }).catch( error =>{
+            this.loading =false
+            this.$notify({
+              title:'操作提示',
+              message:error.message,
+              duration: 2000,
+              type:'error'
+            })
+          })
+        })
       },
       //刷新函数
       refreshTreeData(){
@@ -140,13 +174,9 @@
         let temp = Object.assign({},this.pageRequest)
         temp.objectParam = Object.assign({},this.queryParams)
         temp.pageSize = 0   //不分页
-        //在status未选中状态，传递给后端的status参数改为-1，以此查询所有状态的用户
-        if(temp.objectParam.status  === "" && temp.objectParam.status  !== 0  ){
-          temp.objectParam.status =-1
-        }
         exportLogExcelFile(temp).then( (response) => {
           this.exportLoading = false
-          let a =  Math.floor(Math.random()*100)+"用户数据"
+          let a =  Math.floor(Math.random()*100)+"日志数据"
           downloadFile(response,a,'xlsx')
         }).catch( (error) => {
           this.exportLoading = false
@@ -177,6 +207,7 @@
           {prop:"id", label:"ID", minWidth:50},
           {prop:"userName", label:"用户名", minWidth:80},
           {prop:"method", label:"方法", minWidth:80},
+          {prop:"params",label:"方法参数",minWidth:100},
           {prop:"operation",label:"操作描述",minWidth:100},
           {prop:"ip", label:"IP", minWidth:100},
           {prop:"address", label:"IP来源", minWidth:120},
@@ -185,6 +216,8 @@
           {prop:"createTime",label:"创建时间",minWidth:100 }
         ]
         this.filterColumns = JSON.parse(JSON.stringify(this.columns));
+        this.filterColumns.splice(2,2)
+        this.defaultColumns = JSON.parse(JSON.stringify(this.filterColumns))
       }
     },
     mounted() {

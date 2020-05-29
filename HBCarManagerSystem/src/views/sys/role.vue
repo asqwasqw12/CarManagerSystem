@@ -96,7 +96,7 @@
         </el-col>
     </el-row>
     <!--表格显示列界面-->
-    <table-column-filter-dialog ref="tableColumnFilterDialog" :columns="columns"  @handleFilterColumns="handleFilterColumns"></table-column-filter-dialog>
+    <table-column-filter-dialog ref="tableColumnFilterDialog" :columns="columns" :init-columns="columns" @handleFilterColumns="handleFilterColumns"></table-column-filter-dialog>
     <el-dialog v-dialogDrag :title="operation ? '新增角色':'编辑角色'" width="40%" :visible.sync="dialogVisible" :close-on-click-modal="false">
       <el-form :model="temp" label-width="80px"   ref="temp"  :rules="rules" :size="size"
                style="text-align: left;">

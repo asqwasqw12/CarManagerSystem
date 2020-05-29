@@ -61,7 +61,7 @@
       </el-table-column>
     </el-table>
     <!--表格显示列界面-->
-    <table-column-filter-dialog ref="tableColumnFilterDialog" :columns="columns"  @handleFilterColumns="handleFilterColumns"></table-column-filter-dialog>
+    <table-column-filter-dialog ref="tableColumnFilterDialog" :columns="columns" :init-columns="columns" @handleFilterColumns="handleFilterColumns"></table-column-filter-dialog>
     <!--新增编辑界面-->
     <el-dialog v-dialogDrag :title="operation ? '新增部门':'编辑部门'" width="40%" :visible.sync="dialogVisible" :close-on-click-modal="false">
     <el-form :model="temp" label-width="80px"   ref="temp"  :rules="rules" :size="size"

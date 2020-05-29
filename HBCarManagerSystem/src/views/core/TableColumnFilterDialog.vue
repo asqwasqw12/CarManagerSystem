@@ -36,6 +36,10 @@
         type: Array,
         default: [{prop:"id", label:"ID", minWidth:50}]
       },
+      initColumns:{
+        type:Array,
+        default:[{prop:"id", label:"ID", minWidth:50}]
+      },
       size: {
         type: String,
         default: 'mini'
@@ -82,13 +86,18 @@
         if(!this.selected){
           this.selected = true
           this.columns.forEach( item => {
-            this.$refs.multipleTable.toggleRowSelection(item,true)
+            if(this.initColumns.some( col =>{ return col.prop == item.prop }))
+            {
+              this.$refs.multipleTable.toggleRowSelection(item,true)
+            }
           })
         }
 
       }
     },
    mounted() {
+      //this.initColumns  = JSON.parse(JSON.stringify(this.columns))
+
    }
   }
 </script>
