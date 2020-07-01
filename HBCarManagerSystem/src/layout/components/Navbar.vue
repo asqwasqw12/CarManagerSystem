@@ -1,5 +1,6 @@
 <template>
   <div class="navbar" :style="{'background':themeColor}">
+    <BreadCrumb class="breadcrumb-container"></BreadCrumb>
     <span class="right-menu" >
       <el-menu class="el-menu-demo" mode="horizontal" :background-color="themeColor" :active-text-color="themeColor">
         <el-menu-item index="3" v-popover:popover-message>
@@ -39,11 +40,13 @@
   import PersonalPanel from "@/views/core/PersonalPanel"
   import Avatar from '@/assets/images/avatar.png'
   import { baseUrl } from '@/utils/global'
+  import BreadCrumb from '@/components/BreadCrumb'
   export default {
     components:{
       NoticePanel,
       MessagePanel,
-      PersonalPanel
+      PersonalPanel,
+      BreadCrumb
     },
     name: "Navbar",
     data(){
@@ -139,7 +142,7 @@
     .hamburger-container {
       line-height: 46px;
       height: 100%;
-      float: left;
+      float: left !important;
       cursor: pointer;
       transition: background .3s;
       -webkit-tap-highlight-color:transparent;
@@ -154,7 +157,7 @@
     }
 
     .right-menu {
-      float: right;
+      float: right !important;
       height: 100%;
       line-height: 50px;
       }

@@ -57,6 +57,8 @@
       </el-table-column>
       <el-table-column prop="url" header-align="center" align="center"  :width="setWidth('url')" :label="setLabel('url')" v-if="includeColumn('url')">
       </el-table-column>
+      <el-table-column prop="location" header-align="center" align="center"  :width="setWidth('location')" :label="setLabel('location')" v-if="includeColumn('location')">
+      </el-table-column>
       <el-table-column prop="perms" header-align="center" align="center" :show-overflow-tooltip="true" :width="setWidth('perms')" :label="setLabel('perms')" v-if="includeColumn('perms')">
       </el-table-column>
       <el-table-column prop="orderNum" header-align="center" align="center"  :width="setWidth('orderNum')" :label="setLabel('orderNum')" v-if="includeColumn('orderNum')">
@@ -97,7 +99,10 @@
           <el-input v-model="temp.perms" placeholder="如： sys:user:add,sys:user:edit,sys:user:delete"></el-input>
         </el-form-item>
         <el-form-item v-if="temp.type !== 2" label="菜单路由" prop="url">
-          <el-input v-model="temp.url" placeholder="/sys/user"></el-input>
+          <el-input v-model="temp.url" placeholder="目录：/sys，菜单：user"></el-input>
+        </el-form-item>
+        <el-form-item v-if="temp.type === 1" label="菜单位置" prop="location">
+          <el-input v-model="temp.location" placeholder="sys/user"></el-input>
         </el-form-item>
         <el-form-item v-if="temp.type !==2 " prop="orderNum" label="顺序编号">
           <el-input-number v-model="temp.orderNum" controls-position="right" :min="0" label="排序编号"></el-input-number>
@@ -155,6 +160,7 @@
               parentId:0,
               parentName: '',
               url:'',
+              location:'',
               perms:'',
               orderNum: 0
             },
@@ -289,8 +295,9 @@
             {prop: "type", label: "类型", minWidth: 50},
             {prop:"parentName",label:"上级菜单",minWidth:100},
             {prop:"url",label:"菜单URL",minWidth:150},
+            {prop:"location",label:"菜单位置",minWidth:150},
             {prop:"perms",label:"授权标识",minWidth:150},
-            {prop: "orderNum", label: "排序", minWidth: 70},
+            {prop: "orderNum", label: "排序", minWidth: 50},
           ]
           this.filterColumns = JSON.parse(JSON.stringify(this.columns));//深拷贝
         },

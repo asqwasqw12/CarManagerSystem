@@ -70,6 +70,7 @@
           <a href="http://www.chinacar.com.cn/search.html" target="_blank">汽车公告网</a>&nbsp;&nbsp;
           <a href="http://www.cn-hw.net/" target="_blank">环卫科技</a>&nbsp;&nbsp;
           <a href="http://www.hunanhw.com/" target="_blank">湖南环卫</a>
+          <a href="http://www.cncma.org/" target="_blank">机械工业协会</a>
         </div>
         <span style="font-size:10px;">Copyright © 合加新能源汽车有限公司  京 ICP备 11111111号</span>
       </div>

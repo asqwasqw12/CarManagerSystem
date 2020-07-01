@@ -1,0 +1,41 @@
+<template>
+  <div class="file-wrapper">
+    <el-container class="el-container">
+      <el-aside width="auto">
+        <AsideMenu></AsideMenu>
+      </el-aside>
+      <el-container>
+        <el-main class="el-main">
+          <FileList></FileList>
+        </el-main>
+      </el-container>
+    </el-container>
+  </div>
+
+</template>
+
+<script>
+    import AsideMenu from "@/views/file/components/AsideMenu/AsideMenu";
+    import FileList from "@/views/file/components/FileList";
+    export default {
+        name: "ProjectManager",
+      components: {AsideMenu,FileList}
+    }
+</script>
+
+<style lang="scss"scoped>
+  .file-wrapper {
+    width: 100% !important;
+    .el-container {
+      .el-aside {
+        border-right: solid 1px #E4E7ED;
+        height: calc(100vh - 70px);
+        setScrollbar: 4px;
+      }
+    }
+    .el-main {
+      padding-top: 0px !important;
+      overflow: hidden;
+    }
+  }
+</style>

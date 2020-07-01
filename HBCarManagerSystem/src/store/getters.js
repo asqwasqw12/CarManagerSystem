@@ -16,7 +16,8 @@ const getters = {
   cachedViews: state => state.tagsView.cachedViews,
   sqlApi: state => state.app.sqlApi,
   swaggerApi: state => state.app.swaggerApi,
-  updateAvatarApi:state => state.app.updateAvatarApi
+  updateAvatarApi:state => state.app.updateAvatarApi,
+  updateFileApi:state => state.app.updateFileApi
 
 }
 

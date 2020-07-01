@@ -10,8 +10,9 @@
                        :fixed="column.fixed" :key="column.prop" :type="column.type" :formatter="column.formatter"
                        :sortable="column.sortable==null?true:column.sortable">
           <template  slot-scope="scope">
-            <span v-if="column.prop !=='createTime'">{{ scope.row[column.prop] }}</span>
-            <span  v-else >{{ formatTime(scope.row.createTime) }}</span>
+            <span v-if="column.prop !=='createTime' && column.prop !=='loginTime'">{{ scope.row[column.prop] }}</span>
+            <span  v-if="column.prop ==='createTime'" >{{ formatTime(scope.row.createTime) }}</span>
+            <span  v-if="column.prop ==='loginTime'" >{{ formatTime(scope.row.loginTime) }}</span>
           </template>
       </el-table-column>
       <el-table-column  label="操作" width="120" fixed="right" v-if="showOperation" header-align="center" align="center">

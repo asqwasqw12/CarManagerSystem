@@ -142,10 +142,6 @@
       findPage(){
         this.tableLoading = true
         this.pageRequest.objectParam = Object.assign({},this.queryParams)
-        //在status未选中状态，传递给后端的status参数改为-1，以此查询所有状态的用户
-        if(this.pageRequest.objectParam.status  === "" && this.pageRequest.objectParam.status  !== 0  ){
-          this.pageRequest.objectParam.status =-1
-        }
         findPage(this.pageRequest).then(response => {
           this.tableLoading = false
           if (response.msg === 'ok') {

@@ -74,11 +74,11 @@
     top: 0;
     right: 0;
     z-index: 9;
-    width: calc(100% - #{$sidebarWidth});
+    width: calc(100% - #{$sidebarWidth}) !important;
     transition: width 0.28s;
   }
   .hideSidebar .fixed-header {
-    width: calc(100% - 54px)
+    width: calc(100% - 54px) !important;
   }
 
   .mobile .fixed-header {
