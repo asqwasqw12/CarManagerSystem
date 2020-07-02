@@ -120,7 +120,7 @@
             marginRight: "auto",
            width: "1280px",
            height: "800px",
-           background:  "url(" + require("../../assets/index_background-9.jpg") + ")",
+           background:  "url(" + require("../../assets/index_background-10.jpg") + ")",
             backgroundSize: "cover",
           border: "2px solid #ccc",
             //position:"relative"

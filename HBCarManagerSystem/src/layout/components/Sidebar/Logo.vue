@@ -24,7 +24,7 @@
     },
     data() {
       return {
-        title: '合加汽车数据中心',
+        title: '环卫车辆数据中心',
         logo: require("../../../assets/logo_32_32.png")
       }
     }

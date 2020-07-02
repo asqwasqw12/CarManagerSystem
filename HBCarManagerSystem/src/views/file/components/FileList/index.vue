@@ -28,12 +28,20 @@
       :loading="tableLoading"
       @handleView="handleView" @handleDelete="handleDelete"
     ></File-Table>
+    <!-- 移动文件模态框 -->
+    <MoveFileDialog
+      :dialogMoveFile="dialogMoveFile"
+      @setSelectFilePath="setSelectFilePath"
+      @confirmMoveFile="confirmMoveFile"
+      @setMoveFileDialogData="setMoveFileDialogData"
+    ></MoveFileDialog>
   </div>
 </template>
 
 <script>
   import OperationMenu from './OperationMenu'
   import FileTable from './FileTable'
+  import MoveFileDialog from './MoveFileDialog'
   import {getFileTree, selectFileByFileType} from "@/api/file/file";
   //import SelectColumn from './components/SelectColumn'
   //import FileTable from './components/FileTable'
@@ -45,7 +53,8 @@
     name: 'FileList',
     components: {
       OperationMenu,
-      FileTable
+      FileTable,
+      MoveFileDialog
     },
     data() {
       return {
@@ -162,6 +171,14 @@
           }
         })
       },
+
+      //  设置移动后的文件路径
+      setSelectFilePath(selectFilePath) {
+        this.selectFilePath = selectFilePath
+      },
+
+      //  移动文件模态框-确定按钮事件
+      confirmMoveFile() {},
 
       //表格查看按钮函数
       handleView(params) {
