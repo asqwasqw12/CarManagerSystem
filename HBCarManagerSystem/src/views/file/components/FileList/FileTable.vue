@@ -10,11 +10,11 @@
                        :fixed="column.fixed" :key="column.prop" :type="column.type" :formatter="column.formatter"
                        :sortable="column.sortable==null?true:column.sortable">
         <template  slot-scope="scope">
-          <span v-if="column.prop !=='createTime' && column.prop !=='isDir' && column.prop !=='fileName'">{{ scope.row[column.prop] }}</span>
+          <span v-if="column.prop !=='createTime' && column.prop !=='isDir' && column.prop !=='name'">{{ scope.row[column.prop] }}</span>
           <span  v-if="column.prop ==='createTime'" >{{ formatTime(scope.row.createTime) }}</span>
-          <span v-if="column.prop === 'isDir'">{{ <img :src="setFileImg(scope.row.extendName)" style="width: 30px;" /> }}</span>
-          <div v-if="column.prop === 'fileName'" style="cursor:pointer;" @click="clickFileName(scope.row)">
-            <span>{{scope.row.fileName}}</span>
+          <span v-if="column.prop === 'isDir'"> <img :src="setFileImg(scope.row.extendName)" style="width: 30px;" /> </span>
+          <div v-if="column.prop === 'name'" style="cursor:pointer;" @click="clickFileName(scope.row)">
+            <span>{{scope.row.name}}</span>
             <span v-if="!scope.row.isDir && scope.row.extendName !== null">.{{scope.row.extendName}}</span>
           </div>
         </template>

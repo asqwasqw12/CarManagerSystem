@@ -42,12 +42,7 @@
   import OperationMenu from './OperationMenu'
   import FileTable from './FileTable'
   import MoveFileDialog from './MoveFileDialog'
-  import {getFileTree, selectFileByFileType} from "@/api/file/file";
-  //import SelectColumn from './components/SelectColumn'
-  //import FileTable from './components/FileTable'
-  //import ImageModel from './components/ImageModel'
-  //import MoveFileDialog from './components/MoveFileDialog'
-  //import ImgReview from './components/ImgReview'
+  import {getFileList, getFileTree, selectFileByFileType} from "@/api/file/file";
 
   export default {
     name: 'FileList',
@@ -93,11 +88,12 @@
       },
     },
     created() {
-      //this.getTableDataByType()
+      this.getTableDataByType()
       //this.showStorage()
     },
     mounted() {
       this.initColumns()
+      this.initFileTree()
     },
     methods: {
       changeImageDisplayModel() {
@@ -130,13 +126,36 @@
       },
       //表格数据获取相关事件
       getTableDataByType() {
-        if (this.fileType !== '0') {
-          //  分类型
-          this.showFileListByType()
-        } else {
-          //  全部文件
           this.showFileList()
+      },
+
+      //  获取当前路径下的文件列表
+      showFileList() {
+        let data = {
+          filePath: '/'
         }
+        getFileList(data).then(response => {
+          if (response.msg === 'ok') {
+            this.fileList = response.data
+            this.tableLoading = false
+          } else {
+            this.$notify({
+              title: '提示',
+              type: 'error',
+              message: response.msg,
+              duration: 1500
+            })
+          }
+        }).catch(
+          error => {
+            this.tableLoading = false
+            this.$notify({
+              title: '获取数据提示',
+              message: error.message,
+              position: 'bottom-right',
+              type: 'error'
+            })
+          })
       },
       //  根据文件类型展示文件列表
       showFileListByType() {
@@ -144,14 +163,29 @@
         let data = {
           fileType: this.fileType
         }
-        selectFileByFileType(data).then(res => {
-          if (res.success) {
-            this.fileList = res.data
-            this.loading = false
+        this.tableLoading = true
+        selectFileByFileType(data).then(response => {
+          if (response.msg === 'ok') {
+            this.fileList = response.data
+            this.tableLoading = false
           } else {
-            this.$message.error(res.errorMessage)
+            this.$notify({
+              title: '提示',
+              type: 'error',
+              message: response.msg,
+              duration: 1500
+            })
           }
-        })
+        }).catch(
+          error => {
+            this.tableLoading = false
+            this.$notify({
+              title: '获取数据提示',
+              message: error.message,
+              position: 'bottom-right',
+              type: 'error'
+            })
+          })
       },
       //  设置移动文件模态框相关数据，isBatchMove为null时是确认移动，值由之前的值而定
       setMoveFileDialogData(isBatchMove, visible) {
@@ -163,12 +197,25 @@
       },
       //  移动文件模态框：初始化文件目录树
       initFileTree() {
-        getFileTree().then(res => {
-          if (res.success) {
-            this.dialogMoveFile.fileTree = [res.data]
+        getFileTree().then(response => {
+          if (response.msg === 'ok') {
+            this.dialogMoveFile.fileTree = response.data
           } else {
-            this.$message.error(res.errorMessage)
+            this.$notify({
+              title: '提示',
+              type: 'error',
+              message:response.msg,
+              duration: 1500
+            })
           }
+        }).catch( error =>{
+          this.tableLoading = false
+          this.$notify({
+            title:'获取数据提示',
+            message:error.message,
+            position:'bottom-right',
+            type:'error'
+          })
         })
       },
 
@@ -192,7 +239,7 @@
       initColumns() {
         this.columns = [
           {prop:"isDir", label:"", minWidth:30},
-          {prop:"fileName", label:"文件名", minWidth:120},
+          {prop:"name", label:"文件名", minWidth:120},
           {prop:"filePath", label:"文件路径", minWidth:120},
           {prop:"fileSize", label:"文件大小", minWidth:120},
           {prop:"createTime",label:"创建时间",minWidth:100 }

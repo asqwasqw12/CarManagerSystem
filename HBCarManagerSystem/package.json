@@ -17,6 +17,7 @@
     "echarts": "^4.6.0",
     "element-ui": "^2.13.0",
     "file-saver": "^2.0.2",
+    "filebrowser-frontend": "^1.6.0",
     "js-cookie": "^2.2.1",
     "jsencrypt": "^3.0.0-rc.1",
     "laravel-file-manager": "^2.4.14",

@@ -1,11 +1,11 @@
 import request from '@/utils/request'
 
 //获取文件列表
-export function getFileList(params){
+export function getFileList(data){
   return request({
     url:'/api/file/getFileList',
-    method:'get',
-    params
+    method:'post',
+    data
   })
 }
 

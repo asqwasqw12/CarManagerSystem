@@ -18,7 +18,6 @@ import BaiduMap from 'vue-baidu-map'
 import echarts from 'echarts'
 
 import FileManager from 'laravel-file-manager'
-
 Vue.use(FileManager, {store})
 
 Vue.config.productionTip = false

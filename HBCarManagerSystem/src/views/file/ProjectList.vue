@@ -1,6 +1,7 @@
 <template>
   <div>
     <file-manager :settings="settings"></file-manager>
+    <file-browser></file-browser>
   </div>
 </template>
 

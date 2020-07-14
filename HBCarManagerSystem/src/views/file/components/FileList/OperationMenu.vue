@@ -95,6 +95,9 @@
     created() {
       this.handleEnterDown()
     },
+    mounted(){
+      //this.$emit('getTableDataByType')
+    },
     methods: {
       //  上传按钮
       uploadFileSuccess(result) {
