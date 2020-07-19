@@ -87,13 +87,9 @@
         }
       },
     },
-    created() {
-      this.getTableDataByType()
-      //this.showStorage()
-    },
     mounted() {
       this.initColumns()
-      this.initFileTree()
+      this.findTreeData('')
     },
     methods: {
       changeImageDisplayModel() {
@@ -130,62 +126,24 @@
       },
 
       //  获取当前路径下的文件列表
-      showFileList() {
-        let data = {
-          filePath: '/'
-        }
-        getFileList(data).then(response => {
-          if (response.msg === 'ok') {
-            this.fileList = response.data
-            this.tableLoading = false
-          } else {
-            this.$notify({
-              title: '提示',
-              type: 'error',
-              message: response.msg,
-              duration: 1500
-            })
-          }
-        }).catch(
-          error => {
-            this.tableLoading = false
-            this.$notify({
-              title: '获取数据提示',
-              message: error.message,
-              position: 'bottom-right',
-              type: 'error'
-            })
-          })
-      },
-      //  根据文件类型展示文件列表
-      showFileListByType() {
-        //  分类型
-        let data = {
-          fileType: this.fileType
-        }
+      findTreeData(name) {
         this.tableLoading = true
-        selectFileByFileType(data).then(response => {
-          if (response.msg === 'ok') {
-            this.fileList = response.data
+        return new Promise((resolve,reject) => {
+          getFileList({'name':name}).then(res => {
             this.tableLoading = false
-          } else {
+            this.fileList = res.data
+            resolve(res.data)
+          }).catch( error =>{
+            this.tableLoading =false
+            reject(error)
             this.$notify({
-              title: '提示',
-              type: 'error',
-              message: response.msg,
-              duration: 1500
-            })
-          }
-        }).catch(
-          error => {
-            this.tableLoading = false
-            this.$notify({
-              title: '获取数据提示',
-              message: error.message,
-              position: 'bottom-right',
-              type: 'error'
+              title:'操作提示',
+              message:error.message,
+              duration: 2000,
+              type:'error'
             })
           })
+        })
       },
       //  设置移动文件模态框相关数据，isBatchMove为null时是确认移动，值由之前的值而定
       setMoveFileDialogData(isBatchMove, visible) {
@@ -195,27 +153,10 @@
           : this.dialogMoveFile.isBatchMove
         this.dialogMoveFile.visible = visible
       },
-      //  移动文件模态框：初始化文件目录树
+      //  初始化文件树
       initFileTree() {
-        getFileTree().then(response => {
-          if (response.msg === 'ok') {
-            this.dialogMoveFile.fileTree = response.data
-          } else {
-            this.$notify({
-              title: '提示',
-              type: 'error',
-              message:response.msg,
-              duration: 1500
-            })
-          }
-        }).catch( error =>{
-          this.tableLoading = false
-          this.$notify({
-            title:'获取数据提示',
-            message:error.message,
-            position:'bottom-right',
-            type:'error'
-          })
+        this.findTreeData('').then( result =>{
+          this.treeSelectData = this.filterFileTree(result)
         })
       },
 

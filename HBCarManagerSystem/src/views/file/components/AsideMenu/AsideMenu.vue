@@ -21,7 +21,7 @@
     <div class="file-tree-wrapper">
       <el-tree
         class="file-tree"
-        :data="deptData"
+        :data="data"
         :props="defaultProps"
         :expand-on-click-node="false"
         default-expand-all
@@ -49,6 +49,11 @@
   import variables from '@/styles/variables.scss'
   export default {
     name: 'AsideMenu',
+    props:{
+      data:{
+        type:Array
+      },
+    },
     data() {
       return {
         fileListByFileType: [],

@@ -66,10 +66,10 @@
     <el-dialog v-dialogDrag :title="operation ? '新增部门':'编辑部门'" width="40%" :visible.sync="dialogVisible" :close-on-click-modal="false">
     <el-form :model="temp" label-width="80px"   ref="temp"  :rules="rules" :size="size"
              label-position="right">
-      <el-form-item prop="name"  label="名称" >
+      <el-form-item prop="name"  label="名称:" >
         <el-input v-model="temp.name" placeholder="请输入部门或公司名称"></el-input>
       </el-form-item>
-      <el-form-item prop="parentId"  label="上级部门">
+      <el-form-item prop="parentId"  label="上级部门:">
         <treeselect
           v-model="temp.parentId"
           :options="treeSelectData"
@@ -77,7 +77,7 @@
           @select="selectFun"
         />
       </el-form-item>
-      <el-form-item prop="orderNum" label="顺序编号">
+      <el-form-item prop="orderNum" label="顺序编号:">
         <el-input-number v-model="temp.orderNum" controls-position="right" :min="0" label="排序编号"></el-input-number>
       </el-form-item>
     </el-form>
@@ -94,7 +94,6 @@
   import '@riophae/vue-treeselect/dist/vue-treeselect.css'
   import TableColumnFilterDialog  from '@/views/core/TableColumnFilterDialog'
   import KtButton from "@/views/core/KtButton"
-  import KtTable from "@/views/core/KtTable"
   import pagination from "@/components/Pagination"
   import {batchDelete, exportDeptExcelFile, findTree, save} from "@/api/system/dept"
   import TableTreeColumns from '@/views/core/TableTreeColumns'
@@ -102,7 +101,7 @@
   import {downloadFile} from "@/utils";
     export default {
         name: "dept",
-      components:{ TableColumnFilterDialog,KtButton,KtTable,pagination,TableTreeColumns ,Treeselect},
+      components:{ TableColumnFilterDialog,KtButton,pagination,TableTreeColumns ,Treeselect},
       data(){
           return{
             queryParams: {
@@ -114,7 +113,6 @@
             size:'small',     //按钮尺寸
             columns:[],       //表格所有列属性
             filterColumns:[], //过滤后显示列属性
-            filterColumns2:[],  //过滤好
             dialogVisible:false,  //编辑新增对话框显示属性
             operation:true,   //选择编辑或者新增对话框
             temp:{            //行数据
