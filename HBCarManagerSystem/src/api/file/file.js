@@ -70,7 +70,7 @@ export function deleteFile(data){
 //批量删除文件
 export function batchDeleteFile(data) {
   return request({
-    url:'/api/file/batchDeleteFile',
+    url:'/api/dept/delete',
     method:'post',
     data
   })

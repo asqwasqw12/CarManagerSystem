@@ -2,7 +2,7 @@
   <div class="file-wrapper">
     <el-container class="el-container">
       <el-aside width="auto">
-        <AsideMenu :data="tableTreeData"></AsideMenu>
+        <AsideMenu :data="treeData"></AsideMenu>
       </el-aside>
       <el-container>
         <el-main class="el-main">
@@ -34,6 +34,38 @@
               </el-form-item>
             </el-form>
           </div>
+          <!--表格树内容栏-->
+          <el-table :data="tableData" stripe size="mini" style="width: 100%;" row-key="id"
+                    v-loading="tableLoading" rowKey="id" element-loading-text="加载中。。。">
+            <el-table-column
+              prop="id" header-align="center" align="center" :width="setWidth('id')" :label="setLabel('id')" v-if="includeColumn('id')">
+            </el-table-column>
+            <el-table-column
+              prop="name" header-align="center" align="center" treeKey="id" :width="setWidth('name')" :label="setLabel('name')" v-if="includeColumn('name')" >
+            </el-table-column>
+            <el-table-column
+              prop="extendName" header-align="center" align="center" :width="setWidth('extendName')" :label="setLabel('extendName')"  v-if="includeColumn('extendName')">
+            </el-table-column>
+            <el-table-column
+              prop="frontPath" header-align="center" align="center" :label="setLabel('frontPath')"  :width="setWidth('frontPath')" v-if="includeColumn('frontPath')">
+            </el-table-column>
+            <el-table-column
+              prop="size" header-align="center" align="center" :label="setLabel('size')"  :width="setWidth('size')" v-if="includeColumn('size')">
+            </el-table-column>
+            <el-table-column
+              prop="createBy" header-align="center" align="center" :label="setLabel('createBy')" :width="setWidth('createBy')" v-if="includeColumn('createBy')">
+            </el-table-column>
+            <el-table-column
+              prop="createTime" header-align="center" align="center" :label="setLabel('createTime')" :formatter="dateFormat" :width="setWidth('createBy')" v-if="includeColumn('createTime')">
+            </el-table-column>
+            <el-table-column
+              fixed="right" header-align="center" align="center" width="185" label="操作">
+              <template slot-scope="scope">
+                <kt-button icon="fa fa-edit" perms="file:list:edit" :size="size" @click="handleEdit(scope.$index, scope.row)" style="margin:auto 0;"></kt-button>
+                <kt-button icon="fa fa-trash" perms="file:list:delete" :size="size" type="danger" @click="handleDelete(scope.$index, scope.row)" style="margin:auto 0;" ></kt-button>
+              </template>
+            </el-table-column>
+          </el-table>
           <el-dialog v-dialogDrag :title="operation ? '新增文件夹':'编辑文件'" width="40%" :visible.sync="dialogVisible" :close-on-click-modal="false">
             <el-form :model="temp" label-width="100px"   ref="temp"  :rules="rules" :size="size"
                      label-position="right">
@@ -69,11 +101,22 @@
     import AsideMenu from "@/views/file/components/AsideMenu/AsideMenu";
     import KtButton from "@/views/core/KtButton"
     import TableColumnFilterDialog  from '@/views/core/TableColumnFilterDialog'
-    import {getFileList} from "@/api/file/file";
+    import {batchDeleteFile, getFileList} from "@/api/file/file";
+    import {format} from "@/utils/datetime";
     export default {
         name: "ProjectManager",
       components: {AsideMenu,TableColumnFilterDialog,KtButton,Treeselect},
       data(){
+        let validateName = (rule, value, callback) => {
+          const reg = /^[\u4e00-\u9fa5_a-zA-Z0-9]+$/
+          if (value.length === 0) {
+            callback(new Error('请输入文件或文件夹名称'))
+          } else if (!reg.test(value)) {
+            callback(new Error('请由汉字字母数字下划线自由组合'))
+          } else {
+            callback()
+          }
+        }
           return{
             queryParams: {
               name:''     //文件名称
@@ -87,8 +130,9 @@
               frontPath: '',
               isShare:0
             },
-            treeSelectData:[] , //文件数据树
-            tableTreeData:[],   //文件数据表格
+            treeSelectData:[] , //Treeselect数据源
+            tableData:[],   //el-table数据源
+            treeData:[],   //el-tree数据源
             tableLoading:false,        //表格加载状态
             editLoading:false,   //对话框提交按钮加载状态
             columns:[],       //表格所有列属性
@@ -99,7 +143,7 @@
                 {
                   required: true,
                   trigger: 'blur',
-                  message:'请输入文件或文件夹名称'
+                  validator:validateName
                 }
               ]
             },
@@ -137,7 +181,7 @@
           return new Promise((resolve,reject) => {
             getFileList({'name':name}).then(res => {
               this.tableLoading = false
-              this.tableTreeData = res.data
+              this.tableData = res.data
               resolve(res.data)
             }).catch( error =>{
               this.tableLoading =false
@@ -159,17 +203,26 @@
               id: record.id,
               label: record.name,
             }
-            if (record.children.length > 0) {
+            //如果存在子树并且子树中包含文件夹，则继续查找
+            if (record.children.length > 0 && record.children.some( item =>
+              item.isDir === 1
+            ) ) {
               tmp.children = this.filterFileTree(record.children)
             }
-            res.push(tmp)
+            //如果是文件夹，则保存
+              if(record.isDir === 1){
+                res.push(tmp)
+              }
           })
           return res
         },
+        //获取el-tree对象
+
         //刷新数据
         refreshTreeData(){
           this.findTreeData('').then( result =>{
             this.treeSelectData = this.filterFileTree(result)
+            this.treeData = result
           })
         },
         //表格列属性选择对话框
@@ -179,8 +232,56 @@
             this.$refs.tableColumnFilterDialog.addRow()
           })
         },
-        selectFnn(){
+        selectFun(){
 
+        },
+        //表格编辑按钮
+        handleEdit(index, row) {
+          this.dialogVisible = true
+          this.operation = false
+          Object.assign(this.temp, row)
+        },
+        //表格删除按钮
+        handleDelete(index, row) {
+          this.$confirm('确认删除选中记录吗？', '提示', {
+            type: 'warning'
+          }).then(() => {
+            let params = this.getDeleteIds([], row)
+            batchDeleteFile(params).then( response => {
+              if(response.msg === 'ok'){
+                this.$message(
+                  {
+                    message:'删除成功',
+                    type:'success'
+                  })
+                this.refreshTreeData()
+              }else {
+                this.$message(
+                  {
+                    message:'操作失败',
+                    type:'error'
+                  })
+              }
+            }).catch( error =>{
+              this.loading =false
+              this.$notify({
+                title:'操作提示',
+                message:error.message,
+                duration: 2000,
+                type:'error'
+              })
+            })
+          })
+        },
+        // 获取删除的包含子机构的id列表
+        getDeleteIds (ids, row) {
+          ids.push({id:row.id})
+          if(row.children != null) {
+            for(let i=0, len=row.children.length; i<len; i++) {
+              this.getDeleteIds(ids, row.children[i])
+            }
+          }
+          return ids
         },
         //处理表格列过滤显示
         handleFilterColumns(data) {
@@ -200,6 +301,37 @@
           ]
           this.filterColumns = JSON.parse(JSON.stringify(this.columns));//深拷贝
         },
+        //判断是否显示列
+        includeColumn(prop){
+          return this.filterColumns.some(item =>{
+            return item.prop === prop
+          })
+        },
+        //设置列宽度
+        setWidth(prop){
+          let width = 80
+          this.filterColumns.forEach( item => {
+            if(item.prop === prop){
+              width = item.minWidth
+            }
+          })
+          return "'minWth':"+width
+        },
+
+        //设置列名称
+        setLabel(prop){
+          let label='列名'
+          this.filterColumns.forEach( item => {
+            if(item.prop === prop){
+              label = item.label
+            }
+          })
+          return label
+        },
+        // 时间格式化
+        dateFormat: function (row, column, cellValue, index){
+          return format(row[column.property])
+        }
       }
     }
 </script>

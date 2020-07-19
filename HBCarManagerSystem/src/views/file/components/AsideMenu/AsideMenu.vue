@@ -30,8 +30,10 @@
       >
        <span class="custom-tree-node" slot-scope="{ node, data }">
             <span>
-                <i :class="node.icon"></i><img :src="setFileImg(data.extendName,node)" style="width: 15px;" />{{ node.label }}
+                <i :class="node.icon"></i><img :src="setFileImg(data.extendName,node)" style="width: 15px;" />
             </span>
+            <span v-if="data.isDir !==1">{{node.label}}.{{data.extendName}}</span>
+            <span v-else>{{node.label}}</span>
         </span>
       </el-tree>
       <ul v-show="menuVisible" :style="{left:left+'px',top:top+'px'}" class="contextmenu">
@@ -301,17 +303,18 @@
       //重命名
       rename(node,data){
         let reg
-        if(data.extendName === null || data.extendName === ""){
+        reg = /^[\u4e00-\u9fa5_a-zA-Z0-9]+$/
+        /*if(data.extendName === null || data.extendName === ""){
           reg = /^[\u4e00-\u9fa5_a-zA-Z0-9]+$/
         }else{
           reg = /^([\u4e00-\u9fa5_a-zA-Z0-9]+)\.([a-zA-Z0-9]+)/
-        }
-        this.$prompt('请输入名称', '提示', {
+        }*/
+        this.$prompt('请输入名称(无需输入文件后缀）', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           inputValue:data.name,
           inputPattern: reg,
-          inputErrorMessage: '文件夹或文件格式不正确'
+          inputErrorMessage: '请由汉字字母数字下划线自由组合'
         }).then(({ value }) => {
           data.name=value
         }).catch(() => {
