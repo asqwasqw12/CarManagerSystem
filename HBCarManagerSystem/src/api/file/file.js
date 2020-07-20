@@ -8,7 +8,14 @@ export function getFileList(params){
     params
   })
 }
-
+// 保存
+export function save(data) {
+  return request({
+    url: '/api/file/save',
+    method: 'post',
+    data
+  })
+}
 
 
 //获取存储占用
@@ -70,7 +77,7 @@ export function deleteFile(data){
 //批量删除文件
 export function batchDeleteFile(data) {
   return request({
-    url:'/api/dept/delete',
+    url:'/api/file/delete',
     method:'post',
     data
   })

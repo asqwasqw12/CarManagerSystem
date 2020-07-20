@@ -7,7 +7,7 @@ const app = {
 },
     size: Cookies.get('size') || 'small',
     updateAvatarApi: 'http://127.0.0.1:8080' + '/user/updateAvatar', // 修改头像
-    updateFileApi:'http://127.0.0.1:8080' + '/user/updateFile', // 上传文件
+    uploadFileApi:'http://127.0.0.1:8080' + '/file/upload', // 上传文件
     sqlApi: 'http://127.0.0.1:8080'+'/druid/login.html',                  // Sql 监控
     swaggerApi: 'http://127.0.0.1:8080' + '/swagger-ui.html',             // swagger
   },

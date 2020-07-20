@@ -18,7 +18,7 @@
             />
             <kt-button icon="el-icon-search"  perms="file:list:view" type="success" @click="search()">搜索</kt-button>
             <kt-button icon="el-icon-plus"  perms="file:list:add" type="primary" @click="addFolder()" >新建文件夹</kt-button>
-            <kt-button icon="el-icon-plus"  perms="file:list:add" type="primary" @click="uploadFile()" >文件上传</kt-button>
+            <kt-button icon="el-icon-upload2"  perms="file:list:add" type="primary" @click="uploadFile()" >文件上传</kt-button>
           </div>
           <div class="head-container right" style="float:right;">
             <el-form :inline="true" size="mini">
@@ -66,13 +66,48 @@
               </template>
             </el-table-column>
           </el-table>
-          <el-dialog v-dialogDrag :title="operation ? '新增文件夹':'编辑文件'" width="40%" :visible.sync="dialogVisible" :close-on-click-modal="false">
+          <el-dialog v-dialogDrag :title="'上传文件'" width="500px" :visible.sync="uploadDialogVisible" :close-on-click-modal="false">
+            <el-form ref="form" :model="form" size="small" label-width="100px" :rules="rules">
+              <el-form-item label="文件名" style="width:400px;">
+                <el-input v-model="form.name"  />
+              </el-form-item>
+              <el-form-item prop="parentId"  label="上级文件夹:" style="width:400px;">
+                <treeselect
+                  v-model="form.parentId"
+                  :options="treeSelectData"
+                  placeholder="选择文件夹"
+                  @select="selectFun"
+                />
+              </el-form-item>
+              <!--   上传文件   -->
+              <el-form-item  label="上传" style="text-align: left;">
+                <el-upload
+                  ref="upload"
+                  :limit="1"
+                  :before-upload="beforeUpload"
+                  :auto-upload="false"
+                  :headers="headers"
+                  :on-success="handleSuccess"
+                  :on-error="handleError"
+                  :action="uploadFileApi+ '?name=' + form.name+'&parentId=' + form.parentId"
+                >
+                  <div class="upload-button"><i class="el-icon-upload" /> 添加文件</div>
+                  <div slot="tip" class="el-upload__tip">可上传任意格式文件，且不超过100M</div>
+                </el-upload>
+              </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+              <el-button :size="size" @click.native="uploadDialogVisible = false">取消</el-button>
+              <el-button :size="size" type="primary" @click.native="submitUploadForm" :loading="uploadLoading">确定</el-button>
+            </div>
+          </el-dialog>
+          <el-dialog v-dialogDrag :title="operation ? '新增文件夹':'编辑文件'" width="500px" :visible.sync="dialogVisible" :close-on-click-modal="false">
             <el-form :model="temp" label-width="100px"   ref="temp"  :rules="rules" :size="size"
                      label-position="right">
               <el-form-item prop="name"  label="名称:" >
                 <el-input v-model="temp.name" placeholder="请输入文件夹名称"></el-input>
               </el-form-item>
-              <el-form-item prop="parentId"  label="上级文件夹:">
+              <el-form-item prop="parentId"  label="上级文件夹:" >
                 <treeselect
                   v-model="temp.parentId"
                   :options="treeSelectData"
@@ -101,8 +136,11 @@
     import AsideMenu from "@/views/file/components/AsideMenu/AsideMenu";
     import KtButton from "@/views/core/KtButton"
     import TableColumnFilterDialog  from '@/views/core/TableColumnFilterDialog'
-    import {batchDeleteFile, getFileList} from "@/api/file/file";
+    import {batchDeleteFile, getFileList, save} from "@/api/file/file";
     import {format} from "@/utils/datetime";
+    import store from '@/store'
+    import { mapGetters } from 'vuex'
+    import Cookies from "js-cookie";
     export default {
         name: "ProjectManager",
       components: {AsideMenu,TableColumnFilterDialog,KtButton,Treeselect},
@@ -122,19 +160,35 @@
               name:''     //文件名称
             },
             dialogVisible:false,  //编辑新增对话框显示属性
+            uploadDialogVisible:false,    //上传对话框显示属性
+            form:{
+              id: 0,
+              name: '',
+              parentId: 34,
+              frontPath: '',
+              isShare:1,
+              userId:'',
+              isDir:0,
+              type:"文件"
+            },
             size:'small',     //按钮尺寸
             temp:{            //行数据
               id: 0,
               name: '',
               parentId: 34,
               frontPath: '',
-              isShare:0
+              isShare:1,
+              userId:'',
+              isDir:1,
+              type:"文件夹"
             },
             treeSelectData:[] , //Treeselect数据源
             tableData:[],   //el-table数据源
             treeData:[],   //el-tree数据源
             tableLoading:false,        //表格加载状态
             editLoading:false,   //对话框提交按钮加载状态
+            uploadLoading:false,    //上传框提交按钮加载状
+            headers: { 'Authorization':store.getters.token },
             columns:[],       //表格所有列属性
             filterColumns:[], //过滤后显示列属性
             operation:true,   //选择编辑或者新增对话框
@@ -148,6 +202,13 @@
               ]
             },
           }
+      },
+      computed:{
+        ...mapGetters([
+          'userInfo',
+          'uploadFileApi',
+          'updateAvatarApi'
+        ]),
       },
       mounted(){
         this.initColumns()
@@ -163,17 +224,21 @@
         addFolder(){
           this.dialogVisible = true
           this.operation = true
+          console.log("userInfo="+this.userInfo)
           this.temp = {
             id: 0,
             name: '',
             parentId: 34,
             frontPath: '',
-            isShare:0
+            isShare:1,
+            isDir:1,
+            userId:this.userInfo.id,
+            type:"文件夹"
           }
         },
         //文件上传
-        uplaodFile(){
-
+        uploadFile(){
+          this.uploadDialogVisible = true
         },
         //查找文件树
         findTreeData(name) {
@@ -283,6 +348,73 @@
           }
           return ids
         },
+        //提交上传文件表单
+        submitUploadForm(){
+          this.$refs.upload.submit()
+        },
+        //上传之前
+        beforeUpload(file) {
+          let isLt2M = true
+          isLt2M = file.size / 1024 / 1024 < 100
+          if (!isLt2M) {
+            this.loading = false
+            this.$message.error('上传文件大小不能超过 100MB!')
+          }
+          this.form.name = file.name
+          return isLt2M
+        },
+
+        //
+        handleSuccess(response, file, fileList) {
+          /*this.crud.notify('上传成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
+          this.$refs.upload.clearFiles()
+          this.crud.status.add = CRUD.STATUS.NORMAL
+          this.crud.resetForm()
+          this.crud.toQuery()*/
+          this.$message({ message: '操作成功', type: 'success' })
+          //this.$refs.upload.clearFiles()
+          this.uploadDialogVisible = false
+        },
+        // 监听上传失败
+        handleError(e, file, fileList) {
+          const msg = JSON.parse(e.message)
+          this.$notify({
+            title: msg.message,
+            type: 'error',
+            duration: 2500
+          })
+          this.uploadDialogVisible = false
+        },
+
+        //提交文件数据表单
+        submitForm() {
+          this.$refs.temp.validate((valid) => {
+            if (valid) {
+              this.$confirm('确认提交吗?', '提示', {}).then(() => {
+                this.editLoading = true
+                let params = Object.assign({}, this.temp)
+                save(params).then((response) => {
+                  this.editLoading = false
+                  if(response.msg === 'ok') {
+                    this.$message({ message: '操作成功', type: 'success' })
+                    this.dialogVisible = false
+                    this.refreshTreeData()
+                  } else {
+                    this.$message({message: '操作失败, ' + response.msg, type: 'error'})
+                  }
+                }).catch( error =>{
+                  this.editLoading =false
+                  this.$notify({
+                    title:'操作提示',
+                    message:error.message,
+                    duration: 2000,
+                    type:'error'
+                  })
+                })
+              })
+            }
+          })
+        },
         //处理表格列过滤显示
         handleFilterColumns(data) {
           this.filterColumns = data.filterColumns
@@ -349,6 +481,13 @@
     .el-main {
       padding-top: 0px !important;
       overflow: hidden;
+      .upload-button{
+        border: 1px dashed #c0ccda;
+        border-radius: 5px;
+        height: 45px;
+        line-height: 45px;
+        width:300px;
+      }
     }
   }
 </style>
