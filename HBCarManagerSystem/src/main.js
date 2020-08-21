@@ -3,9 +3,11 @@
 import Vue from 'vue'
 import App from './App'
 import router from '@/router/routers'
+import './assets/styles/index.scss'  //全局css
 //import '@/assets/styles/bootstrap.min.css'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+
 import 'font-awesome/css/font-awesome.min.css'
 import Viewer from 'v-viewer'          //引入图片查看器
 import 'viewerjs/dist/viewer.css'

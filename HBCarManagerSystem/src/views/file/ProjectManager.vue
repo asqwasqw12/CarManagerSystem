@@ -59,8 +59,9 @@
               prop="createTime" header-align="center" align="center" :label="setLabel('createTime')" :formatter="dateFormat" :width="setWidth('createBy')" v-if="includeColumn('createTime')">
             </el-table-column>
             <el-table-column
-              fixed="right" header-align="center" align="center" width="185" label="操作">
+              fixed="right" header-align="center" align="right" width="185" label="操作">
               <template slot-scope="scope">
+                <kt-button v-if="scope.row.isDir === 0" icon="fa fa-download" perms="file:list:view" :size="size" @click="exportFile(scope.$index, scope.row)" style="margin:auto 0;" :loading="exportLoading"></kt-button>
                 <kt-button icon="fa fa-edit" perms="file:list:edit" :size="size" @click="handleEdit(scope.$index, scope.row)" style="margin:auto 0;"></kt-button>
                 <kt-button icon="fa fa-trash" perms="file:list:delete" :size="size" type="danger" @click="handleDelete(scope.$index, scope.row)" style="margin:auto 0;" ></kt-button>
               </template>
@@ -136,11 +137,12 @@
     import AsideMenu from "@/views/file/components/AsideMenu/AsideMenu";
     import KtButton from "@/views/core/KtButton"
     import TableColumnFilterDialog  from '@/views/core/TableColumnFilterDialog'
-    import {batchDeleteFile, getFileList, save} from "@/api/file/file";
+    import {batchDeleteFile, download, getFileList, save} from "@/api/file/file";
     import {format} from "@/utils/datetime";
     import store from '@/store'
     import { mapGetters } from 'vuex'
     import Cookies from "js-cookie";
+    import {downloadFile} from "@/utils";
     export default {
         name: "ProjectManager",
       components: {AsideMenu,TableColumnFilterDialog,KtButton,Treeselect},
@@ -188,6 +190,7 @@
             tableLoading:false,        //表格加载状态
             editLoading:false,   //对话框提交按钮加载状态
             uploadLoading:false,    //上传框提交按钮加载状
+            exportLoading:false,    //下载框提交按钮加载状态
             headers: { 'Authorization':store.getters.token },
             columns:[],       //表格所有列属性
             filterColumns:[], //过滤后显示列属性
@@ -299,6 +302,24 @@
         },
         selectFun(){
 
+        },
+        //表格下载按钮
+        exportFile(index,row){
+          this.exportLoading =true
+          let data = Object.assign({}, row)
+          //let name =this.queryParams.name
+          download(data).then( (response) => {
+            this.exportLoading = false
+            downloadFile(response,data.name,data.extendName)
+          }).catch( (error) => {
+            this.exportLoading = false
+            this.$notify({
+              title:'操作提示',
+              message:error.message,
+              duration: 2000,
+              type:'error'
+            })
+          })
         },
         //表格编辑按钮
         handleEdit(index, row) {

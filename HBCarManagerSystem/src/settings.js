@@ -42,9 +42,9 @@ module.exports = {
   /**
    * 底部文字，支持html语法
    */
-  footerTxt: '© 2019 he jia  <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License 2.0</a>',
+  footerTxt: '© 2020   <a href="http://www.evcrrc.com/" target="_blank">中车环卫电动汽车</a>',
   /**
    * 备案号
    */
-  caseNumber: '鄂ICP备18005431号'
+  caseNumber: '湘ICP备18005431号'
 }

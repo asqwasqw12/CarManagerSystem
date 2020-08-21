@@ -17,7 +17,8 @@ const getters = {
   sqlApi: state => state.app.sqlApi,
   swaggerApi: state => state.app.swaggerApi,
   updateAvatarApi:state => state.app.updateAvatarApi,
-  uploadFileApi:state => state.app.uploadFileApi
+  uploadFileApi:state => state.app.uploadFileApi,
+  websocketApi:state => state.app.websocketApi
 
 }
 

@@ -2,7 +2,7 @@
     <div :class="classObj" class="app-wrapper">
       <div v-if="device === 'mobile' && sidebar.opened" class="drawer-bg" @click="handleClickOutside"></div>
       <sidebar class="sidebar-container"></sidebar>
-      <div  class="main-container">
+      <div :class="{hasTagsView:true}" class="main-container">
         <div :class="{'fixed-header':true }">
           <navbar></navbar>
           <tags-view/>
@@ -49,6 +49,7 @@
   @import "@/styles/mixin.scss";
   @import "@/styles/sidebar.scss";
   .app-wrapper {
+    @include clearfix;
     position: relative;
     height: 100%;
     width: 100%;

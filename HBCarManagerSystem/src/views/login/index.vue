@@ -1,6 +1,6 @@
 <template>
   <div class="location_frame">
-    <div class="main_frame" :style="mainFrameStyle">
+    <div class="main_frame" >
       <div id="login" >
         <el-form :model="loginForm" ref="loginForm" :rules="rules">
           <el-form-item>
@@ -39,10 +39,9 @@
         </el-form>
 
       </div>
-      <div class="truck" :style="truckStyle" ></div>
-      <div class="footer">
-       <a href="http://www.tus-est.com/" target="_blank">启迪环境</a>&nbsp;&nbsp;<a href="https://www.hjxnyqc.com.cn/" target="_blank">合加新能源汽车</a><br>
-        <div class="left">装备制造：<a href="http://www.inforeenviro.com/" target="_blank">盈峰环境</a>&nbsp;&nbsp;<a href="http://www.ythuanwei.com/products/" target="_blank">宇通环卫</a>&nbsp;&nbsp;
+      <div class="info">
+        <a href="https://www.crrcgc.cc/" target="_blank">中国中车</a>&nbsp;&nbsp;<a href="http://www.evcrrc.com/" target="_blank">中车时代电动汽车有限公司</a><br>
+        <div class="left"><span style="font-weight: bolder">装备制造：</span><a href="http://www.inforeenviro.com/" target="_blank">盈峰环境</a>&nbsp;&nbsp;<a href="http://www.ythuanwei.com/products/" target="_blank">宇通环卫</a>&nbsp;&nbsp;
           <a href="http://www.xcmg.com/xghj/" target="_blank">徐工环境</a>&nbsp;&nbsp;<a href="http://www.fjlm.c om.cn/" target="_blank">福龙马</a>&nbsp;&nbsp;<a href="http://www.hdclean.com/" target="_blank">海德汽车</a>
           <a href="http://www.krtzc.com.cn/index.html" target="_blank">凯瑞特种车</a>&nbsp;&nbsp;<a href="https://zyc.wuzheng.com.cn/?categoryCode=qxcp" target="_blank">五征环保</a>&nbsp;&nbsp;
           <a href="http://www.senyuanhi.com/productMechanies/24/" target="_blank">森源重工</a>&nbsp;&nbsp;<a href="http://www.hbxgzz.com/?bd_vid=10078331111149122661" target="_blank">楚胜汽车</a>&nbsp;&nbsp;
@@ -50,30 +49,36 @@
           <a href="http://www.fotonbrock.com/" target="_blank">福田普罗科</a>&nbsp;&nbsp;<a href="http://www.aerosun.cn/n3379707/n3379731/index.html" target="_blank">航天晨光</a>
           <a href="http://www.zhongtongauto.com/product/5/" target="_blank">中通集团</a>&nbsp;&nbsp;<a href="http://www.wctzc.com/" target="_blank">潍柴特种车</a>&nbsp;&nbsp;
           <a href="http://www.hishan.com.cn/" target="_blank">海山机械</a>&nbsp;&nbsp;<a href="http://www.saodiche.com.cn/index.asp" target="_blank">南通明诺</a>&nbsp;&nbsp;
-          <a href="http://njhbddc.isitestar.cn/" target="_blank">南京皇保</a>&nbsp;&nbsp;
+          <a href="http://njhbddc.isitestar.cn/" target="_blank">南京皇保</a>&nbsp;&nbsp;<a href="https://www.hjxnyqc.com.cn/" target="_blank">合加新能源汽车</a>&nbsp;&nbsp;
           <a href="http://www.hako.cn/" target="_blank">德国哈高</a>&nbsp;&nbsp;<a href="https://www.johnstonsweepers.com/" target="_blank">英国庄士顿</a>&nbsp;&nbsp;
           <a href="https://www.johnstonsweepers.com/" target="_blank">意大利道路宝</a>&nbsp;&nbsp;<a href="http://www.faun.com.cn/cn/about.html" target="_blank">法恩中国</a>&nbsp;&nbsp;
           <a href="https://www.chukyo-juki.co.jp/list/list.php?paged=1&category=specialized" target="_blank">日本中京重机</a>&nbsp;&nbsp;
           <a href="http://www.ceksanmakina.com/EN/index.php" target="_blank">土耳其CEKSAN</a>&nbsp;&nbsp;
         </div>
-        <div class="left">零部件：<a href="http://www.dfcv.com.cn/Index.aspx" target="_blank">东风商用车</a>&nbsp;&nbsp;
+        <div class="left"><span style="font-weight: bolder">零部件：</span><a href="http://www.dfcv.com.cn/Index.aspx" target="_blank">东风商用车</a>&nbsp;&nbsp;
           <a href="http://www.fawjiefang.com.cn/" target="_blank">一汽解放</a>&nbsp;&nbsp;<a href="http;//139.196.137.160/" target="_blank">一汽凌源</a>&nbsp;&nbsp;
           <a href="http://lighttruck.jmc.com.cn/" target="_blank">江铃汽车</a><a href="http://www.qingling.com.cn/" target="_blank">庆铃汽车</a>
           <a href="http://www.dcec.com.cn/" target="_blank">东风康明斯</a>&nbsp;&nbsp;<a href="https://www.catlbattery.com/" target="_blank">宁德时代</a>&nbsp;&nbsp;<a href="http://www.vortexinfo.cn/h-col-282.html" target="_blank">伏泰科技</a>
           <a href="http://www.jiachengtech.com/" target="_blank">嘉成科技</a>&nbsp;&nbsp;<a href="http://www.csshuobo.com/" target="_blank">硕博电子</a>
         </div>
-        <div class="left">环卫运营：
+        <div class="left"><span style="font-weight: bolder">环卫运营：</span>
           <a href="http://www.besg.com.cn/approach/index.html" target="_blank">北京环卫</a>&nbsp;&nbsp;
+          <a href="http://www.tus-est.com/" target="_blank">启迪环境</a>&nbsp;&nbsp;
           <a href="http://www.rrjqj.com/intro/1.html">仁仁洁</a>
         </div>
-        <div class="left">行业新闻:
+        <div class="left"><span style="font-weight: bolder">行业新闻:</span>
           <a href="http://www.chinacar.com.cn/search.html" target="_blank">汽车公告网</a>&nbsp;&nbsp;
           <a href="http://www.cn-hw.net/" target="_blank">环卫科技</a>&nbsp;&nbsp;
           <a href="http://www.hunanhw.com/" target="_blank">湖南环卫</a>
           <a href="http://www.cncma.org/" target="_blank">机械工业协会</a>
         </div>
-        <span style="font-size:10px;">Copyright © 合加新能源汽车有限公司  京 ICP备 11111111号</span>
       </div>
+      <div class="truck" ></div>
+    </div>
+    <div  v-if="$store.state.settings.showFooter" id="el-main-footer">
+      <span v-html="$store.state.settings.footerTxt" />
+      <span> ⋅ </span>
+      <a href="http://www.beian.miit.gov.cn" target="_blank">{{ $store.state.settings.caseNumber }}</a>
     </div>
   </div>
 </template>
@@ -234,14 +239,22 @@
     }
 </script>
 
-<style scoped>
+<style lang="scss" scoped >
+  @import "~@/assets/styles/element-variables.scss";
   .location_frame {
+    min-height: calc(100vh - 50px);
+    width: 100%;
+    text-align: center;
+
+    /*overflow: hidden;*/
+  }
+  .main_frame{
+    position:relative;
+    width: 1280px;
+    height: 800px;
     margin-left:auto;
     margin-right:auto;
-    margin-top:10px;
-    width:1280px;
-    height:800px;
-    border:1px solid red;
+    background: url('../../assets/index_background-10.jpg') no-repeat center/cover;
   }
   #login {
     margin-top:50px;
@@ -260,12 +273,13 @@
     height: 38px;
   }
   .truck{
-    position:relative;
+    position:absolute;
+    left:0px;
+    top:470px;
     width:200px;
     height:80px;
-    /*background:url("../../assets/truck.png") ;*/
-    margin-top:120px;
-    margin-bottom:200px;
+    background:url("../../assets/truck.png") ;
+
     animation:ball 10s linear infinite;
   }
   @keyframes ball{
@@ -276,14 +290,34 @@
       80%{transform:translate(280px);} */
     100%{transform:translate(0px);}
   }
-  .footer{
-    float:bottom;
-    margin-top:-100px;
+  .info{
+    position:absolute;
+    left:0px;
+    top:570px;
+  }
+  #el-main-footer {
+    background: none repeat scroll 0 0 white;
+    border-top: 1px solid #e7eaec;
+    overflow: hidden;
+    padding: 10px 6px 0 6px;
+    height: 33px;
+    font-size: 0.7rem !important;
+    color: #7a8b9a;
+    letter-spacing: 0.8px;
+    font-family: Arial, sans-serif !important;
+    position: fixed;
+    bottom: 0;
+    z-index: 99;
+    width: 100%;
   }
   .left{
       text-align: left;
       margin: 0px 20px;
     }
+  a{
+    text-decoration: underline;
+    color:$--color-primary
+  }
 </style>
 <style>
   /*body{

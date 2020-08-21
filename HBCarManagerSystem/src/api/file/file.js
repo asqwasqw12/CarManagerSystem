@@ -37,11 +37,12 @@ export function selectFileByFileType(params){
 }
 
 //下载文件
-export function downloadFile(params){
+export function download(data){
   return request({
-    url:'/api/fileTransfer/downloadFile',
-    method:'get',
-    params
+    url:'/api/file/download',
+    method:'post',
+    responseType:'blob',
+    data
   })
 }
 
@@ -112,4 +113,4 @@ export function createFile(data){
 }
 
 
-export default { createFile,batchMoveFile,moveFile,batchDeleteFile,deleteFile,unzipFile,getFileTree,downloadFile,selectFileByFileType,getStorage,getFileList }
+export default { createFile,batchMoveFile,moveFile,batchDeleteFile,deleteFile,unzipFile,getFileTree,download,selectFileByFileType,getStorage,getFileList }
