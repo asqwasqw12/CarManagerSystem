@@ -44,6 +44,21 @@
         prop="parentName" header-align="center" align="center" :width="setWidth('parentName')" :label="setLabel('parentName')"  v-if="includeColumn('parentName')">
       </el-table-column>
       <el-table-column
+       prop="address" header-align="center" align="center" :width="setWidth('address')" :label="setLabel('address')"  v-if="includeColumn('address')">
+      </el-table-column>
+     <el-table-column
+       prop="telephone" header-align="center" align="center" :width="setWidth('telephone')" :label="setLabel('telephone')"  v-if="includeColumn('telephone')">
+     </el-table-column>
+     <el-table-column
+       prop="website" header-align="center" align="center" :width="setWidth('website')" :label="setLabel('website')"  v-if="includeColumn('website')">
+     </el-table-column>
+     <el-table-column
+       prop="isCompany" header-align="center" align="center" :width="setWidth('isCompany')" :label="setLabel('isCompany')"  v-if="includeColumn('isCompany')">
+       <template slot-scope="scope">
+         <el-tag>{{deptTypeList[scope.row.isCompany]}}</el-tag>
+       </template>
+     </el-table-column>
+      <el-table-column
         prop="orderNum" header-align="center" align="center" :label="setLabel('orderNum')"  :width="setWidth('orderNum')" v-if="includeColumn('orderNum')">
       </el-table-column>
       <el-table-column
@@ -63,9 +78,16 @@
     <!--表格显示列界面-->
     <table-column-filter-dialog ref="tableColumnFilterDialog" :columns="columns" :init-columns="columns" @handleFilterColumns="handleFilterColumns"></table-column-filter-dialog>
     <!--新增编辑界面-->
-    <el-dialog v-dialogDrag :title="operation ? '新增部门':'编辑部门'" width="40%" :visible.sync="dialogVisible" :close-on-click-modal="false">
+    <el-dialog v-dialogDrag :title="operation ? '新增部门/公司':'编辑部门/公司'" width="40%" :visible.sync="dialogVisible" :close-on-click-modal="false">
     <el-form :model="temp" label-width="80px"   ref="temp"  :rules="rules" :size="size"
              label-position="right">
+      <el-form-item prop="isCompany" label="类型:">
+        <el-radio-group v-model="temp.isCompany">
+          <el-radio v-for="(type,index) in deptTypeList" :label="index" :key="index">
+            {{ type }}
+          </el-radio>
+        </el-radio-group>
+      </el-form-item>
       <el-form-item prop="name"  label="名称:" >
         <el-input v-model="temp.name" placeholder="请输入部门或公司名称"></el-input>
       </el-form-item>
@@ -79,6 +101,18 @@
       </el-form-item>
       <el-form-item prop="orderNum" label="顺序编号:">
         <el-input-number v-model="temp.orderNum" controls-position="right" :min="0" label="排序编号"></el-input-number>
+      </el-form-item>
+      <el-form-item v-if="temp.isCompany" prop="address" label="公司地址:">
+        <el-input v-model="temp.address" placeholder="请输入公司地址"></el-input>
+      </el-form-item>
+      <el-form-item v-if="temp.isCompany" prop="telephone" label="联系电话:">
+        <el-input v-model="temp.telephone" placeholder="请输入联系电话"></el-input>
+      </el-form-item>
+      <el-form-item v-if="temp.isCompany" prop="address" label="公司网址:">
+        <el-input v-model="temp.website" placeholder="请输入公司地址"></el-input>
+      </el-form-item>
+      <el-form-item v-if="temp.isCompany" prop="remarks" label="备注">
+        <el-input v-model="temp.remarks" type="textarea"></el-input>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -120,9 +154,15 @@
               name: '',
               parentId: 1,
               parentName: '',
-              orderNum: 0
+              orderNum: 0,
+              address:'',
+              telephone:'',
+              website:'',
+              industry:'',
+              isCompany:0
             },
             dataForm:{},
+            deptTypeList:["部门","公司"],
             treeSelectData:[] , //部门数据树
             tableTreeData:[],   //表格部门数据
             rules: {
@@ -165,7 +205,12 @@
             name: '',
             parentId: 1,
             parentName: '',
-            orderNum: 0
+            orderNum: 0,
+            address:'',
+            telephone:'',
+            website:'',
+            industry:'',
+            isCompany:0
           }
         },
 
@@ -241,6 +286,11 @@
             {prop: "id", label: "ID", minWidth: 50},
             {prop: "name", label: "名称", minWidth: 80},
             {prop: "parentName", label: "上级部门", minWidth: 80},
+            {prop: "address", label: "公司地址", minWidth: 80},
+            {prop: "telephone", label: "联系电话", minWidth: 80},
+            {prop: "telephone", label: "公司网址", minWidth: 80},
+            {prop: "isCompany", label: "类型", minWidth: 80},
+            {prop: "remarks", label: "备注", minWidth: 80},
             {prop: "orderNum", label: "排序", minWidth: 70},
             {prop: "createBy", label: "创建人", minWidth: 120},
             {prop: "createTime", label: "创建时间", minWidth: 100}

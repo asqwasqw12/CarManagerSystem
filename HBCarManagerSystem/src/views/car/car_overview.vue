@@ -1,10 +1,10 @@
 <template>
     <div >
       <div class="search-container">
-        <!--部门数据-->
+        <!--公司数据-->
         <treeselect
           :options="treeSelectData"
-          placeholder="选择部门"
+          placeholder="选择公司"
           @select="selectFun"
         />
       </div>
@@ -50,7 +50,8 @@
             <li><svg-icon icon-class="anq" /> 上装状态<div class="vehicle-right">{{ vehicleStatus.vehicleId }}</div></li>
           </ul>
         </bm-info-window>
-        <bm-local-search v-if = "searchDisplay" class="search" :keyword="map.keyword" :auto-viewport="true" :location="map.location"></bm-local-search>
+        <el-input v-model="locationInput"> </el-input>
+        <bm-local-search v-if = "searchDisplay" class="search" style="float:left" :keyword="locationInput" :auto-viewport="true" :location="map.location"></bm-local-search>
         <!--行车路径-->
         <bm-driving v-if="drivingDisplay" start="合加新能源汽车有限公司" end="咸宁区交通运输局" @searchcomplete="handleSearchComplete" :panel="false" :autoViewport="true"></bm-driving>
           <bml-lushu v-if="trailDisplay"
@@ -82,6 +83,7 @@
         name: "car_overview",
       data(){
           return {
+            locationInput:'',
             deptData:[],
             treeSelectData:[
               {
@@ -107,7 +109,7 @@
 
             drivingDisplay:false,   //行车路线显示属性
             trailDisplay:false,    //轨迹显示属性
-            searchDisplay:false,   //搜索组件显示属性
+            searchDisplay:true,   //搜索组件显示属性
             infoWindowDisplay:false,    //标注点信息显示属性
             infoWindowTitle:"<h4 style='padding:0px;margin:0px;text-align: center;'>车辆信息</h4>",
             infoWindowPosition:{
@@ -160,7 +162,8 @@
         // 获取部门列表
         findDeptTree() {
           findTree({'name':''}).then( res => {
-            this.deptData = res.data
+            //this.deptData = res.data
+            this.deptData = res.data.filter((item) => item.isCompany ==1 )
             this.treeSelectData = this.filterDeptTree(res.data)
           })
         },
@@ -168,14 +171,18 @@
         filterDeptTree(deptList) {
           const res = []
           deptList.forEach(dept => {
-            const tmp = {
-              id: dept.id,
-              label: dept.name,
+            if(dept.isCompany ===1){
+              const tmp = {
+                id: dept.id,
+                label: dept.name,
+              }
+              if (dept.children && dept.children.length > 0) {
+                if(this.filterDeptTree(dept.children).length>0){
+                  tmp.children = this.filterDeptTree(dept.children)
+                }
+              }
+              res.push(tmp)
             }
-            if (dept.children.length > 0) {
-              tmp.children = this.filterDeptTree(dept.children)
-            }
-            res.push(tmp)
           })
           return res
         },
@@ -188,6 +195,7 @@
           handler({BMap,map }){
             let me=this
             this.BMap= BMap
+            this.map = map
             console.log(BMap,map)
             //鼠标缩放
             map.enableScrollWheelZoom(true);
@@ -195,6 +203,22 @@
             map.addEventListener('click',function(e){
               console.log(e.point.lng,e.point.lat)
             })
+
+            //下面为功能测试
+            setTimeout(function(){
+              map.panTo(new BMap.Point(113.262232,23.154345));
+            }, 5000);
+            let pointGZ = new BMap.Point(113.262232,23.154345);
+            let pointHK = new BMap.Point(110.35,20.02);
+            let myIcon = new BMap.Icon
+            ("http://developer.baidu.com/map/jsdemo/img/fox.gif",new BMap.Size
+            (300,157));
+            //创建标注
+            let marker = new BMap.Marker(pointHK,{icon:myIcon});
+            let marker1 = new BMap.Marker(pointGZ,{icon:myIcon});
+            //将标注放大地图上
+            map.addOverlay(marker);
+            map.addOverlay(marker1);
             /*let myIcon = new BMap.Icon("markers.png", new BMap.Size(23, 25), {
               offset: new BMap.Size(10, 25),
               imageOffset: new BMap.Size(0, 0 - index * 25)   // 设置图片偏移
@@ -316,7 +340,7 @@
 <style scoped>
 .map{
   width:100%;
-  height:600px;
+  height:450px;
 
 }
 .search-container {

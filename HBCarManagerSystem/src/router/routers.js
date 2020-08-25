@@ -42,8 +42,8 @@ export const constantRouterMap = [
     children: [
       {
         path: 'home',
-        component: () => import('@/views/car/car_overview.vue'),
-        name: 'overview',
+        component: () => import('@/views/home.vue'),
+        name: 'home',
         meta: { title: '首页', icon: 'index', affix: true, noCache: true }
       }
     ]
