@@ -115,7 +115,7 @@ const tagsView = {
     delCachedView({commit,state},view){
       return new Promise( (resolve) =>{
         commit('DEL_CACHED_VIEW',view)
-        resolve([...state.visitedViews])
+        resolve([...state.cachedViews])
       })
     },
 

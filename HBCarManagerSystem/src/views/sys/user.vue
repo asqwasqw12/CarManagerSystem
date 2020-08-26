@@ -2,7 +2,7 @@
   <div class="app-container" >
     <el-row :gutter="20">
       <!--侧边部门数据栏-->
-      <el-col :xs="9" :sm="6"  :md="4" :lg="4" :xl="4">
+      <el-col :xs="9" :sm="6"  :md="4" :lg="4" :xl="4" >
         <!--工具栏-->
         <div class="head-container">
           <el-input
@@ -20,6 +20,7 @@
           :expand-on-click-node="false"
           default-expand-all
           @node-click="handleNodeClick"
+          class="tree-left"
           />
       </el-col>
       <!--用户数据栏-->
@@ -639,5 +640,8 @@
 </script>
 
 <style scoped>
-
+.tree-left{
+  overflow: hidden;
+ /* border:1px solid red;*/
+}
 </style>

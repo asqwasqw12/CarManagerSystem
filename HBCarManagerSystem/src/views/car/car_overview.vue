@@ -340,7 +340,8 @@
 <style scoped>
 .map{
   width:100%;
-  height:450px;
+  height:600px;
+  min-height: calc(100vh - 84px);
 
 }
 .search-container {

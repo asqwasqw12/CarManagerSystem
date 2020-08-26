@@ -61,7 +61,7 @@
               </router-link>
             </span>
             <span>
-              <router-link :to="{ path:'/user/center',query:{id:1}}">
+              <router-link :to="{ path:'/project/info',query:{id:company.id }}">
                <el-button size="small" icon="fa fa-male" >项目信息</el-button>
               </router-link>
             </span>
@@ -314,6 +314,7 @@
 <style scoped>
   .map{
     width:100%;
+    min-height: calc(100vh - 84px);
     height:600px;
 
   }

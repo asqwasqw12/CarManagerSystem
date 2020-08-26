@@ -18,7 +18,8 @@
         name: "AppMain",
       computed:{
           cachedViews(){
-            return this.$store.state.cachedViews
+            console.log("到底发生什么了！！！！="+ this.$store.state.tagsView.cachedViews)
+            return this.$store.state.tagsView.cachedViews
           },
         key(){
             console.log('this.route.path:'+this.$route.path)

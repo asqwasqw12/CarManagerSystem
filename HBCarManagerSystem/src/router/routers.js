@@ -57,12 +57,26 @@ export const constantRouterMap = [
       {
         path: 'center',
         component: () => import('@/views/system/user/center'),
-        name: '个人中心',
+        name: 'center',
         meta: { title: '个人中心' }
       }
     ]
   },
-
+  {
+    path: '/project',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'info',
+        component: () => import('@/views/project/info'),
+        name: 'info',
+        meta: { title: '项目信息',
+                noCache:false }
+      }
+    ]
+  },
 {
   path:'/register',
     name:'register',

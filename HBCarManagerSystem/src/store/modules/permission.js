@@ -34,11 +34,13 @@ export function filterMenu(menuList) {
   menuList.forEach(menu => {
     const tmp = {
       path: menu.url,
-      name: menu.name,
+      name: menu.componentName,
+      hidden:menu.hidden,
       meta: {
         icon: menu.icon,
         index: menu.id,
-        title:menu.name
+        title:menu.name,
+        noCache:menu.noCache,
       },
       component:layout
     }

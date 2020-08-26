@@ -62,7 +62,7 @@
   import Avatar from '@/assets/images/avatar.png'
   import { baseUrl } from '@/utils/global'
   export default {
-    name: 'Center',
+    name: 'center',
     components: {  UpdateUser },
     data() {
       return {

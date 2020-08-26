@@ -8,6 +8,16 @@ export function findTree(params) {
     params
   })
 }
+
+// 根据用户名查找
+export function findById(params) {
+  return request({
+    url: '/api/dept/findById',
+    method: 'get',
+    params
+  })
+}
+
 // 保存
 export function save(data) {
   return request({
@@ -35,4 +45,4 @@ export function exportDeptExcelFile(data){
   })
 }
 
-export default { findTree,save,batchDelete }
+export default { findTree,findById,save,batchDelete }
