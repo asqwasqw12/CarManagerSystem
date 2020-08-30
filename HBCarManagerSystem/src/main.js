@@ -18,6 +18,8 @@ import store from './store'
 import '@/router/index' // permission control
 import BaiduMap from 'vue-baidu-map'
 import echarts from 'echarts'
+import vRegion from 'v-region'
+
 
 import FileManager from 'laravel-file-manager'
 Vue.use(FileManager, {store})
@@ -35,7 +37,7 @@ Vue.use(BaiduMap, {
   // ak 是在百度地图开发者平台申请的密钥 详见 http://lbsyun.baidu.com/apiconsole/key */
   ak: 'tYc5nRCwfQq7SH1gtU3Yu5hxbCcblKxk'
 })
-
+Vue.use(vRegion)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

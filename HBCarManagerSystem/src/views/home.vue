@@ -18,7 +18,7 @@
       <bm-marker v-if="companyList.length>0"
                  v-for="company in companyList"
                  :key ="company.id"
-                 :position="{ lng:company.latitude,lat:company.longitude}"
+                 :position="company.latitude ?{ lng:company.latitude,lat:company.longitude} : company.administrativeDivision"
                  @click="OpenWindow($event,company)"
                  :draggable="map.dragging"
                  animation="BMAP_ANIMATION_DROP">
@@ -167,6 +167,9 @@
 
       },
       created(){
+        //this.findDeptTree()
+      },
+      mounted(){
         this.findDeptTree()
       },
       //离开之前关闭infoWindow
@@ -181,6 +184,13 @@
           findTree({'name':''}).then( res => {
             this.treeSelectData = this.filterDeptTree(res.data)
             this.companyList = this.getCompanyList(res.data)
+          }).catch(error=> {
+            this.$notify({
+              title:'操作提示',
+              message:error.message,
+              duration: 2000,
+              type:'error'
+            })
           })
         },
         //获取vue-treeselect对象

@@ -44,7 +44,7 @@ export const constantRouterMap = [
         path: 'home',
         component: () => import('@/views/home.vue'),
         name: 'home',
-        meta: { title: '首页', icon: 'index', affix: true, noCache: true }
+        meta: { title: '首页', icon: 'index', affix: true, noCache:true }
       }
     ]
   },
