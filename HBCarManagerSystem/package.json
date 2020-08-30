@@ -21,7 +21,7 @@
     "js-cookie": "^2.2.1",
     "jsencrypt": "^3.0.0-rc.1",
     "laravel-file-manager": "^2.4.14",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "nprogress": "^0.2.0",
     "path-to-regexp": "^6.1.0",
     "v-region": "^2.2.2",
