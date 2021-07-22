@@ -31,7 +31,7 @@
     "vue-cropperjs": "^4.1.0",
     "vue-router": "^3.0.1",
     "vue-simple-uploader": "^0.7.4",
-    "xlsx": "^0.15.5"
+    "xlsx": "^0.17.0"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
